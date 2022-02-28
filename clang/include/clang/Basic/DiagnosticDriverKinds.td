@@ -60,6 +60,12 @@ def err_drv_no_cuda_libdevice : Error<
   "cannot find libdevice for %0. Provide path to different CUDA installation "
   "via --cuda-path, or pass -nocudalib to build without linking with libdevice.">;
 
+def err_drv_no_neuware_installation : Error<
+  "cannot find neuware installation. Provide its path via --neuware-path, or pass "
+  "-noneuwareinc to build without neuware includes.">;
+def err_drv_invalid_Xarch_argument_isdriver : Error<
+  "Unsupported neuware NPU architecture: %0">;
+
 def err_drv_no_rocm_device_lib : Error<
   "cannot find ROCm device library%select{| for %1}0. Provide its path via --rocm-path or "
   "--rocm-device-lib-path, or pass -nogpulib to build without ROCm device library.">;

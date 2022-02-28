@@ -25,6 +25,7 @@
 #include "Targets/M68k.h"
 #include "Targets/MSP430.h"
 #include "Targets/Mips.h"
+#include "Targets/MLISA.h"
 #include "Targets/NVPTX.h"
 #include "Targets/OSTargets.h"
 #include "Targets/PNaCl.h"
@@ -303,6 +304,9 @@ TargetInfo *AllocateTarget(const llvm::Triple &Triple,
     default:
       return new MipsTargetInfo(Triple, Opts);
     }
+
+  case llvm::Triple::mlisa:
+    return new MLISATargetInfo(Triple, Opts,64);
 
   case llvm::Triple::m68k:
     switch (os) {

@@ -13,6 +13,7 @@
 #include "ToolChains/AVR.h"
 #include "ToolChains/Ananas.h"
 #include "ToolChains/BareMetal.h"
+#include "ToolChains/Bang.h"
 #include "ToolChains/Clang.h"
 #include "ToolChains/CloudABI.h"
 #include "ToolChains/Contiki.h"
@@ -703,6 +704,10 @@ static bool isValidSYCLTriple(llvm::Triple T) {
 
   // AMDGCN is valid for SYCL
   if (T.isAMDGCN())
+    return true;
+
+  // BANG is valid for SYCL
+  if (T.isMLISA())
     return true;
 
   // Check for invalid SYCL device triple values.
@@ -3918,6 +3923,21 @@ class OffloadingActionBuilder final {
       return HIPFatBinary;
     }
 
+    Action *finalizeMLISADependences(Action *Input, const llvm::Triple &TT) {
+      auto *BA = C.getDriver().ConstructPhaseAction(
+          C, Args, phases::Backend, Input, AssociatedOffloadKind);
+
+      auto *AA = C.getDriver().ConstructPhaseAction(C, Args, phases::Assemble,
+                                                    BA, AssociatedOffloadKind);
+
+      ActionList AL = {AA};
+      Action *LinkAction = C.MakeAction<LinkJobAction>(AL, types::TY_Image);
+      ActionList BangActions = {LinkAction};
+      Action *CNFatBinary =
+          C.MakeAction<LinkJobAction>(BangActions, types::TY_Bang_FATBIN);
+      return CNFatBinary;
+    }
+
   public:
     SYCLActionBuilder(Compilation &C, DerivedArgList &Args,
                       const Driver::InputList &Inputs)
@@ -4315,6 +4335,7 @@ class OffloadingActionBuilder final {
         auto TT = SYCLTripleList[I];
         auto isNVPTX = (*TC)->getTriple().isNVPTX();
         auto isAMDGCN = (*TC)->getTriple().isAMDGCN();
+        auto isMLISA = (*TC)->getTriple().isMLISA();
         bool isSpirvAOT = TT.getSubArch() == llvm::Triple::SPIRSubArch_fpga ||
                           TT.getSubArch() == llvm::Triple::SPIRSubArch_gen ||
                           TT.getSubArch() == llvm::Triple::SPIRSubArch_x86_64;
@@ -4412,7 +4433,7 @@ class OffloadingActionBuilder final {
         // When spv online link is supported by all backends, the fallback
         // device libraries are only needed when current toolchain is using
         // AOT compilation.
-        if (!isNVPTX && !isAMDGCN) {
+        if (!isNVPTX && !isAMDGCN && !isMLISA) {
           SYCLDeviceLibLinked = addSYCLDeviceLibs(
               *TC, FullLinkObjects, true,
               C.getDefaultToolChain().getTriple().isWindowsMSVCEnvironment());
@@ -4426,7 +4447,7 @@ class OffloadingActionBuilder final {
           FullDeviceLinkAction = DeviceLinkAction;
         // setup some flags upfront
 
-        if ((isNVPTX || isAMDGCN) && DeviceCodeSplit) {
+        if ((isNVPTX || isAMDGCN || isMLISA) && DeviceCodeSplit) {
           // TODO Temporary limitation, need to support code splitting for PTX
           const Driver &D = C.getDriver();
           const std::string &OptName =
@@ -4438,14 +4459,14 @@ class OffloadingActionBuilder final {
         }
         // reflects whether current target is ahead-of-time and can't support
         // runtime setting of specialization constants
-        bool isAOT = isNVPTX || isAMDGCN || isSpirvAOT;
+        bool isAOT = isMLISA || isNVPTX || isAMDGCN || isSpirvAOT;
         // TODO support device code split for NVPTX target
 
         ActionList WrapperInputs;
         // post link is not optional - even if not splitting, always need to
         // process specialization constants
         types::ID PostLinkOutType =
-            isNVPTX || isAMDGCN ? types::TY_LLVM_BC : types::TY_Tempfiletable;
+            isNVPTX || isAMDGCN || isMLISA ? types::TY_LLVM_BC : types::TY_Tempfiletable;
         auto *PostLinkAction = C.MakeAction<SYCLPostLinkJobAction>(
             FullDeviceLinkAction, PostLinkOutType);
         PostLinkAction->setRTSetsSpecConstants(!isAOT);
@@ -4458,7 +4479,13 @@ class OffloadingActionBuilder final {
           Action *FinAction =
               finalizeAMDGCNDependences(PostLinkAction, (*TC)->getTriple());
           WrapperInputs.push_back(FinAction);
-        } else {
+        } else if (isMLISA) {
+          Action *FinAction =
+              finalizeMLISADependences(PostLinkAction, (*TC)->getTriple());
+          WrapperInputs.push_back(FinAction);
+        } 
+        
+        else {
           // For SPIRV-based targets - translate to SPIRV then optionally
           // compile ahead-of-time to native architecture
           constexpr char COL_CODE[] = "Code";
@@ -7322,6 +7349,10 @@ const ToolChain &Driver::getOffloadingDeviceToolChain(const ArgList &Args,
             break;
           case llvm::Triple::amdgcn:
             TC = std::make_unique<toolchains::HIPToolChain>(
+                *this, Target, HostTC, Args, TargetDeviceOffloadKind);
+            break;
+          case llvm::Triple::mlisa:
+            TC = std::make_unique<toolchains::BangToolChain>(
                 *this, Target, HostTC, Args, TargetDeviceOffloadKind);
             break;
           default:

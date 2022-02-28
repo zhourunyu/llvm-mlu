@@ -394,6 +394,10 @@ std::string tools::getCPUName(const ArgList &Args, const llvm::Triple &T,
     return std::string(CPUName);
   }
 
+  // default set it to mtp_270
+  case llvm::Triple::mlisa:
+    return "mtp_270";
+
   case llvm::Triple::nvptx:
   case llvm::Triple::nvptx64:
     if (const Arg *A = Args.getLastArg(options::OPT_march_EQ))

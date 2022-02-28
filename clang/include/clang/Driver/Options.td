@@ -789,6 +789,14 @@ def Xcuda_fatbinary : Separate<["-"], "Xcuda-fatbinary">,
   HelpText<"Pass <arg> to fatbinary invocation">, MetaVarName<"<arg>">;
 def Xcuda_ptxas : Separate<["-"], "Xcuda-ptxas">,
   HelpText<"Pass <arg> to the ptxas assembler">, MetaVarName<"<arg>">;
+def Xbang_fatbinary : Separate<["-"], "Xbang-fatbinary">,
+  HelpText<"Pass <arg> to fatbinary invocation">, MetaVarName<"<arg>">;
+def Xbang_cnas : Separate<["-"], "Xbang_cnas">,
+  HelpText<"Pass <arg> to the cnas assembler">, MetaVarName<"<arg>">;
+def bang_wram_align64 : Separate<["-"], "bang_wram_align64">,
+  HelpText<"Pass <arg> to set the wram align to 64">, MetaVarName<"<arg>">;
+def wram_align_EQ : Separate<["-"], "wram_align=">,
+  HelpText<"Pass <arg> to set the wram alignement">, MetaVarName<"<arg>">;
 def Xopenmp_target : Separate<["-"], "Xopenmp-target">,
   HelpText<"Pass <arg> to the target offloading toolchain.">, MetaVarName<"<arg>">;
 def Xopenmp_target_EQ : JoinedAndSeparate<["-"], "Xopenmp-target=">,
@@ -916,6 +924,16 @@ def offload_arch_EQ : Joined<["--"], "offload-arch=">, Flags<[NoXarchOption]>,
            "specified more than once.">;
 def cuda_gpu_arch_EQ : Joined<["--"], "cuda-gpu-arch=">, Flags<[NoXarchOption]>,
   Alias<offload_arch_EQ>;
+def bang_device_only : Flag<["--"], "bang-device-only">,
+  HelpText<"Compile BANG code for device only">;
+def bang_host_only : Flag<["--"], "bang-host-only">,
+  HelpText<"Compile BNAG code for host only.  Has no effect on non-BANG "
+           "compilations.">;
+def bang_compile_host_device : Flag<["--"], "bang-compile-host-device">,
+  HelpText<"Compile BANG code for both host and device (default).  Has no "
+           "effect on non-BANG compilations.">;
+def bang_fatbin_only : Flag<["--"], "bang_fatbin_only">,
+  HelpText<"Compile BANG code for both fatbinary (default).">;
 def hip_link : Flag<["--"], "hip-link">,
   HelpText<"Link clang-offload-bundler bundles for HIP">;
 def no_offload_arch_EQ : Joined<["--"], "no-offload-arch=">, Flags<[NoXarchOption]>,
@@ -937,6 +955,31 @@ def cuda_path_ignore_env : Flag<["--"], "cuda-path-ignore-env">, Group<i_Group>,
   HelpText<"Ignore environment variables to detect CUDA installation">;
 def ptxas_path_EQ : Joined<["--"], "ptxas-path=">, Group<i_Group>,
   HelpText<"Path to ptxas (used for compiling CUDA code)">;
+def neuware_path_EQ : Joined<["--"], "neuware-path=">, Group<i_Group>,
+  HelpText<"neuware installation path">;
+def no_neuware_version_check : Flag<["--"], "no-neuware-version-check">,
+  HelpText<"Don't error out if the detected version of the neuware install is "
+           "too low for the requested neuware gpu architecture.">;
+def fbang_enable_global_ieee_754: Flag<["--"], "fbang_enable_global_ieee_754">, 
+  HelpText<"Enable bang IEEE 754.">;
+def fbang_disable_global_ieee_754: Flag<["--"], "fbang_disable_global_ieee_754">, 
+  HelpText<"Disable bang IEEE 754.">;
+def fbang_disable_uop_cdma: Flag<["--"], "fbang_disable_uop_cdma">, 
+  HelpText<"set no op on cdma">;
+def fbang_disable_uop_mdma: Flag<["--"], "fbang_disable_uop_mdma">, 
+  HelpText<"set no op on mdma">;
+def fbang_disable_uop_gdma: Flag<["--"], "fbang_disable_uop_gdma">, 
+  HelpText<"set no op on gdma">;
+def cnas_path_EQ : Joined<["--"], "cnas-path=">, Group<i_Group>,
+  HelpText<"Path to cnas (used for compiling BANC code)">;
+def bang_stack_on_ldram: Flag<["--"], "bang_stack_on_ldram">, 
+  HelpText<"is enabled, promote stack to LDRAM">;
+def fbang_enable_trc_mode: Flag<["--"], "fbang_enable_trc_mode">, 
+  HelpText<"is enabled, fbang_enable_trc_mode">;
+def fmlu_fast_math: Flag<["--"], "fmlu_fast_math">, 
+  HelpText<"is enabled, fmlu_fast_math">;
+def fbang_instrument_functions: Flag<["--"], "fbang_instrument_functions">, 
+  HelpText<"set fbang_instrument_functions">;
 def fgpu_flush_denormals_to_zero : Flag<["-"], "fgpu-flush-denormals-to-zero">,
   HelpText<"Flush denormal floating point values to zero in CUDA/HIP device mode.">;
 def fno_gpu_flush_denormals_to_zero : Flag<["-"], "fno-gpu-flush-denormals-to-zero">;
@@ -3725,6 +3768,10 @@ def : Flag<["-"], "nocudainc">, Alias<nogpuinc>;
 def nogpulib : Flag<["-"], "nogpulib">,
   HelpText<"Do not link device library for CUDA/HIP device compilation">;
 def : Flag<["-"], "nocudalib">, Alias<nogpulib>;
+def noneuwareinc : Flag<["-"], "noneuwareinc">, HelpText<"Do not add include paths for neuware and"
+  " do not include the default neuware wrapper headers">;
+def noneuwarelib : Flag<["-"], "noneuwarelib">,
+  HelpText<"Do not link device library for BANG device compilation">;
 def nodefaultlibs : Flag<["-"], "nodefaultlibs">;
 def nofixprebinding : Flag<["-"], "nofixprebinding">;
 def nolibc : Flag<["-"], "nolibc">;

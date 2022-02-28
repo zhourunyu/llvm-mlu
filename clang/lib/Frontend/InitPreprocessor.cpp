@@ -1182,6 +1182,9 @@ static void InitializePredefinedMacros(const TargetInfo &TI,
     const llvm::Triple &DeviceTriple = TI.getTriple();
     if (DeviceTriple.isNVPTX())
       Builder.defineMacro("__SYCL_NVPTX__", "1");
+
+    if (DeviceTriple.isAMDGCN())
+      Builder.defineMacro("__SYCL_AMDGCN__", "1");
     const llvm::Triple::SubArchType DeviceSubArch = DeviceTriple.getSubArch();
     if (DeviceTriple.isSPIR() &&
         DeviceSubArch != llvm::Triple::SPIRSubArch_fpga)
