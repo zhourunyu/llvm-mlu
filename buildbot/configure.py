@@ -22,11 +22,12 @@ def do_configure(args):
     xptifw_dir = os.path.join(abs_src_dir, "xptifw")
     libdevice_dir = os.path.join(abs_src_dir, "libdevice")
     llvm_targets_to_build = 'X86'
-    llvm_enable_projects = 'clang;' + llvm_external_projects
+    llvm_enable_projects = 'clang;' + 'llvm/tools;' + llvm_external_projects
     libclc_targets_to_build = ''
     sycl_build_pi_cuda = 'OFF'
     sycl_build_pi_esimd_cpu = 'ON'
     sycl_build_pi_rocm = 'OFF'
+    sycl_build_pi_bang = 'OFF'
     sycl_werror = 'ON'
     llvm_enable_assertions = 'ON'
     llvm_enable_doxygen = 'OFF'
@@ -43,7 +44,7 @@ def do_configure(args):
     if args.cuda:
         llvm_targets_to_build += ';NVPTX'
         llvm_enable_projects += ';libclc'
-        libclc_targets_to_build = 'nvptx64--;nvptx64--nvidiacl'
+        libclc_targets_to_build = 'nvptx64--nvidiacl'
         sycl_build_pi_cuda = 'ON'
 
     if args.disable_esimd_cpu:
@@ -57,6 +58,15 @@ def do_configure(args):
         libclc_targets_to_build = 'amdgcn--;amdgcn--amdhsa'
         sycl_build_pi_rocm = 'ON'
 
+    if args.bang:
+        #llvm_targets_to_build += ';MLU'
+        # TODO libclc should be added once,
+        # TODO when we build DPC++ with both CUDA and ROCM support
+        llvm_enable_projects += ';libclc'
+        libclc_targets_to_build = 'mlisa--'
+        #sycl_build_pi_bang = 'ON'
+
+    
     if args.no_werror:
         sycl_werror = 'OFF'
 
@@ -162,6 +172,7 @@ def main():
                         metavar="BUILD_TYPE", default="Release", help="build type: Debug, Release")
     parser.add_argument("--cuda", action='store_true', help="switch from OpenCL to CUDA")
     parser.add_argument("--rocm", action='store_true', help="swith from OpenCL to ROCM")
+    parser.add_argument("--bang", action='store_true', help="swith from OpenCL to Bang")
     parser.add_argument("--arm", action='store_true', help="build ARM support rather than x86")
     parser.add_argument("--disable-esimd-cpu", action='store_true', help="build without ESIMD_CPU support")
     parser.add_argument("--no-assertions", action='store_true', help="build without assertions")

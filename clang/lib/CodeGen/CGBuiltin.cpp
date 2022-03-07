@@ -37,6 +37,7 @@
 #include "llvm/IR/Intrinsics.h"
 #include "llvm/IR/IntrinsicsAArch64.h"
 #include "llvm/IR/IntrinsicsAMDGPU.h"
+#include "llvm/IR/IntrinsicsMLISA.h"
 #include "llvm/IR/IntrinsicsARM.h"
 #include "llvm/IR/IntrinsicsBPF.h"
 #include "llvm/IR/IntrinsicsHexagon.h"
@@ -5269,7 +5270,10 @@ static Value *EmitTargetArchBuiltinExpr(CodeGenFunction *CGF,
   case llvm::Triple::riscv32:
   case llvm::Triple::riscv64:
     return CGF->EmitRISCVBuiltinExpr(BuiltinID, E, ReturnValue);
+  case llvm::Triple::mlisa:
+    return CGF->EmitMLISABuiltinExpr(BuiltinID, E);
   default:
+    assert("Emit Target Builtin Expr don't match any Arch");
     return nullptr;
   }
 }
@@ -15827,6 +15831,45 @@ Value *CodeGenFunction::EmitAMDGPUBuiltinExpr(unsigned BuiltinID,
     }
     LLVM_FALLTHROUGH;
   }
+  default:
+    return nullptr;
+  }
+}
+
+
+Value *CodeGenFunction::EmitMLISABuiltinExpr(unsigned BuiltinID,
+                                              const CallExpr *E) {
+  llvm::AtomicOrdering AO = llvm::AtomicOrdering::SequentiallyConsistent;
+  llvm::SyncScope::ID SSID;
+  switch (BuiltinID) {
+  
+  // mlisa workitem
+  case MLISA::BI__mlvm_read_mlu_sreg_taskidx:
+    return emitRangedBuiltin(*this, Intrinsic::mlvm_read_mlu_sreg_taskidx, 0, 1024);
+  case MLISA::BI__mlvm_read_mlu_sreg_taskidy:
+    return emitRangedBuiltin(*this, Intrinsic::mlvm_read_mlu_sreg_taskidy, 0, 1024);
+  case MLISA::BI__mlvm_read_mlu_sreg_taskidz:
+    return emitRangedBuiltin(*this, Intrinsic::mlvm_read_mlu_sreg_taskidz, 0, 1024);
+
+  /*
+
+  // amdgcn workgroup size
+  case MLISA::BI__builtin_amdgcn_workgroup_size_x:
+    return EmitAMDGPUWorkGroupSize(*this, 0);
+  case MLISA::BI__builtin_amdgcn_workgroup_size_y:
+    return EmitAMDGPUWorkGroupSize(*this, 1);
+  case MLISA::BI__builtin_amdgcn_workgroup_size_z:
+    return EmitAMDGPUWorkGroupSize(*this, 2);
+
+  // amdgcn grid size
+  case MLISA::BI__builtin_amdgcn_grid_size_x:
+    return EmitAMDGPUGridSize(*this, 0);
+  case MLISA::BI__builtin_amdgcn_grid_size_y:
+    return EmitAMDGPUGridSize(*this, 1);
+  case MLISA::BI__builtin_amdgcn_grid_size_z:
+    return EmitAMDGPUGridSize(*this, 2);
+  */
+
   default:
     return nullptr;
   }
