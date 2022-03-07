@@ -50,6 +50,7 @@ set( LIBCLC_TARGETS_ALL
   nvptx64--nvidiacl
   spirv-mesa3d-
   spirv64-mesa3d-
+  mlisa--
 )
 set( LIBCLC_TEST_TARGETS_ALL
   nvptx--nvidiacl
@@ -161,6 +162,7 @@ set( nvptx--nvidiacl_devices none )
 set( nvptx64--nvidiacl_devices none )
 set( spirv-mesa3d-_devices none )
 set( spirv64-mesa3d-_devices none )
+set( mlisa--_devices none)
 
 # Setup aliases
 set( cedar_aliases palm sumo sumo2 redwood juniper )
