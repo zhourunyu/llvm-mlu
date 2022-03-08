@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/mlx/repos/llvm-mlu/build/_deps/vc-intrinsics-subbuild/CMakeFiles/vc-intrinsics-populate"
+		},
+		{
+			"file" : "/home/mlx/repos/llvm-mlu/build/_deps/vc-intrinsics-subbuild/CMakeFiles/vc-intrinsics-populate.rule"
+		},
+		{
+			"file" : "/home/mlx/repos/llvm-mlu/build/_deps/vc-intrinsics-subbuild/CMakeFiles/vc-intrinsics-populate-complete.rule"
+		},
+		{
+			"file" : "/home/mlx/repos/llvm-mlu/build/_deps/vc-intrinsics-subbuild/vc-intrinsics-populate-prefix/src/vc-intrinsics-populate-stamp/vc-intrinsics-populate-install.rule"
+		},
+		{
+			"file" : "/home/mlx/repos/llvm-mlu/build/_deps/vc-intrinsics-subbuild/vc-intrinsics-populate-prefix/src/vc-intrinsics-populate-stamp/vc-intrinsics-populate-mkdir.rule"
+		},
+		{
+			"file" : "/home/mlx/repos/llvm-mlu/build/_deps/vc-intrinsics-subbuild/vc-intrinsics-populate-prefix/src/vc-intrinsics-populate-stamp/vc-intrinsics-populate-download.rule"
+		},
+		{
+			"file" : "/home/mlx/repos/llvm-mlu/build/_deps/vc-intrinsics-subbuild/vc-intrinsics-populate-prefix/src/vc-intrinsics-populate-stamp/vc-intrinsics-populate-update.rule"
+		},
+		{
+			"file" : "/home/mlx/repos/llvm-mlu/build/_deps/vc-intrinsics-subbuild/vc-intrinsics-populate-prefix/src/vc-intrinsics-populate-stamp/vc-intrinsics-populate-patch.rule"
+		},
+		{
+			"file" : "/home/mlx/repos/llvm-mlu/build/_deps/vc-intrinsics-subbuild/vc-intrinsics-populate-prefix/src/vc-intrinsics-populate-stamp/vc-intrinsics-populate-configure.rule"
+		},
+		{
+			"file" : "/home/mlx/repos/llvm-mlu/build/_deps/vc-intrinsics-subbuild/vc-intrinsics-populate-prefix/src/vc-intrinsics-populate-stamp/vc-intrinsics-populate-build.rule"
+		},
+		{
+			"file" : "/home/mlx/repos/llvm-mlu/build/_deps/vc-intrinsics-subbuild/vc-intrinsics-populate-prefix/src/vc-intrinsics-populate-stamp/vc-intrinsics-populate-test.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"vc-intrinsics-populate"
+		],
+		"name" : "vc-intrinsics-populate"
+	}
+}

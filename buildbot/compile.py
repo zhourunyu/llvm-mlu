@@ -35,7 +35,7 @@ def do_compile(args):
         "-j", str(cpu_count)]
 
     if args.verbose:
-      cmake_cmd.append("--verbose")
+      cmake_cmd.append("-v")
 
     print("[Cmake Command]: {}".format(" ".join(cmake_cmd)))
 

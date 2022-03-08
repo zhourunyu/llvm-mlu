@@ -31,7 +31,7 @@ list(APPEND SYCL_TEST_DEPS
   sycl-toolchain
   FileCheck
   not
-  get_device_count_by_type
+#  get_device_count_by_type
   llvm-config
   llvm-cxxdump
   llvm-readobj

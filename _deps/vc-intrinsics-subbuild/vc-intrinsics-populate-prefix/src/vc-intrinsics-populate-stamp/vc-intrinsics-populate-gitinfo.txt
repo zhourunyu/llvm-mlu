@@ -1,0 +1,3 @@
+repository='https://github.com/intel/vc-intrinsics.git'
+module=''
+tag='origin'

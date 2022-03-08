@@ -193,7 +193,7 @@ add_custom_target( sycl-toolchain
           llvm-link
           llvm-objcopy
           sycl-post-link
-          sycl-ls
+          #sycl-ls
           opencl-aot
           ${XPTIFW_LIBS}
   COMMENT "Building SYCL compiler toolchain..."
@@ -243,7 +243,7 @@ set( SYCL_TOOLCHAIN_DEPLOY_COMPONENTS
      llvm-link
      llvm-objcopy
      sycl-post-link
-     sycl-ls
+     #sycl-ls
      clang-resource-headers
      OpenCL-Headers
      opencl-aot

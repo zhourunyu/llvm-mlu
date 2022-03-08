@@ -137,7 +137,11 @@ def do_configure(args):
             "-DSYCL_USE_LIBCXX=ON",
             "-DSYCL_LIBCXX_INCLUDE_PATH={}".format(args.libcxx_include),
             "-DSYCL_LIBCXX_LIBRARY_PATH={}".format(args.libcxx_library)])
-
+   
+    cmake_cmd.extend(["-DLLVMGenXIntrinsics_SOURCE_DIR=/home/mlx/repos/llvm-mlu/_deps/vc-intrinsics-src",
+			"-Docl-headers_SOURCE_DIR=/home/mlx/repos/llvm-mlu/_deps/ocl-headers-src",
+			"-DOpenCL_LIBRARY_SRC=/home/mlx/repos/llvm-mlu/_deps/ocl-icd-src",
+			"-DOpenCL_HEADERS=/home/mlx/repos/llvm-mlu/_deps/ocl-headers-src"]) 
     print("[Cmake Command]: {}".format(" ".join(cmake_cmd)))
 
     try:

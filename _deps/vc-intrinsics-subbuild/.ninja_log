@@ -1,0 +1,11 @@
+# ninja log v5
+0	43	1646356937	vc-intrinsics-populate-prefix/src/vc-intrinsics-populate-stamp/vc-intrinsics-populate-mkdir	98a7363970269370
+43	2214	1646356939	vc-intrinsics-populate-prefix/src/vc-intrinsics-populate-stamp/vc-intrinsics-populate-download	f55a5bdf08276b6c
+2214	2237	0	vc-intrinsics-populate-prefix/src/vc-intrinsics-populate-stamp/vc-intrinsics-populate-update	39752032efcb32e0
+2238	2250	1646356940	vc-intrinsics-populate-prefix/src/vc-intrinsics-populate-stamp/vc-intrinsics-populate-patch	ce476504513b2981
+2250	2264	1646356940	vc-intrinsics-populate-prefix/src/vc-intrinsics-populate-stamp/vc-intrinsics-populate-configure	12dcfce6e8e7a617
+2264	2279	1646356940	vc-intrinsics-populate-prefix/src/vc-intrinsics-populate-stamp/vc-intrinsics-populate-build	f02d8d21598d0ce9
+2279	2294	1646356940	vc-intrinsics-populate-prefix/src/vc-intrinsics-populate-stamp/vc-intrinsics-populate-install	3f53da59e09433b2
+2294	2307	1646356940	vc-intrinsics-populate-prefix/src/vc-intrinsics-populate-stamp/vc-intrinsics-populate-test	27dfe6230f7e894
+2307	2324	1646356940	CMakeFiles/vc-intrinsics-populate-complete	74d3efdcd36664ce
+2307	2324	1646356940	vc-intrinsics-populate-prefix/src/vc-intrinsics-populate-stamp/vc-intrinsics-populate-done	74d3efdcd36664ce
