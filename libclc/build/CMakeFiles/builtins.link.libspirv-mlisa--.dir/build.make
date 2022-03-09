@@ -112,7 +112,7 @@ CMakeFiles/builtins.link.libspirv-mlisa--.dir/generic/libspirv/subnormal_config.
 CMakeFiles/builtins.link.libspirv-mlisa--.dir/generic/libspirv/subnormal_helper_func.bc: CMakeFiles/builtins.link.libspirv-mlisa--.dir/flags.make
 CMakeFiles/builtins.link.libspirv-mlisa--.dir/generic/libspirv/subnormal_helper_func.bc: ../generic/libspirv/subnormal_helper_func.ll
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building LLAsm object CMakeFiles/builtins.link.libspirv-mlisa--.dir/generic/libspirv/subnormal_helper_func.bc"
-	/home/mlx/repos/llvm-mlu/build/bin/clang-13 -E -P $(LLAsm_DEFINES) $(LLAsm_INCLUDES) $(LLAsm_FLAGS) -I /home/mlx/repos/llvm-mlu/libclc/generic/libspirv -cl-no-stdinc -x cl /home/mlx/repos/llvm-mlu/libclc/generic/libspirv/subnormal_helper_func.ll -o CMakeFiles/builtins.link.libspirv-mlisa--.dir/generic/libspirv/subnormal_helper_func.bc.temp
+	/home/mlx/repos/llvm-mlu/build/bin/clang-13 -E -P $(LLAsm_DEFINES) $(LLAsm_INCLUDES) $(LLAsm_FLAGS) -I /home/mlx/repos/llvm-mlu/libclc/generic/libspirv  -x cl /home/mlx/repos/llvm-mlu/libclc/generic/libspirv/subnormal_helper_func.ll -o CMakeFiles/builtins.link.libspirv-mlisa--.dir/generic/libspirv/subnormal_helper_func.bc.temp
 	/home/mlx/repos/llvm-mlu/build/bin/llvm-as -o CMakeFiles/builtins.link.libspirv-mlisa--.dir/generic/libspirv/subnormal_helper_func.bc CMakeFiles/builtins.link.libspirv-mlisa--.dir/generic/libspirv/subnormal_helper_func.bc.temp
 
 CMakeFiles/builtins.link.libspirv-mlisa--.dir/generic/libspirv/async/async_work_group_strided_copy.bc: CMakeFiles/builtins.link.libspirv-mlisa--.dir/flags.make
