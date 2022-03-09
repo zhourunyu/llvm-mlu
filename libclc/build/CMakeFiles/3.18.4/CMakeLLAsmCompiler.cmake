@@ -1,0 +1,10 @@
+set(CMAKE_LLAsm_PREPROCESSOR "/home/mlx/repos/llvm-mlu/build/bin/clang-13")
+set(CMAKE_LLAsm_COMPILER "/home/mlx/repos/llvm-mlu/build/bin/llvm-as")
+set(CMAKE_LLAsm_ARCHIVE "/home/mlx/repos/llvm-mlu/build/bin/llvm-link")
+set(CMAKE_LLAsm_COMPILER_LOADED 1)
+
+set(CMAKE_LLAsm_SOURCE_FILE_EXTENSIONS ll)
+set(CMAKE_LLAsm_OUTPUT_EXTENSION .bc)
+set(CMAKE_LLAsm_OUTPUT_EXTENSION_REPLACE 1)
+set(CMAKE_STATIC_LIBRARY_PREFIX_LLAsm "")
+set(CMAKE_STATIC_LIBRARY_SUFFIX_LLAsm ".bc")

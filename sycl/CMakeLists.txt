@@ -191,6 +191,8 @@ add_custom_target( sycl-toolchain
           llvm-no-spir-kernel
           llvm-spirv
           llvm-link
+		  llvm-config
+		  llvm-config
           llvm-objcopy
           sycl-post-link
           #sycl-ls
@@ -240,6 +242,7 @@ set( SYCL_TOOLCHAIN_DEPLOY_COMPONENTS
      llvm-foreach
      llvm-no-spir-kernel
      llvm-spirv
+	 llvm-config
      llvm-link
      llvm-objcopy
      sycl-post-link

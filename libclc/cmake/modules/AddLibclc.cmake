@@ -108,6 +108,7 @@ macro(add_libclc_builtin_set arch_suffix)
 
   # nvptx-- targets don't include workitem builtins
   if( NOT ${t} MATCHES ".*ptx.*--$" )
+    message(" === check external calls ===  ")
     add_test( NAME external-calls-${obj_suffix}
       COMMAND ./check_external_calls.sh ${LIBCLC_LIBRARY_OUTPUT_INTDIR}/${obj_suffix}
       WORKING_DIRECTORY ${LIBCLC_LIBRARY_OUTPUT_INTDIR} )

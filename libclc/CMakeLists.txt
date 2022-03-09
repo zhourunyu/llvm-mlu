@@ -134,6 +134,8 @@ endif()
 
 list( SORT LIBCLC_TARGETS_TO_BUILD )
 
+set(LLVM_SPIRV /home/mlx/repos/llvm-mlu/build/bin/llvm-spirv)
+
 if( "spirv-mesa3d-" IN_LIST LIBCLC_TARGETS_TO_BUILD OR "spirv64-mesa3d-" IN_LIST LIBCLC_TARGETS_TO_BUILD )
 	if( NOT LLVM_SPIRV )
 		message( FATAL_ERROR "SPIR-V targets requested, but spirv-tools is not installed" )

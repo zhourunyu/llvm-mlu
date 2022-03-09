@@ -1,0 +1,264 @@
+Performing C SOURCE FILE Test C_SUPPORTS_WERROR_UNGUARDED_AVAILABILITY_NEW failed with the following output:
+Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_3ce7f/fast && /usr/bin/make  -f CMakeFiles/cmTC_3ce7f.dir/build.make CMakeFiles/cmTC_3ce7f.dir/build
+make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_3ce7f.dir/src.c.o
+/usr/bin/cc   -Werror=date-time -DC_SUPPORTS_WERROR_UNGUARDED_AVAILABILITY_NEW   -Werror -Werror=unguarded-availability-new -o CMakeFiles/cmTC_3ce7f.dir/src.c.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.c
+cc1: error: -Werror=unguarded-availability-new: no option -Wunguarded-availability-new
+CMakeFiles/cmTC_3ce7f.dir/build.make:84: recipe for target 'CMakeFiles/cmTC_3ce7f.dir/src.c.o' failed
+make[1]: *** [CMakeFiles/cmTC_3ce7f.dir/src.c.o] Error 1
+make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Makefile:140: recipe for target 'cmTC_3ce7f/fast' failed
+make: *** [cmTC_3ce7f/fast] Error 2
+
+
+Source file was:
+int main(void) { return 0; }
+Performing C++ SOURCE FILE Test CXX_SUPPORTS_WERROR_UNGUARDED_AVAILABILITY_NEW failed with the following output:
+Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_fd481/fast && /usr/bin/make  -f CMakeFiles/cmTC_fd481.dir/build.make CMakeFiles/cmTC_fd481.dir/build
+make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_fd481.dir/src.cxx.o
+/usr/bin/c++   -fvisibility-inlines-hidden -Werror=date-time -DCXX_SUPPORTS_WERROR_UNGUARDED_AVAILABILITY_NEW   -Werror -Werror=unguarded-availability-new -o CMakeFiles/cmTC_fd481.dir/src.cxx.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx
+cc1plus: error: -Werror=unguarded-availability-new: no option -Wunguarded-availability-new
+CMakeFiles/cmTC_fd481.dir/build.make:84: recipe for target 'CMakeFiles/cmTC_fd481.dir/src.cxx.o' failed
+make[1]: *** [CMakeFiles/cmTC_fd481.dir/src.cxx.o] Error 1
+make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Makefile:140: recipe for target 'cmTC_fd481/fast' failed
+make: *** [cmTC_fd481/fast] Error 2
+
+
+Source file was:
+int main() { return 0; }
+Performing C SOURCE FILE Test C_SUPPORTS_COVERED_SWITCH_DEFAULT_FLAG failed with the following output:
+Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_f2273/fast && /usr/bin/make  -f CMakeFiles/cmTC_f2273.dir/build.make CMakeFiles/cmTC_f2273.dir/build
+make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_f2273.dir/src.c.o
+/usr/bin/cc   -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wno-missing-field-initializers -Wimplicit-fallthrough -DC_SUPPORTS_COVERED_SWITCH_DEFAULT_FLAG   -Werror -Wcovered-switch-default -o CMakeFiles/cmTC_f2273.dir/src.c.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.c
+cc: error: unrecognized command line option '-Wcovered-switch-default'; did you mean '-Wno-switch-default'?
+CMakeFiles/cmTC_f2273.dir/build.make:84: recipe for target 'CMakeFiles/cmTC_f2273.dir/src.c.o' failed
+make[1]: *** [CMakeFiles/cmTC_f2273.dir/src.c.o] Error 1
+make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Makefile:140: recipe for target 'cmTC_f2273/fast' failed
+make: *** [cmTC_f2273/fast] Error 2
+
+
+Source file was:
+int main(void) { return 0; }
+Performing C++ SOURCE FILE Test CXX_SUPPORTS_COVERED_SWITCH_DEFAULT_FLAG failed with the following output:
+Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_51945/fast && /usr/bin/make  -f CMakeFiles/cmTC_51945.dir/build.make CMakeFiles/cmTC_51945.dir/build
+make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_51945.dir/src.cxx.o
+/usr/bin/c++   -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -DCXX_SUPPORTS_COVERED_SWITCH_DEFAULT_FLAG   -Werror -Wcovered-switch-default -o CMakeFiles/cmTC_51945.dir/src.cxx.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx
+c++: error: unrecognized command line option '-Wcovered-switch-default'; did you mean '-Wno-switch-default'?
+CMakeFiles/cmTC_51945.dir/build.make:84: recipe for target 'CMakeFiles/cmTC_51945.dir/src.cxx.o' failed
+make[1]: *** [CMakeFiles/cmTC_51945.dir/src.cxx.o] Error 1
+make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Makefile:140: recipe for target 'cmTC_51945/fast' failed
+make: *** [cmTC_51945/fast] Error 2
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test CXX_SUPPORTS_CLASS_MEMACCESS_FLAG failed with the following output:
+Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_79834/fast && /usr/bin/make  -f CMakeFiles/cmTC_79834.dir/build.make CMakeFiles/cmTC_79834.dir/build
+make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_79834.dir/src.cxx.o
+/usr/bin/c++   -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -DCXX_SUPPORTS_CLASS_MEMACCESS_FLAG   -Wclass-memaccess -o CMakeFiles/cmTC_79834.dir/src.cxx.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx
+c++: error: unrecognized command line option '-Wclass-memaccess'
+CMakeFiles/cmTC_79834.dir/build.make:84: recipe for target 'CMakeFiles/cmTC_79834.dir/src.cxx.o' failed
+make[1]: *** [CMakeFiles/cmTC_79834.dir/src.cxx.o] Error 1
+make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Makefile:140: recipe for target 'cmTC_79834/fast' failed
+make: *** [cmTC_79834/fast] Error 2
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test CXX_SUPPORTS_REDUNDANT_MOVE_FLAG failed with the following output:
+Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_67c73/fast && /usr/bin/make  -f CMakeFiles/cmTC_67c73.dir/build.make CMakeFiles/cmTC_67c73.dir/build
+make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_67c73.dir/src.cxx.o
+/usr/bin/c++   -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -DCXX_SUPPORTS_REDUNDANT_MOVE_FLAG   -Wredundant-move -o CMakeFiles/cmTC_67c73.dir/src.cxx.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx
+c++: error: unrecognized command line option '-Wredundant-move'; did you mean '-Wredundant-decls'?
+CMakeFiles/cmTC_67c73.dir/build.make:84: recipe for target 'CMakeFiles/cmTC_67c73.dir/src.cxx.o' failed
+make[1]: *** [CMakeFiles/cmTC_67c73.dir/src.cxx.o] Error 1
+make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Makefile:140: recipe for target 'cmTC_67c73/fast' failed
+make: *** [cmTC_67c73/fast] Error 2
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test CXX_SUPPORTS_PESSIMIZING_MOVE_FLAG failed with the following output:
+Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_fcaf7/fast && /usr/bin/make  -f CMakeFiles/cmTC_fcaf7.dir/build.make CMakeFiles/cmTC_fcaf7.dir/build
+make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_fcaf7.dir/src.cxx.o
+/usr/bin/c++   -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -DCXX_SUPPORTS_PESSIMIZING_MOVE_FLAG   -Wpessimizing-move -o CMakeFiles/cmTC_fcaf7.dir/src.cxx.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx
+c++: error: unrecognized command line option '-Wpessimizing-move'
+CMakeFiles/cmTC_fcaf7.dir/build.make:84: recipe for target 'CMakeFiles/cmTC_fcaf7.dir/src.cxx.o' failed
+make[1]: *** [CMakeFiles/cmTC_fcaf7.dir/src.cxx.o] Error 1
+make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Makefile:140: recipe for target 'cmTC_fcaf7/fast' failed
+make: *** [cmTC_fcaf7/fast] Error 2
+
+
+Source file was:
+int main() { return 0; }
+Performing C SOURCE FILE Test C_SUPPORTS_DELETE_NON_VIRTUAL_DTOR_FLAG failed with the following output:
+Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_3f748/fast && /usr/bin/make  -f CMakeFiles/cmTC_3f748.dir/build.make CMakeFiles/cmTC_3f748.dir/build
+make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_3f748.dir/src.c.o
+/usr/bin/cc   -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wno-missing-field-initializers -Wimplicit-fallthrough -DC_SUPPORTS_DELETE_NON_VIRTUAL_DTOR_FLAG   -Werror -Wdelete-non-virtual-dtor -o CMakeFiles/cmTC_3f748.dir/src.c.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.c
+cc1: error: command line option '-Wdelete-non-virtual-dtor' is valid for C++/ObjC++ but not for C [-Werror]
+cc1: all warnings being treated as errors
+CMakeFiles/cmTC_3f748.dir/build.make:84: recipe for target 'CMakeFiles/cmTC_3f748.dir/src.c.o' failed
+make[1]: *** [CMakeFiles/cmTC_3f748.dir/src.c.o] Error 1
+make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Makefile:140: recipe for target 'cmTC_3f748/fast' failed
+make: *** [cmTC_3f748/fast] Error 2
+
+
+Source file was:
+int main(void) { return 0; }
+Performing C++ SOURCE FILE Test CXX_WSUGGEST_OVERRIDE_ALLOWS_ONLY_FINAL failed with the following output:
+Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_5b3fd/fast && /usr/bin/make  -f CMakeFiles/cmTC_5b3fd.dir/build.make CMakeFiles/cmTC_5b3fd.dir/build
+make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_5b3fd.dir/src.cxx.o
+/usr/bin/c++   -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-noexcept-type -Wdelete-non-virtual-dtor -DCXX_WSUGGEST_OVERRIDE_ALLOWS_ONLY_FINAL  -Werror=suggest-override -o CMakeFiles/cmTC_5b3fd.dir/src.cxx.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx
+/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx:2:67: error: ‘virtual void derived::anchor()’ can be marked override [-Werror=suggest-override]
+                                class derived : base {public: void anchor() final;};
+                                                                   ^~~~~~
+cc1plus: some warnings being treated as errors
+CMakeFiles/cmTC_5b3fd.dir/build.make:84: recipe for target 'CMakeFiles/cmTC_5b3fd.dir/src.cxx.o' failed
+make[1]: *** [CMakeFiles/cmTC_5b3fd.dir/src.cxx.o] Error 1
+make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Makefile:140: recipe for target 'cmTC_5b3fd/fast' failed
+make: *** [cmTC_5b3fd/fast] Error 2
+
+
+Source file was:
+class base {public: virtual void anchor();};
+                               class derived : base {public: void anchor() final;};
+                               int main() { return 0; }
+Performing C SOURCE FILE Test C_WCOMMENT_ALLOWS_LINE_WRAP failed with the following output:
+Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_4ef53/fast && /usr/bin/make  -f CMakeFiles/cmTC_4ef53.dir/build.make CMakeFiles/cmTC_4ef53.dir/build
+make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_4ef53.dir/src.c.o
+/usr/bin/cc   -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wno-missing-field-initializers -Wimplicit-fallthrough -DC_WCOMMENT_ALLOWS_LINE_WRAP  -Werror -Wcomment -o CMakeFiles/cmTC_4ef53.dir/src.c.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.c
+/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.c:1:1: error: multi-line comment [-Werror=comment]
+ // \
+ ^
+cc1: all warnings being treated as errors
+CMakeFiles/cmTC_4ef53.dir/build.make:84: recipe for target 'CMakeFiles/cmTC_4ef53.dir/src.c.o' failed
+make[1]: *** [CMakeFiles/cmTC_4ef53.dir/src.c.o] Error 1
+make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Makefile:140: recipe for target 'cmTC_4ef53/fast' failed
+make: *** [cmTC_4ef53/fast] Error 2
+
+
+Source file was:
+// \
+//
+int main() {return 0;}
+Performing C SOURCE FILE Test C_SUPPORTS_STRING_CONVERSION_FLAG failed with the following output:
+Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_851e5/fast && /usr/bin/make  -f CMakeFiles/cmTC_851e5.dir/build.make CMakeFiles/cmTC_851e5.dir/build
+make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_851e5.dir/src.c.o
+/usr/bin/cc   -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-comment -DC_SUPPORTS_STRING_CONVERSION_FLAG   -Werror -Wstring-conversion -o CMakeFiles/cmTC_851e5.dir/src.c.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.c
+cc: error: unrecognized command line option '-Wstring-conversion'; did you mean '-Wint-conversion'?
+CMakeFiles/cmTC_851e5.dir/build.make:84: recipe for target 'CMakeFiles/cmTC_851e5.dir/src.c.o' failed
+make[1]: *** [CMakeFiles/cmTC_851e5.dir/src.c.o] Error 1
+make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Makefile:140: recipe for target 'cmTC_851e5/fast' failed
+make: *** [cmTC_851e5/fast] Error 2
+
+
+Source file was:
+int main(void) { return 0; }
+Performing C++ SOURCE FILE Test CXX_SUPPORTS_STRING_CONVERSION_FLAG failed with the following output:
+Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_8ba4a/fast && /usr/bin/make  -f CMakeFiles/cmTC_8ba4a.dir/build.make CMakeFiles/cmTC_8ba4a.dir/build
+make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_8ba4a.dir/src.cxx.o
+/usr/bin/c++   -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-noexcept-type -Wdelete-non-virtual-dtor -Wno-comment -DCXX_SUPPORTS_STRING_CONVERSION_FLAG   -Werror -Wstring-conversion -o CMakeFiles/cmTC_8ba4a.dir/src.cxx.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx
+c++: error: unrecognized command line option '-Wstring-conversion'; did you mean '-Wint-conversion'?
+CMakeFiles/cmTC_8ba4a.dir/build.make:84: recipe for target 'CMakeFiles/cmTC_8ba4a.dir/src.cxx.o' failed
+make[1]: *** [CMakeFiles/cmTC_8ba4a.dir/src.cxx.o] Error 1
+make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Makefile:140: recipe for target 'cmTC_8ba4a/fast' failed
+make: *** [cmTC_8ba4a/fast] Error 2
+
+
+Source file was:
+int main() { return 0; }
+Determining if the os_signpost_interval_begin exist failed with the following output:
+Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_3f326/fast && /usr/bin/make  -f CMakeFiles/cmTC_3f326.dir/build.make CMakeFiles/cmTC_3f326.dir/build
+make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_3f326.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-comment -Wmisleading-indentation -ffunction-sections -fdata-sections  -o CMakeFiles/cmTC_3f326.dir/CheckSymbolExists.c.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:2:10: fatal error: os/signpost.h: No such file or directory
+ #include <os/signpost.h>
+          ^~~~~~~~~~~~~~~
+compilation terminated.
+CMakeFiles/cmTC_3f326.dir/build.make:84: recipe for target 'CMakeFiles/cmTC_3f326.dir/CheckSymbolExists.c.o' failed
+make[1]: *** [CMakeFiles/cmTC_3f326.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Makefile:140: recipe for target 'cmTC_3f326/fast' failed
+make: *** [cmTC_3f326/fast] Error 2
+
+
+File /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <os/signpost.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef os_signpost_interval_begin
+  return ((int*)(&os_signpost_interval_begin))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the LLAsm compiler works failed with the following output:
+Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_00375/fast && /usr/bin/make  -f CMakeFiles/cmTC_00375.dir/build.make CMakeFiles/cmTC_00375.dir/build
+make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Building LLAsm object CMakeFiles/cmTC_00375.dir/testLLAsmCompiler.bc
+/home/mlx/repos/llvm-mlu/build/bin/clang-13 -E -P    -cl-no-stdinc -x cl /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/testLLAsmCompiler.ll -o CMakeFiles/cmTC_00375.dir/testLLAsmCompiler.bc.temp
+/home/mlx/repos/llvm-mlu/build/bin/llvm-as -o CMakeFiles/cmTC_00375.dir/testLLAsmCompiler.bc CMakeFiles/cmTC_00375.dir/testLLAsmCompiler.bc.temp
+make[1]: execvp: /home/mlx/repos/llvm-mlu/build/bin/llvm-as: Permission denied
+CMakeFiles/cmTC_00375.dir/build.make:84: recipe for target 'CMakeFiles/cmTC_00375.dir/testLLAsmCompiler.bc' failed
+make[1]: *** [CMakeFiles/cmTC_00375.dir/testLLAsmCompiler.bc] Error 127
+make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
+Makefile:140: recipe for target 'cmTC_00375/fast' failed
+make: *** [cmTC_00375/fast] Error 2
+
+
+
