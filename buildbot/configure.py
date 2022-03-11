@@ -27,7 +27,7 @@ def do_configure(args):
     sycl_build_pi_cuda = 'OFF'
     sycl_build_pi_esimd_cpu = 'ON'
     sycl_build_pi_rocm = 'OFF'
-    sycl_build_pi_bang = 'OFF'
+    sycl_build_pi_cnrt = 'OFF'
     sycl_werror = 'ON'
     llvm_enable_assertions = 'ON'
     llvm_enable_doxygen = 'OFF'
@@ -64,7 +64,7 @@ def do_configure(args):
         # TODO when we build DPC++ with both CUDA and ROCM support
         llvm_enable_projects += ';libclc'
         libclc_targets_to_build = 'mlisa--'
-        sycl_build_pi_bang = 'ON'
+        sycl_build_pi_cnrt = 'ON'
 
     if args.no_werror:
         sycl_werror = 'OFF'
@@ -101,7 +101,7 @@ def do_configure(args):
         "-DLIBCLC_TARGETS_TO_BUILD={}".format(libclc_targets_to_build),
         "-DSYCL_BUILD_PI_CUDA={}".format(sycl_build_pi_cuda),
         "-DSYCL_BUILD_PI_ROCM={}".format(sycl_build_pi_rocm),
-        "-DSYCL_BUILD_PI_BANG={}".format(sycl_build_pi_bang),
+        "-DSYCL_BUILD_PI_CNRT={}".format(sycl_build_pi_cnrt),
         "-DLLVM_BUILD_TOOLS=ON",
         "-DSYCL_ENABLE_WERROR={}".format(sycl_werror),
         "-DCMAKE_INSTALL_PREFIX={}".format(install_dir),

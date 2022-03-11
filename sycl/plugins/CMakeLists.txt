@@ -12,7 +12,7 @@ if(SYCL_BUILD_PI_ROCM)
   add_subdirectory(rocm)
 endif()
 
-if(SYCL_BUILD_PI_BANG)
+if(SYCL_BUILD_PI_CNRT)
   add_subdirectory(cnrt)
 endif()
 
