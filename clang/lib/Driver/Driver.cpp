@@ -3929,13 +3929,8 @@ class OffloadingActionBuilder final {
 
       auto *AA = C.getDriver().ConstructPhaseAction(C, Args, phases::Assemble,
                                                     BA, AssociatedOffloadKind);
-
-      ActionList AL = {AA};
-      Action *LinkAction = C.MakeAction<LinkJobAction>(AL, types::TY_Image);
-      ActionList HIPActions = {LinkAction};
-      Action *HIPFatBinary =
-          C.MakeAction<LinkJobAction>(HIPActions, types::TY_Bang_FATBIN);
-      return HIPFatBinary;
+      ActionList DeviceActions = {BA, AA};
+      return C.MakeAction<LinkJobAction>(DeviceActions, types::TY_CN_FATBIN);;
     }
 
   public:
