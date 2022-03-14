@@ -17,7 +17,7 @@ const char *BangVirtualArchToString(BangVirtualArch A) {
 }
 
 const char *BangArchToString(BangArch A) {
-  return "MTP270";
+  return "mtp_270";
 }
 
 // The input should have the form "MTP100".

@@ -4446,6 +4446,25 @@ void Clang::ConstructJob(Compilation &C, const JobAction &JA,
           IsHeaderModulePrecompile || Inputs.size() == 1) &&
          "Unable to handle multiple inputs.");
 
+
+  // Construct llc command.
+  // The output is an asm file
+  // "/usr/local/neuware/lib/llvm-mm/bin/llc" "--filetype=asm"   "--march=mlisa" "--mcpu=mtp_270" "/tmp/vector_add-2870aa.bc" "-o" "/tmp/vector_add-74376d.s"
+  if (IsSYCL && JA.getType() == types::TY_PP_Asm && Triple.isMLISA()){
+    ArgStringList LlcArgs{"-filetype=asm", "--march=mlisa", "--mcpu=mtp_270", "-o", Output.getFilename()};
+    for (const auto &II : Inputs) {
+      addDashXForInput(Args, II, LlcArgs);
+      if (II.isFilename())
+        LlcArgs.push_back(II.getFilename());
+      else
+        II.getInputArg().renderAsInput(Args, LlcArgs);
+    }
+    const char *Llc = "/usr/local/neuware/lib/llvm-mm/bin/llc";
+    C.addCommand(std::make_unique<Command>(
+          JA, *this, ResponseFileSupport::None(), Llc, LlcArgs, Inputs, Output));
+    return;
+  }
+
   // Perform the SYCL host compilation using an external compiler if the user
   // requested.
   if (Args.hasArg(options::OPT_fsycl_host_compiler_EQ) && IsSYCL &&

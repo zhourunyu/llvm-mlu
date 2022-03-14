@@ -38,6 +38,17 @@ set(files
   avxvnniintrin.h
   bmi2intrin.h
   bmiintrin.h
+  #bang_device_functions_decls.h
+  #bang_device_functions_extra.h
+  #bang_device_functions.h
+  #bang_device_functions_math.h
+  #bang_device_profile.h
+  #bang_device_types.h
+  #bang_grid.h
+  #bang.h
+  #bang_math_decls.h
+  #bang_pipeline.h
+  #bang_runtime.h
   __clang_cuda_builtin_vars.h
   __clang_cuda_math.h
   __clang_cuda_cmath.h
@@ -51,6 +62,12 @@ set(files
   __clang_hip_cmath.h
   __clang_hip_math.h
   __clang_hip_runtime_wrapper.h
+  #__clang_bang_builtin_vars.h
+  #__clang_bang_math_forward_declares.h
+  #__clang_bang_intrinsics.h
+  #__clang_bang_math_tables.h
+  #__clang_bang_cmath.h
+  #__clang_bang_runtime_wrapper.h
   cetintrin.h
   cet.h
   cldemoteintrin.h
@@ -143,6 +160,7 @@ set(cuda_wrapper_files
   cuda_wrappers/complex
   cuda_wrappers/new
 )
+
 
 set(ppc_wrapper_files
   ppc_wrappers/mmintrin.h
