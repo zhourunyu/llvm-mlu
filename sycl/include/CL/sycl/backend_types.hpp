@@ -62,6 +62,7 @@ inline std::ostream &operator<<(std::ostream &Out, backend be) {
     break;
   case backend::cnrt:
     Out << "cnrt";
+    break;
   case backend::all:
     Out << "all";
   }
