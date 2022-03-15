@@ -28,10 +28,10 @@ The C compiler identification is GNU, found in "/home/mlx/repos/llvm-mlu/libclc/
 Detecting CXX compiler ABI info compiled with the following output:
 Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_080d9/fast && /usr/bin/make  -f CMakeFiles/cmTC_080d9.dir/build.make CMakeFiles/cmTC_080d9.dir/build
+Run Build Command(s):/usr/bin/make cmTC_e3da9/fast && /usr/bin/make  -f CMakeFiles/cmTC_e3da9.dir/build.make CMakeFiles/cmTC_e3da9.dir/build
 make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_080d9.dir/CMakeCXXCompilerABI.cpp.o
-/usr/bin/c++   -v -o CMakeFiles/cmTC_080d9.dir/CMakeCXXCompilerABI.cpp.o -c /usr/local/lib/python3.6/dist-packages/cmake/data/share/cmake-3.18/Modules/CMakeCXXCompilerABI.cpp
+Building CXX object CMakeFiles/cmTC_e3da9.dir/CMakeCXXCompilerABI.cpp.o
+/usr/bin/c++   -v -o CMakeFiles/cmTC_e3da9.dir/CMakeCXXCompilerABI.cpp.o -c /usr/local/lib/python3.6/dist-packages/cmake/data/share/cmake-3.18/Modules/CMakeCXXCompilerABI.cpp
 Using built-in specs.
 COLLECT_GCC=/usr/bin/c++
 OFFLOAD_TARGET_NAMES=nvptx-none
@@ -40,8 +40,8 @@ Target: x86_64-linux-gnu
 Configured with: ../src/configure -v --with-pkgversion='Ubuntu 7.5.0-3ubuntu1~18.04' --with-bugurl=file:///usr/share/doc/gcc-7/README.Bugs --enable-languages=c,ada,c++,go,brig,d,fortran,objc,obj-c++ --prefix=/usr --with-gcc-major-version-only --program-suffix=-7 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-libmpx --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu
 Thread model: posix
 gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04) 
-COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_080d9.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
- /usr/lib/gcc/x86_64-linux-gnu/7/cc1plus -quiet -v -imultiarch x86_64-linux-gnu -D_GNU_SOURCE /usr/local/lib/python3.6/dist-packages/cmake/data/share/cmake-3.18/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpbase CMakeCXXCompilerABI.cpp -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_080d9.dir/CMakeCXXCompilerABI.cpp.o -version -fstack-protector-strong -Wformat -Wformat-security -o /tmp/ccbM9bO7.s
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_e3da9.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
+ /usr/lib/gcc/x86_64-linux-gnu/7/cc1plus -quiet -v -imultiarch x86_64-linux-gnu -D_GNU_SOURCE /usr/local/lib/python3.6/dist-packages/cmake/data/share/cmake-3.18/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpbase CMakeCXXCompilerABI.cpp -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_e3da9.dir/CMakeCXXCompilerABI.cpp.o -version -fstack-protector-strong -Wformat -Wformat-security -o /tmp/ccnBeH6I.s
 GNU C++14 (Ubuntu 7.5.0-3ubuntu1~18.04) version 7.5.0 (x86_64-linux-gnu)
 	compiled by GNU C version 7.5.0, GMP version 6.1.2, MPFR version 4.0.1, MPC version 1.1.0, isl version isl-0.19-GMP
 
@@ -65,15 +65,15 @@ GNU C++14 (Ubuntu 7.5.0-3ubuntu1~18.04) version 7.5.0 (x86_64-linux-gnu)
 
 GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 Compiler executable checksum: 3eb3dc290cd5714c3e1c3ae751116f07
-COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_080d9.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
- as -v --64 -o CMakeFiles/cmTC_080d9.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccbM9bO7.s
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_e3da9.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
+ as -v --64 -o CMakeFiles/cmTC_e3da9.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccnBeH6I.s
 GNU assembler version 2.30 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.30
 COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/
 LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../:/lib/:/usr/lib/
-COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_080d9.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
-Linking CXX executable cmTC_080d9
-/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_080d9.dir/link.txt --verbose=1
-/usr/bin/c++  -v CMakeFiles/cmTC_080d9.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_080d9 
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_e3da9.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
+Linking CXX executable cmTC_e3da9
+/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e3da9.dir/link.txt --verbose=1
+/usr/bin/c++  -v CMakeFiles/cmTC_e3da9.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_e3da9 
 Using built-in specs.
 COLLECT_GCC=/usr/bin/c++
 COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/7/lto-wrapper
@@ -85,9 +85,9 @@ Thread model: posix
 gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04) 
 COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/
 LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../:/lib/:/usr/lib/
-COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_080d9' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
- /usr/lib/gcc/x86_64-linux-gnu/7/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/7/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/7/lto-wrapper -plugin-opt=-fresolution=/tmp/ccPNCjM8.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_080d9 /usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/7/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/7 -L/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/7/../../.. CMakeFiles/cmTC_080d9.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/7/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crtn.o
-COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_080d9' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_e3da9' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
+ /usr/lib/gcc/x86_64-linux-gnu/7/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/7/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/7/lto-wrapper -plugin-opt=-fresolution=/tmp/ccHaPqcO.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_e3da9 /usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/7/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/7 -L/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/7/../../.. CMakeFiles/cmTC_e3da9.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/7/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crtn.o
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_e3da9' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
 make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
 
 
@@ -119,10 +119,10 @@ Parsed CXX implicit link information from above output:
   link line regex: [^( *|.*[/\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
   ignore line: [Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command(s):/usr/bin/make cmTC_080d9/fast && /usr/bin/make  -f CMakeFiles/cmTC_080d9.dir/build.make CMakeFiles/cmTC_080d9.dir/build]
+  ignore line: [Run Build Command(s):/usr/bin/make cmTC_e3da9/fast && /usr/bin/make  -f CMakeFiles/cmTC_e3da9.dir/build.make CMakeFiles/cmTC_e3da9.dir/build]
   ignore line: [make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp']
-  ignore line: [Building CXX object CMakeFiles/cmTC_080d9.dir/CMakeCXXCompilerABI.cpp.o]
-  ignore line: [/usr/bin/c++   -v -o CMakeFiles/cmTC_080d9.dir/CMakeCXXCompilerABI.cpp.o -c /usr/local/lib/python3.6/dist-packages/cmake/data/share/cmake-3.18/Modules/CMakeCXXCompilerABI.cpp]
+  ignore line: [Building CXX object CMakeFiles/cmTC_e3da9.dir/CMakeCXXCompilerABI.cpp.o]
+  ignore line: [/usr/bin/c++   -v -o CMakeFiles/cmTC_e3da9.dir/CMakeCXXCompilerABI.cpp.o -c /usr/local/lib/python3.6/dist-packages/cmake/data/share/cmake-3.18/Modules/CMakeCXXCompilerABI.cpp]
   ignore line: [Using built-in specs.]
   ignore line: [COLLECT_GCC=/usr/bin/c++]
   ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none]
@@ -131,8 +131,8 @@ Parsed CXX implicit link information from above output:
   ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 7.5.0-3ubuntu1~18.04' --with-bugurl=file:///usr/share/doc/gcc-7/README.Bugs --enable-languages=c ada c++ go brig d fortran objc obj-c++ --prefix=/usr --with-gcc-major-version-only --program-suffix=-7 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-libmpx --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu]
   ignore line: [Thread model: posix]
   ignore line: [gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04) ]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_080d9.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64']
-  ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/7/cc1plus -quiet -v -imultiarch x86_64-linux-gnu -D_GNU_SOURCE /usr/local/lib/python3.6/dist-packages/cmake/data/share/cmake-3.18/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpbase CMakeCXXCompilerABI.cpp -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_080d9.dir/CMakeCXXCompilerABI.cpp.o -version -fstack-protector-strong -Wformat -Wformat-security -o /tmp/ccbM9bO7.s]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_e3da9.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64']
+  ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/7/cc1plus -quiet -v -imultiarch x86_64-linux-gnu -D_GNU_SOURCE /usr/local/lib/python3.6/dist-packages/cmake/data/share/cmake-3.18/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpbase CMakeCXXCompilerABI.cpp -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_e3da9.dir/CMakeCXXCompilerABI.cpp.o -version -fstack-protector-strong -Wformat -Wformat-security -o /tmp/ccnBeH6I.s]
   ignore line: [GNU C++14 (Ubuntu 7.5.0-3ubuntu1~18.04) version 7.5.0 (x86_64-linux-gnu)]
   ignore line: [	compiled by GNU C version 7.5.0  GMP version 6.1.2  MPFR version 4.0.1  MPC version 1.1.0  isl version isl-0.19-GMP]
   ignore line: []
@@ -156,15 +156,15 @@ Parsed CXX implicit link information from above output:
   ignore line: []
   ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
   ignore line: [Compiler executable checksum: 3eb3dc290cd5714c3e1c3ae751116f07]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_080d9.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64']
-  ignore line: [ as -v --64 -o CMakeFiles/cmTC_080d9.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccbM9bO7.s]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_e3da9.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64']
+  ignore line: [ as -v --64 -o CMakeFiles/cmTC_e3da9.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccnBeH6I.s]
   ignore line: [GNU assembler version 2.30 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.30]
   ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/]
   ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../:/lib/:/usr/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_080d9.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64']
-  ignore line: [Linking CXX executable cmTC_080d9]
-  ignore line: [/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_080d9.dir/link.txt --verbose=1]
-  ignore line: [/usr/bin/c++  -v CMakeFiles/cmTC_080d9.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_080d9 ]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_e3da9.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64']
+  ignore line: [Linking CXX executable cmTC_e3da9]
+  ignore line: [/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e3da9.dir/link.txt --verbose=1]
+  ignore line: [/usr/bin/c++  -v CMakeFiles/cmTC_e3da9.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_e3da9 ]
   ignore line: [Using built-in specs.]
   ignore line: [COLLECT_GCC=/usr/bin/c++]
   ignore line: [COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/7/lto-wrapper]
@@ -176,13 +176,13 @@ Parsed CXX implicit link information from above output:
   ignore line: [gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04) ]
   ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/]
   ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../:/lib/:/usr/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_080d9' '-shared-libgcc' '-mtune=generic' '-march=x86-64']
-  link line: [ /usr/lib/gcc/x86_64-linux-gnu/7/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/7/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/7/lto-wrapper -plugin-opt=-fresolution=/tmp/ccPNCjM8.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_080d9 /usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/7/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/7 -L/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/7/../../.. CMakeFiles/cmTC_080d9.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/7/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crtn.o]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_e3da9' '-shared-libgcc' '-mtune=generic' '-march=x86-64']
+  link line: [ /usr/lib/gcc/x86_64-linux-gnu/7/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/7/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/7/lto-wrapper -plugin-opt=-fresolution=/tmp/ccHaPqcO.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_e3da9 /usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/7/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/7 -L/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/7/../../.. CMakeFiles/cmTC_e3da9.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/7/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crtn.o]
     arg [/usr/lib/gcc/x86_64-linux-gnu/7/collect2] ==> ignore
     arg [-plugin] ==> ignore
     arg [/usr/lib/gcc/x86_64-linux-gnu/7/liblto_plugin.so] ==> ignore
     arg [-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/7/lto-wrapper] ==> ignore
-    arg [-plugin-opt=-fresolution=/tmp/ccPNCjM8.res] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/ccHaPqcO.res] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
     arg [-plugin-opt=-pass-through=-lc] ==> ignore
@@ -200,7 +200,7 @@ Parsed CXX implicit link information from above output:
     arg [-znow] ==> ignore
     arg [-zrelro] ==> ignore
     arg [-o] ==> ignore
-    arg [cmTC_080d9] ==> ignore
+    arg [cmTC_e3da9] ==> ignore
     arg [/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/Scrt1.o] ==> ignore
     arg [/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crti.o] ==> ignore
     arg [/usr/lib/gcc/x86_64-linux-gnu/7/crtbeginS.o] ==> ignore
@@ -212,7 +212,7 @@ Parsed CXX implicit link information from above output:
     arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
     arg [-L/usr/lib/../lib] ==> dir [/usr/lib/../lib]
     arg [-L/usr/lib/gcc/x86_64-linux-gnu/7/../../..] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/7/../../..]
-    arg [CMakeFiles/cmTC_080d9.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+    arg [CMakeFiles/cmTC_e3da9.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
     arg [-lstdc++] ==> lib [stdc++]
     arg [-lm] ==> lib [m]
     arg [-lgcc_s] ==> lib [gcc_s]
@@ -238,10 +238,10 @@ Parsed CXX implicit link information from above output:
 Detecting C compiler ABI info compiled with the following output:
 Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_3c64a/fast && /usr/bin/make  -f CMakeFiles/cmTC_3c64a.dir/build.make CMakeFiles/cmTC_3c64a.dir/build
+Run Build Command(s):/usr/bin/make cmTC_6e74d/fast && /usr/bin/make  -f CMakeFiles/cmTC_6e74d.dir/build.make CMakeFiles/cmTC_6e74d.dir/build
 make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_3c64a.dir/CMakeCCompilerABI.c.o
-/usr/bin/cc   -v -o CMakeFiles/cmTC_3c64a.dir/CMakeCCompilerABI.c.o -c /usr/local/lib/python3.6/dist-packages/cmake/data/share/cmake-3.18/Modules/CMakeCCompilerABI.c
+Building C object CMakeFiles/cmTC_6e74d.dir/CMakeCCompilerABI.c.o
+/usr/bin/cc   -v -o CMakeFiles/cmTC_6e74d.dir/CMakeCCompilerABI.c.o -c /usr/local/lib/python3.6/dist-packages/cmake/data/share/cmake-3.18/Modules/CMakeCCompilerABI.c
 Using built-in specs.
 COLLECT_GCC=/usr/bin/cc
 OFFLOAD_TARGET_NAMES=nvptx-none
@@ -250,8 +250,8 @@ Target: x86_64-linux-gnu
 Configured with: ../src/configure -v --with-pkgversion='Ubuntu 7.5.0-3ubuntu1~18.04' --with-bugurl=file:///usr/share/doc/gcc-7/README.Bugs --enable-languages=c,ada,c++,go,brig,d,fortran,objc,obj-c++ --prefix=/usr --with-gcc-major-version-only --program-suffix=-7 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-libmpx --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu
 Thread model: posix
 gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04) 
-COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_3c64a.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64'
- /usr/lib/gcc/x86_64-linux-gnu/7/cc1 -quiet -v -imultiarch x86_64-linux-gnu /usr/local/lib/python3.6/dist-packages/cmake/data/share/cmake-3.18/Modules/CMakeCCompilerABI.c -quiet -dumpbase CMakeCCompilerABI.c -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_3c64a.dir/CMakeCCompilerABI.c.o -version -fstack-protector-strong -Wformat -Wformat-security -o /tmp/ccMj1CCj.s
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_6e74d.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64'
+ /usr/lib/gcc/x86_64-linux-gnu/7/cc1 -quiet -v -imultiarch x86_64-linux-gnu /usr/local/lib/python3.6/dist-packages/cmake/data/share/cmake-3.18/Modules/CMakeCCompilerABI.c -quiet -dumpbase CMakeCCompilerABI.c -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_6e74d.dir/CMakeCCompilerABI.c.o -version -fstack-protector-strong -Wformat -Wformat-security -o /tmp/ccsO4QgU.s
 GNU C11 (Ubuntu 7.5.0-3ubuntu1~18.04) version 7.5.0 (x86_64-linux-gnu)
 	compiled by GNU C version 7.5.0, GMP version 6.1.2, MPFR version 4.0.1, MPC version 1.1.0, isl version isl-0.19-GMP
 
@@ -271,15 +271,15 @@ GNU C11 (Ubuntu 7.5.0-3ubuntu1~18.04) version 7.5.0 (x86_64-linux-gnu)
 
 GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 Compiler executable checksum: b62ed4a2880cd4159476ea8293b72fa8
-COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_3c64a.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64'
- as -v --64 -o CMakeFiles/cmTC_3c64a.dir/CMakeCCompilerABI.c.o /tmp/ccMj1CCj.s
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_6e74d.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64'
+ as -v --64 -o CMakeFiles/cmTC_6e74d.dir/CMakeCCompilerABI.c.o /tmp/ccsO4QgU.s
 GNU assembler version 2.30 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.30
 COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/
 LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../:/lib/:/usr/lib/
-COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_3c64a.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64'
-Linking C executable cmTC_3c64a
-/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_3c64a.dir/link.txt --verbose=1
-/usr/bin/cc  -v CMakeFiles/cmTC_3c64a.dir/CMakeCCompilerABI.c.o -o cmTC_3c64a 
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_6e74d.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64'
+Linking C executable cmTC_6e74d
+/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6e74d.dir/link.txt --verbose=1
+/usr/bin/cc  -v CMakeFiles/cmTC_6e74d.dir/CMakeCCompilerABI.c.o -o cmTC_6e74d 
 Using built-in specs.
 COLLECT_GCC=/usr/bin/cc
 COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/7/lto-wrapper
@@ -291,9 +291,9 @@ Thread model: posix
 gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04) 
 COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/
 LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../:/lib/:/usr/lib/
-COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_3c64a' '-mtune=generic' '-march=x86-64'
- /usr/lib/gcc/x86_64-linux-gnu/7/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/7/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/7/lto-wrapper -plugin-opt=-fresolution=/tmp/ccuoM9Un.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_3c64a /usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/7/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/7 -L/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/7/../../.. CMakeFiles/cmTC_3c64a.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/7/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crtn.o
-COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_3c64a' '-mtune=generic' '-march=x86-64'
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_6e74d' '-mtune=generic' '-march=x86-64'
+ /usr/lib/gcc/x86_64-linux-gnu/7/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/7/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/7/lto-wrapper -plugin-opt=-fresolution=/tmp/ccez8cB0.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_6e74d /usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/7/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/7 -L/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/7/../../.. CMakeFiles/cmTC_6e74d.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/7/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crtn.o
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_6e74d' '-mtune=generic' '-march=x86-64'
 make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
 
 
@@ -319,10 +319,10 @@ Parsed C implicit link information from above output:
   link line regex: [^( *|.*[/\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
   ignore line: [Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command(s):/usr/bin/make cmTC_3c64a/fast && /usr/bin/make  -f CMakeFiles/cmTC_3c64a.dir/build.make CMakeFiles/cmTC_3c64a.dir/build]
+  ignore line: [Run Build Command(s):/usr/bin/make cmTC_6e74d/fast && /usr/bin/make  -f CMakeFiles/cmTC_6e74d.dir/build.make CMakeFiles/cmTC_6e74d.dir/build]
   ignore line: [make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp']
-  ignore line: [Building C object CMakeFiles/cmTC_3c64a.dir/CMakeCCompilerABI.c.o]
-  ignore line: [/usr/bin/cc   -v -o CMakeFiles/cmTC_3c64a.dir/CMakeCCompilerABI.c.o -c /usr/local/lib/python3.6/dist-packages/cmake/data/share/cmake-3.18/Modules/CMakeCCompilerABI.c]
+  ignore line: [Building C object CMakeFiles/cmTC_6e74d.dir/CMakeCCompilerABI.c.o]
+  ignore line: [/usr/bin/cc   -v -o CMakeFiles/cmTC_6e74d.dir/CMakeCCompilerABI.c.o -c /usr/local/lib/python3.6/dist-packages/cmake/data/share/cmake-3.18/Modules/CMakeCCompilerABI.c]
   ignore line: [Using built-in specs.]
   ignore line: [COLLECT_GCC=/usr/bin/cc]
   ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none]
@@ -331,8 +331,8 @@ Parsed C implicit link information from above output:
   ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 7.5.0-3ubuntu1~18.04' --with-bugurl=file:///usr/share/doc/gcc-7/README.Bugs --enable-languages=c ada c++ go brig d fortran objc obj-c++ --prefix=/usr --with-gcc-major-version-only --program-suffix=-7 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-libmpx --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu]
   ignore line: [Thread model: posix]
   ignore line: [gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04) ]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_3c64a.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64']
-  ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/7/cc1 -quiet -v -imultiarch x86_64-linux-gnu /usr/local/lib/python3.6/dist-packages/cmake/data/share/cmake-3.18/Modules/CMakeCCompilerABI.c -quiet -dumpbase CMakeCCompilerABI.c -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_3c64a.dir/CMakeCCompilerABI.c.o -version -fstack-protector-strong -Wformat -Wformat-security -o /tmp/ccMj1CCj.s]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_6e74d.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64']
+  ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/7/cc1 -quiet -v -imultiarch x86_64-linux-gnu /usr/local/lib/python3.6/dist-packages/cmake/data/share/cmake-3.18/Modules/CMakeCCompilerABI.c -quiet -dumpbase CMakeCCompilerABI.c -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_6e74d.dir/CMakeCCompilerABI.c.o -version -fstack-protector-strong -Wformat -Wformat-security -o /tmp/ccsO4QgU.s]
   ignore line: [GNU C11 (Ubuntu 7.5.0-3ubuntu1~18.04) version 7.5.0 (x86_64-linux-gnu)]
   ignore line: [	compiled by GNU C version 7.5.0  GMP version 6.1.2  MPFR version 4.0.1  MPC version 1.1.0  isl version isl-0.19-GMP]
   ignore line: []
@@ -352,15 +352,15 @@ Parsed C implicit link information from above output:
   ignore line: []
   ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
   ignore line: [Compiler executable checksum: b62ed4a2880cd4159476ea8293b72fa8]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_3c64a.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64']
-  ignore line: [ as -v --64 -o CMakeFiles/cmTC_3c64a.dir/CMakeCCompilerABI.c.o /tmp/ccMj1CCj.s]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_6e74d.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64']
+  ignore line: [ as -v --64 -o CMakeFiles/cmTC_6e74d.dir/CMakeCCompilerABI.c.o /tmp/ccsO4QgU.s]
   ignore line: [GNU assembler version 2.30 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.30]
   ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/]
   ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../:/lib/:/usr/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_3c64a.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64']
-  ignore line: [Linking C executable cmTC_3c64a]
-  ignore line: [/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_3c64a.dir/link.txt --verbose=1]
-  ignore line: [/usr/bin/cc  -v CMakeFiles/cmTC_3c64a.dir/CMakeCCompilerABI.c.o -o cmTC_3c64a ]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_6e74d.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64']
+  ignore line: [Linking C executable cmTC_6e74d]
+  ignore line: [/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6e74d.dir/link.txt --verbose=1]
+  ignore line: [/usr/bin/cc  -v CMakeFiles/cmTC_6e74d.dir/CMakeCCompilerABI.c.o -o cmTC_6e74d ]
   ignore line: [Using built-in specs.]
   ignore line: [COLLECT_GCC=/usr/bin/cc]
   ignore line: [COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/7/lto-wrapper]
@@ -372,13 +372,13 @@ Parsed C implicit link information from above output:
   ignore line: [gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04) ]
   ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/]
   ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../:/lib/:/usr/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_3c64a' '-mtune=generic' '-march=x86-64']
-  link line: [ /usr/lib/gcc/x86_64-linux-gnu/7/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/7/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/7/lto-wrapper -plugin-opt=-fresolution=/tmp/ccuoM9Un.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_3c64a /usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/7/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/7 -L/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/7/../../.. CMakeFiles/cmTC_3c64a.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/7/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crtn.o]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_6e74d' '-mtune=generic' '-march=x86-64']
+  link line: [ /usr/lib/gcc/x86_64-linux-gnu/7/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/7/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/7/lto-wrapper -plugin-opt=-fresolution=/tmp/ccez8cB0.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_6e74d /usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/7/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/7 -L/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/7/../../.. CMakeFiles/cmTC_6e74d.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/7/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crtn.o]
     arg [/usr/lib/gcc/x86_64-linux-gnu/7/collect2] ==> ignore
     arg [-plugin] ==> ignore
     arg [/usr/lib/gcc/x86_64-linux-gnu/7/liblto_plugin.so] ==> ignore
     arg [-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/7/lto-wrapper] ==> ignore
-    arg [-plugin-opt=-fresolution=/tmp/ccuoM9Un.res] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/ccez8cB0.res] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
     arg [-plugin-opt=-pass-through=-lc] ==> ignore
@@ -396,7 +396,7 @@ Parsed C implicit link information from above output:
     arg [-znow] ==> ignore
     arg [-zrelro] ==> ignore
     arg [-o] ==> ignore
-    arg [cmTC_3c64a] ==> ignore
+    arg [cmTC_6e74d] ==> ignore
     arg [/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/Scrt1.o] ==> ignore
     arg [/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/crti.o] ==> ignore
     arg [/usr/lib/gcc/x86_64-linux-gnu/7/crtbeginS.o] ==> ignore
@@ -408,7 +408,7 @@ Parsed C implicit link information from above output:
     arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
     arg [-L/usr/lib/../lib] ==> dir [/usr/lib/../lib]
     arg [-L/usr/lib/gcc/x86_64-linux-gnu/7/../../..] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/7/../../..]
-    arg [CMakeFiles/cmTC_3c64a.dir/CMakeCCompilerABI.c.o] ==> ignore
+    arg [CMakeFiles/cmTC_6e74d.dir/CMakeCCompilerABI.c.o] ==> ignore
     arg [-lgcc] ==> lib [gcc]
     arg [--push-state] ==> ignore
     arg [--as-needed] ==> ignore
@@ -438,13 +438,13 @@ Parsed C implicit link information from above output:
 Performing C++ SOURCE FILE Test SUPPORTS_FVISIBILITY_INLINES_HIDDEN_FLAG succeeded with the following output:
 Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_17c4f/fast && /usr/bin/make  -f CMakeFiles/cmTC_17c4f.dir/build.make CMakeFiles/cmTC_17c4f.dir/build
+Run Build Command(s):/usr/bin/make cmTC_229fb/fast && /usr/bin/make  -f CMakeFiles/cmTC_229fb.dir/build.make CMakeFiles/cmTC_229fb.dir/build
 make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_17c4f.dir/src.cxx.o
-/usr/bin/c++   -DSUPPORTS_FVISIBILITY_INLINES_HIDDEN_FLAG   -fvisibility-inlines-hidden -o CMakeFiles/cmTC_17c4f.dir/src.cxx.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx
-Linking CXX executable cmTC_17c4f
-/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_17c4f.dir/link.txt --verbose=1
-/usr/bin/c++  -DSUPPORTS_FVISIBILITY_INLINES_HIDDEN_FLAG CMakeFiles/cmTC_17c4f.dir/src.cxx.o -o cmTC_17c4f 
+Building CXX object CMakeFiles/cmTC_229fb.dir/src.cxx.o
+/usr/bin/c++   -DSUPPORTS_FVISIBILITY_INLINES_HIDDEN_FLAG   -fvisibility-inlines-hidden -o CMakeFiles/cmTC_229fb.dir/src.cxx.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_229fb
+/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_229fb.dir/link.txt --verbose=1
+/usr/bin/c++  -DSUPPORTS_FVISIBILITY_INLINES_HIDDEN_FLAG CMakeFiles/cmTC_229fb.dir/src.cxx.o -o cmTC_229fb 
 make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
 
 
@@ -453,13 +453,13 @@ int main() { return 0; }
 Performing C SOURCE FILE Test C_SUPPORTS_WERROR_DATE_TIME succeeded with the following output:
 Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_c1442/fast && /usr/bin/make  -f CMakeFiles/cmTC_c1442.dir/build.make CMakeFiles/cmTC_c1442.dir/build
+Run Build Command(s):/usr/bin/make cmTC_59b11/fast && /usr/bin/make  -f CMakeFiles/cmTC_59b11.dir/build.make CMakeFiles/cmTC_59b11.dir/build
 make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_c1442.dir/src.c.o
-/usr/bin/cc   -DC_SUPPORTS_WERROR_DATE_TIME   -Werror -Werror=date-time -o CMakeFiles/cmTC_c1442.dir/src.c.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.c
-Linking C executable cmTC_c1442
-/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c1442.dir/link.txt --verbose=1
-/usr/bin/cc  -DC_SUPPORTS_WERROR_DATE_TIME CMakeFiles/cmTC_c1442.dir/src.c.o -o cmTC_c1442 
+Building C object CMakeFiles/cmTC_59b11.dir/src.c.o
+/usr/bin/cc   -DC_SUPPORTS_WERROR_DATE_TIME   -Werror -Werror=date-time -o CMakeFiles/cmTC_59b11.dir/src.c.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_59b11
+/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_59b11.dir/link.txt --verbose=1
+/usr/bin/cc  -DC_SUPPORTS_WERROR_DATE_TIME CMakeFiles/cmTC_59b11.dir/src.c.o -o cmTC_59b11 
 make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
 
 
@@ -468,13 +468,13 @@ int main(void) { return 0; }
 Performing C++ SOURCE FILE Test CXX_SUPPORTS_WERROR_DATE_TIME succeeded with the following output:
 Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_55f6d/fast && /usr/bin/make  -f CMakeFiles/cmTC_55f6d.dir/build.make CMakeFiles/cmTC_55f6d.dir/build
+Run Build Command(s):/usr/bin/make cmTC_59933/fast && /usr/bin/make  -f CMakeFiles/cmTC_59933.dir/build.make CMakeFiles/cmTC_59933.dir/build
 make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_55f6d.dir/src.cxx.o
-/usr/bin/c++   -fvisibility-inlines-hidden -DCXX_SUPPORTS_WERROR_DATE_TIME   -Werror -Werror=date-time -o CMakeFiles/cmTC_55f6d.dir/src.cxx.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx
-Linking CXX executable cmTC_55f6d
-/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_55f6d.dir/link.txt --verbose=1
-/usr/bin/c++  -fvisibility-inlines-hidden -DCXX_SUPPORTS_WERROR_DATE_TIME CMakeFiles/cmTC_55f6d.dir/src.cxx.o -o cmTC_55f6d 
+Building CXX object CMakeFiles/cmTC_59933.dir/src.cxx.o
+/usr/bin/c++   -fvisibility-inlines-hidden -DCXX_SUPPORTS_WERROR_DATE_TIME   -Werror -Werror=date-time -o CMakeFiles/cmTC_59933.dir/src.cxx.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_59933
+/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_59933.dir/link.txt --verbose=1
+/usr/bin/c++  -fvisibility-inlines-hidden -DCXX_SUPPORTS_WERROR_DATE_TIME CMakeFiles/cmTC_59933.dir/src.cxx.o -o cmTC_59933 
 make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
 
 
@@ -483,13 +483,13 @@ int main() { return 0; }
 Performing C++ SOURCE FILE Test CXX_SUPPORTS_MISSING_FIELD_INITIALIZERS_FLAG succeeded with the following output:
 Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_021d4/fast && /usr/bin/make  -f CMakeFiles/cmTC_021d4.dir/build.make CMakeFiles/cmTC_021d4.dir/build
+Run Build Command(s):/usr/bin/make cmTC_46759/fast && /usr/bin/make  -f CMakeFiles/cmTC_46759.dir/build.make CMakeFiles/cmTC_46759.dir/build
 make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_021d4.dir/src.cxx.o
-/usr/bin/c++   -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -DCXX_SUPPORTS_MISSING_FIELD_INITIALIZERS_FLAG   -Wmissing-field-initializers -o CMakeFiles/cmTC_021d4.dir/src.cxx.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx
-Linking CXX executable cmTC_021d4
-/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_021d4.dir/link.txt --verbose=1
-/usr/bin/c++  -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -DCXX_SUPPORTS_MISSING_FIELD_INITIALIZERS_FLAG CMakeFiles/cmTC_021d4.dir/src.cxx.o -o cmTC_021d4 
+Building CXX object CMakeFiles/cmTC_46759.dir/src.cxx.o
+/usr/bin/c++   -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -DCXX_SUPPORTS_MISSING_FIELD_INITIALIZERS_FLAG   -Wmissing-field-initializers -o CMakeFiles/cmTC_46759.dir/src.cxx.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_46759
+/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_46759.dir/link.txt --verbose=1
+/usr/bin/c++  -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -DCXX_SUPPORTS_MISSING_FIELD_INITIALIZERS_FLAG CMakeFiles/cmTC_46759.dir/src.cxx.o -o cmTC_46759 
 make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
 
 
@@ -498,13 +498,13 @@ int main() { return 0; }
 Performing C SOURCE FILE Test C_SUPPORTS_IMPLICIT_FALLTHROUGH_FLAG succeeded with the following output:
 Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_14489/fast && /usr/bin/make  -f CMakeFiles/cmTC_14489.dir/build.make CMakeFiles/cmTC_14489.dir/build
+Run Build Command(s):/usr/bin/make cmTC_2b7d7/fast && /usr/bin/make  -f CMakeFiles/cmTC_2b7d7.dir/build.make CMakeFiles/cmTC_2b7d7.dir/build
 make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_14489.dir/src.c.o
-/usr/bin/cc   -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wno-missing-field-initializers -DC_SUPPORTS_IMPLICIT_FALLTHROUGH_FLAG   -Werror -Wimplicit-fallthrough -o CMakeFiles/cmTC_14489.dir/src.c.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.c
-Linking C executable cmTC_14489
-/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_14489.dir/link.txt --verbose=1
-/usr/bin/cc  -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wno-missing-field-initializers -DC_SUPPORTS_IMPLICIT_FALLTHROUGH_FLAG CMakeFiles/cmTC_14489.dir/src.c.o -o cmTC_14489 
+Building C object CMakeFiles/cmTC_2b7d7.dir/src.c.o
+/usr/bin/cc   -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wno-missing-field-initializers -DC_SUPPORTS_IMPLICIT_FALLTHROUGH_FLAG   -Werror -Wimplicit-fallthrough -o CMakeFiles/cmTC_2b7d7.dir/src.c.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_2b7d7
+/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2b7d7.dir/link.txt --verbose=1
+/usr/bin/cc  -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wno-missing-field-initializers -DC_SUPPORTS_IMPLICIT_FALLTHROUGH_FLAG CMakeFiles/cmTC_2b7d7.dir/src.c.o -o cmTC_2b7d7 
 make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
 
 
@@ -513,13 +513,13 @@ int main(void) { return 0; }
 Performing C++ SOURCE FILE Test CXX_SUPPORTS_IMPLICIT_FALLTHROUGH_FLAG succeeded with the following output:
 Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_93b37/fast && /usr/bin/make  -f CMakeFiles/cmTC_93b37.dir/build.make CMakeFiles/cmTC_93b37.dir/build
+Run Build Command(s):/usr/bin/make cmTC_90d47/fast && /usr/bin/make  -f CMakeFiles/cmTC_90d47.dir/build.make CMakeFiles/cmTC_90d47.dir/build
 make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_93b37.dir/src.cxx.o
-/usr/bin/c++   -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -DCXX_SUPPORTS_IMPLICIT_FALLTHROUGH_FLAG   -Werror -Wimplicit-fallthrough -o CMakeFiles/cmTC_93b37.dir/src.cxx.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx
-Linking CXX executable cmTC_93b37
-/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_93b37.dir/link.txt --verbose=1
-/usr/bin/c++  -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -DCXX_SUPPORTS_IMPLICIT_FALLTHROUGH_FLAG CMakeFiles/cmTC_93b37.dir/src.cxx.o -o cmTC_93b37 
+Building CXX object CMakeFiles/cmTC_90d47.dir/src.cxx.o
+/usr/bin/c++   -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -DCXX_SUPPORTS_IMPLICIT_FALLTHROUGH_FLAG   -Werror -Wimplicit-fallthrough -o CMakeFiles/cmTC_90d47.dir/src.cxx.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_90d47
+/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_90d47.dir/link.txt --verbose=1
+/usr/bin/c++  -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -DCXX_SUPPORTS_IMPLICIT_FALLTHROUGH_FLAG CMakeFiles/cmTC_90d47.dir/src.cxx.o -o cmTC_90d47 
 make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
 
 
@@ -528,13 +528,13 @@ int main() { return 0; }
 Performing C++ SOURCE FILE Test CXX_SUPPORTS_NOEXCEPT_TYPE_FLAG succeeded with the following output:
 Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_229a5/fast && /usr/bin/make  -f CMakeFiles/cmTC_229a5.dir/build.make CMakeFiles/cmTC_229a5.dir/build
+Run Build Command(s):/usr/bin/make cmTC_5cc36/fast && /usr/bin/make  -f CMakeFiles/cmTC_5cc36.dir/build.make CMakeFiles/cmTC_5cc36.dir/build
 make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_229a5.dir/src.cxx.o
-/usr/bin/c++   -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -DCXX_SUPPORTS_NOEXCEPT_TYPE_FLAG   -Wnoexcept-type -o CMakeFiles/cmTC_229a5.dir/src.cxx.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx
-Linking CXX executable cmTC_229a5
-/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_229a5.dir/link.txt --verbose=1
-/usr/bin/c++  -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -DCXX_SUPPORTS_NOEXCEPT_TYPE_FLAG CMakeFiles/cmTC_229a5.dir/src.cxx.o -o cmTC_229a5 
+Building CXX object CMakeFiles/cmTC_5cc36.dir/src.cxx.o
+/usr/bin/c++   -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -DCXX_SUPPORTS_NOEXCEPT_TYPE_FLAG   -Wnoexcept-type -o CMakeFiles/cmTC_5cc36.dir/src.cxx.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_5cc36
+/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_5cc36.dir/link.txt --verbose=1
+/usr/bin/c++  -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -DCXX_SUPPORTS_NOEXCEPT_TYPE_FLAG CMakeFiles/cmTC_5cc36.dir/src.cxx.o -o cmTC_5cc36 
 make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
 
 
@@ -543,13 +543,13 @@ int main() { return 0; }
 Performing C++ SOURCE FILE Test CXX_SUPPORTS_DELETE_NON_VIRTUAL_DTOR_FLAG succeeded with the following output:
 Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_ff751/fast && /usr/bin/make  -f CMakeFiles/cmTC_ff751.dir/build.make CMakeFiles/cmTC_ff751.dir/build
+Run Build Command(s):/usr/bin/make cmTC_83917/fast && /usr/bin/make  -f CMakeFiles/cmTC_83917.dir/build.make CMakeFiles/cmTC_83917.dir/build
 make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_ff751.dir/src.cxx.o
-/usr/bin/c++   -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-noexcept-type -DCXX_SUPPORTS_DELETE_NON_VIRTUAL_DTOR_FLAG   -Werror -Wdelete-non-virtual-dtor -o CMakeFiles/cmTC_ff751.dir/src.cxx.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx
-Linking CXX executable cmTC_ff751
-/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ff751.dir/link.txt --verbose=1
-/usr/bin/c++  -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-noexcept-type -DCXX_SUPPORTS_DELETE_NON_VIRTUAL_DTOR_FLAG CMakeFiles/cmTC_ff751.dir/src.cxx.o -o cmTC_ff751 
+Building CXX object CMakeFiles/cmTC_83917.dir/src.cxx.o
+/usr/bin/c++   -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-noexcept-type -DCXX_SUPPORTS_DELETE_NON_VIRTUAL_DTOR_FLAG   -Werror -Wdelete-non-virtual-dtor -o CMakeFiles/cmTC_83917.dir/src.cxx.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_83917
+/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_83917.dir/link.txt --verbose=1
+/usr/bin/c++  -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-noexcept-type -DCXX_SUPPORTS_DELETE_NON_VIRTUAL_DTOR_FLAG CMakeFiles/cmTC_83917.dir/src.cxx.o -o cmTC_83917 
 make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
 
 
@@ -558,13 +558,13 @@ int main() { return 0; }
 Performing C++ SOURCE FILE Test CXX_SUPPORTS_SUGGEST_OVERRIDE_FLAG succeeded with the following output:
 Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_88a05/fast && /usr/bin/make  -f CMakeFiles/cmTC_88a05.dir/build.make CMakeFiles/cmTC_88a05.dir/build
+Run Build Command(s):/usr/bin/make cmTC_e78fb/fast && /usr/bin/make  -f CMakeFiles/cmTC_e78fb.dir/build.make CMakeFiles/cmTC_e78fb.dir/build
 make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_88a05.dir/src.cxx.o
-/usr/bin/c++   -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-noexcept-type -Wdelete-non-virtual-dtor -DCXX_SUPPORTS_SUGGEST_OVERRIDE_FLAG   -Wsuggest-override -o CMakeFiles/cmTC_88a05.dir/src.cxx.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx
-Linking CXX executable cmTC_88a05
-/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_88a05.dir/link.txt --verbose=1
-/usr/bin/c++  -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-noexcept-type -Wdelete-non-virtual-dtor -DCXX_SUPPORTS_SUGGEST_OVERRIDE_FLAG CMakeFiles/cmTC_88a05.dir/src.cxx.o -o cmTC_88a05 
+Building CXX object CMakeFiles/cmTC_e78fb.dir/src.cxx.o
+/usr/bin/c++   -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-noexcept-type -Wdelete-non-virtual-dtor -DCXX_SUPPORTS_SUGGEST_OVERRIDE_FLAG   -Wsuggest-override -o CMakeFiles/cmTC_e78fb.dir/src.cxx.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_e78fb
+/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e78fb.dir/link.txt --verbose=1
+/usr/bin/c++  -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-noexcept-type -Wdelete-non-virtual-dtor -DCXX_SUPPORTS_SUGGEST_OVERRIDE_FLAG CMakeFiles/cmTC_e78fb.dir/src.cxx.o -o cmTC_e78fb 
 make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
 
 
@@ -573,13 +573,13 @@ int main() { return 0; }
 Performing C SOURCE FILE Test C_SUPPORTS_MISLEADING_INDENTATION_FLAG succeeded with the following output:
 Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_84c73/fast && /usr/bin/make  -f CMakeFiles/cmTC_84c73.dir/build.make CMakeFiles/cmTC_84c73.dir/build
+Run Build Command(s):/usr/bin/make cmTC_cf145/fast && /usr/bin/make  -f CMakeFiles/cmTC_cf145.dir/build.make CMakeFiles/cmTC_cf145.dir/build
 make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_84c73.dir/src.c.o
-/usr/bin/cc   -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-comment -DC_SUPPORTS_MISLEADING_INDENTATION_FLAG   -Werror -Wmisleading-indentation -o CMakeFiles/cmTC_84c73.dir/src.c.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.c
-Linking C executable cmTC_84c73
-/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_84c73.dir/link.txt --verbose=1
-/usr/bin/cc  -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-comment -DC_SUPPORTS_MISLEADING_INDENTATION_FLAG CMakeFiles/cmTC_84c73.dir/src.c.o -o cmTC_84c73 
+Building C object CMakeFiles/cmTC_cf145.dir/src.c.o
+/usr/bin/cc   -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-comment -DC_SUPPORTS_MISLEADING_INDENTATION_FLAG   -Werror -Wmisleading-indentation -o CMakeFiles/cmTC_cf145.dir/src.c.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_cf145
+/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_cf145.dir/link.txt --verbose=1
+/usr/bin/cc  -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-comment -DC_SUPPORTS_MISLEADING_INDENTATION_FLAG CMakeFiles/cmTC_cf145.dir/src.c.o -o cmTC_cf145 
 make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
 
 
@@ -588,13 +588,13 @@ int main(void) { return 0; }
 Performing C++ SOURCE FILE Test CXX_SUPPORTS_MISLEADING_INDENTATION_FLAG succeeded with the following output:
 Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_2083b/fast && /usr/bin/make  -f CMakeFiles/cmTC_2083b.dir/build.make CMakeFiles/cmTC_2083b.dir/build
+Run Build Command(s):/usr/bin/make cmTC_0b28b/fast && /usr/bin/make  -f CMakeFiles/cmTC_0b28b.dir/build.make CMakeFiles/cmTC_0b28b.dir/build
 make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_2083b.dir/src.cxx.o
-/usr/bin/c++   -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-noexcept-type -Wdelete-non-virtual-dtor -Wno-comment -DCXX_SUPPORTS_MISLEADING_INDENTATION_FLAG   -Werror -Wmisleading-indentation -o CMakeFiles/cmTC_2083b.dir/src.cxx.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx
-Linking CXX executable cmTC_2083b
-/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2083b.dir/link.txt --verbose=1
-/usr/bin/c++  -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-noexcept-type -Wdelete-non-virtual-dtor -Wno-comment -DCXX_SUPPORTS_MISLEADING_INDENTATION_FLAG CMakeFiles/cmTC_2083b.dir/src.cxx.o -o cmTC_2083b 
+Building CXX object CMakeFiles/cmTC_0b28b.dir/src.cxx.o
+/usr/bin/c++   -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-noexcept-type -Wdelete-non-virtual-dtor -Wno-comment -DCXX_SUPPORTS_MISLEADING_INDENTATION_FLAG   -Werror -Wmisleading-indentation -o CMakeFiles/cmTC_0b28b.dir/src.cxx.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_0b28b
+/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_0b28b.dir/link.txt --verbose=1
+/usr/bin/c++  -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-noexcept-type -Wdelete-non-virtual-dtor -Wno-comment -DCXX_SUPPORTS_MISLEADING_INDENTATION_FLAG CMakeFiles/cmTC_0b28b.dir/src.cxx.o -o cmTC_0b28b 
 make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
 
 
@@ -603,13 +603,13 @@ int main() { return 0; }
 Performing C SOURCE FILE Test C_SUPPORTS_FNO_FUNCTION_SECTIONS succeeded with the following output:
 Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_b9d6f/fast && /usr/bin/make  -f CMakeFiles/cmTC_b9d6f.dir/build.make CMakeFiles/cmTC_b9d6f.dir/build
+Run Build Command(s):/usr/bin/make cmTC_8aab0/fast && /usr/bin/make  -f CMakeFiles/cmTC_8aab0.dir/build.make CMakeFiles/cmTC_8aab0.dir/build
 make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_b9d6f.dir/src.c.o
-/usr/bin/cc   -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-comment -Wmisleading-indentation -DC_SUPPORTS_FNO_FUNCTION_SECTIONS   -Werror -fno-function-sections -o CMakeFiles/cmTC_b9d6f.dir/src.c.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.c
-Linking C executable cmTC_b9d6f
-/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b9d6f.dir/link.txt --verbose=1
-/usr/bin/cc  -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-comment -Wmisleading-indentation -DC_SUPPORTS_FNO_FUNCTION_SECTIONS CMakeFiles/cmTC_b9d6f.dir/src.c.o -o cmTC_b9d6f 
+Building C object CMakeFiles/cmTC_8aab0.dir/src.c.o
+/usr/bin/cc   -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-comment -Wmisleading-indentation -DC_SUPPORTS_FNO_FUNCTION_SECTIONS   -Werror -fno-function-sections -o CMakeFiles/cmTC_8aab0.dir/src.c.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_8aab0
+/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_8aab0.dir/link.txt --verbose=1
+/usr/bin/cc  -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-comment -Wmisleading-indentation -DC_SUPPORTS_FNO_FUNCTION_SECTIONS CMakeFiles/cmTC_8aab0.dir/src.c.o -o cmTC_8aab0 
 make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
 
 
@@ -618,13 +618,13 @@ int main(void) { return 0; }
 Performing C SOURCE FILE Test C_SUPPORTS_FFUNCTION_SECTIONS succeeded with the following output:
 Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_d4b8d/fast && /usr/bin/make  -f CMakeFiles/cmTC_d4b8d.dir/build.make CMakeFiles/cmTC_d4b8d.dir/build
+Run Build Command(s):/usr/bin/make cmTC_8a634/fast && /usr/bin/make  -f CMakeFiles/cmTC_8a634.dir/build.make CMakeFiles/cmTC_8a634.dir/build
 make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_d4b8d.dir/src.c.o
-/usr/bin/cc   -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-comment -Wmisleading-indentation -DC_SUPPORTS_FFUNCTION_SECTIONS   -Werror -ffunction-sections -o CMakeFiles/cmTC_d4b8d.dir/src.c.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.c
-Linking C executable cmTC_d4b8d
-/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d4b8d.dir/link.txt --verbose=1
-/usr/bin/cc  -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-comment -Wmisleading-indentation -DC_SUPPORTS_FFUNCTION_SECTIONS CMakeFiles/cmTC_d4b8d.dir/src.c.o -o cmTC_d4b8d 
+Building C object CMakeFiles/cmTC_8a634.dir/src.c.o
+/usr/bin/cc   -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-comment -Wmisleading-indentation -DC_SUPPORTS_FFUNCTION_SECTIONS   -Werror -ffunction-sections -o CMakeFiles/cmTC_8a634.dir/src.c.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_8a634
+/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_8a634.dir/link.txt --verbose=1
+/usr/bin/cc  -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-comment -Wmisleading-indentation -DC_SUPPORTS_FFUNCTION_SECTIONS CMakeFiles/cmTC_8a634.dir/src.c.o -o cmTC_8a634 
 make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
 
 
@@ -633,13 +633,13 @@ int main(void) { return 0; }
 Performing C++ SOURCE FILE Test CXX_SUPPORTS_FFUNCTION_SECTIONS succeeded with the following output:
 Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_4db07/fast && /usr/bin/make  -f CMakeFiles/cmTC_4db07.dir/build.make CMakeFiles/cmTC_4db07.dir/build
+Run Build Command(s):/usr/bin/make cmTC_51ff7/fast && /usr/bin/make  -f CMakeFiles/cmTC_51ff7.dir/build.make CMakeFiles/cmTC_51ff7.dir/build
 make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_4db07.dir/src.cxx.o
-/usr/bin/c++   -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-noexcept-type -Wdelete-non-virtual-dtor -Wno-comment -Wmisleading-indentation -DCXX_SUPPORTS_FFUNCTION_SECTIONS   -Werror -ffunction-sections -o CMakeFiles/cmTC_4db07.dir/src.cxx.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx
-Linking CXX executable cmTC_4db07
-/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_4db07.dir/link.txt --verbose=1
-/usr/bin/c++  -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-noexcept-type -Wdelete-non-virtual-dtor -Wno-comment -Wmisleading-indentation -DCXX_SUPPORTS_FFUNCTION_SECTIONS CMakeFiles/cmTC_4db07.dir/src.cxx.o -o cmTC_4db07 
+Building CXX object CMakeFiles/cmTC_51ff7.dir/src.cxx.o
+/usr/bin/c++   -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-noexcept-type -Wdelete-non-virtual-dtor -Wno-comment -Wmisleading-indentation -DCXX_SUPPORTS_FFUNCTION_SECTIONS   -Werror -ffunction-sections -o CMakeFiles/cmTC_51ff7.dir/src.cxx.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_51ff7
+/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_51ff7.dir/link.txt --verbose=1
+/usr/bin/c++  -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-noexcept-type -Wdelete-non-virtual-dtor -Wno-comment -Wmisleading-indentation -DCXX_SUPPORTS_FFUNCTION_SECTIONS CMakeFiles/cmTC_51ff7.dir/src.cxx.o -o cmTC_51ff7 
 make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
 
 
@@ -648,13 +648,13 @@ int main() { return 0; }
 Performing C SOURCE FILE Test C_SUPPORTS_FDATA_SECTIONS succeeded with the following output:
 Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_42412/fast && /usr/bin/make  -f CMakeFiles/cmTC_42412.dir/build.make CMakeFiles/cmTC_42412.dir/build
+Run Build Command(s):/usr/bin/make cmTC_a17a9/fast && /usr/bin/make  -f CMakeFiles/cmTC_a17a9.dir/build.make CMakeFiles/cmTC_a17a9.dir/build
 make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_42412.dir/src.c.o
-/usr/bin/cc   -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-comment -Wmisleading-indentation -ffunction-sections -DC_SUPPORTS_FDATA_SECTIONS   -Werror -fdata-sections -o CMakeFiles/cmTC_42412.dir/src.c.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.c
-Linking C executable cmTC_42412
-/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_42412.dir/link.txt --verbose=1
-/usr/bin/cc  -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-comment -Wmisleading-indentation -ffunction-sections -DC_SUPPORTS_FDATA_SECTIONS CMakeFiles/cmTC_42412.dir/src.c.o -o cmTC_42412 
+Building C object CMakeFiles/cmTC_a17a9.dir/src.c.o
+/usr/bin/cc   -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-comment -Wmisleading-indentation -ffunction-sections -DC_SUPPORTS_FDATA_SECTIONS   -Werror -fdata-sections -o CMakeFiles/cmTC_a17a9.dir/src.c.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_a17a9
+/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a17a9.dir/link.txt --verbose=1
+/usr/bin/cc  -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-comment -Wmisleading-indentation -ffunction-sections -DC_SUPPORTS_FDATA_SECTIONS CMakeFiles/cmTC_a17a9.dir/src.c.o -o cmTC_a17a9 
 make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
 
 
@@ -663,13 +663,13 @@ int main(void) { return 0; }
 Performing C++ SOURCE FILE Test CXX_SUPPORTS_FDATA_SECTIONS succeeded with the following output:
 Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_f5bf8/fast && /usr/bin/make  -f CMakeFiles/cmTC_f5bf8.dir/build.make CMakeFiles/cmTC_f5bf8.dir/build
+Run Build Command(s):/usr/bin/make cmTC_fcae2/fast && /usr/bin/make  -f CMakeFiles/cmTC_fcae2.dir/build.make CMakeFiles/cmTC_fcae2.dir/build
 make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_f5bf8.dir/src.cxx.o
-/usr/bin/c++   -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-noexcept-type -Wdelete-non-virtual-dtor -Wno-comment -Wmisleading-indentation -ffunction-sections -DCXX_SUPPORTS_FDATA_SECTIONS   -Werror -fdata-sections -o CMakeFiles/cmTC_f5bf8.dir/src.cxx.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx
-Linking CXX executable cmTC_f5bf8
-/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f5bf8.dir/link.txt --verbose=1
-/usr/bin/c++  -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-noexcept-type -Wdelete-non-virtual-dtor -Wno-comment -Wmisleading-indentation -ffunction-sections -DCXX_SUPPORTS_FDATA_SECTIONS CMakeFiles/cmTC_f5bf8.dir/src.cxx.o -o cmTC_f5bf8 
+Building CXX object CMakeFiles/cmTC_fcae2.dir/src.cxx.o
+/usr/bin/c++   -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-noexcept-type -Wdelete-non-virtual-dtor -Wno-comment -Wmisleading-indentation -ffunction-sections -DCXX_SUPPORTS_FDATA_SECTIONS   -Werror -fdata-sections -o CMakeFiles/cmTC_fcae2.dir/src.cxx.o -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_fcae2
+/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_fcae2.dir/link.txt --verbose=1
+/usr/bin/c++  -fvisibility-inlines-hidden -Werror=date-time -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wno-missing-field-initializers -Wimplicit-fallthrough -Wno-noexcept-type -Wdelete-non-virtual-dtor -Wno-comment -Wmisleading-indentation -ffunction-sections -DCXX_SUPPORTS_FDATA_SECTIONS CMakeFiles/cmTC_fcae2.dir/src.cxx.o -o cmTC_fcae2 
 make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
 
 
@@ -678,12 +678,12 @@ int main() { return 0; }
 Determining if the CLC compiler works passed with the following output:
 Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_e80b8/fast && /usr/bin/make  -f CMakeFiles/cmTC_e80b8.dir/build.make CMakeFiles/cmTC_e80b8.dir/build
+Run Build Command(s):/usr/bin/make cmTC_44c35/fast && /usr/bin/make  -f CMakeFiles/cmTC_44c35.dir/build.make CMakeFiles/cmTC_44c35.dir/build
 make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
-Building CLC object CMakeFiles/cmTC_e80b8.dir/testCLCCompiler.bc
-/home/mlx/repos/llvm-mlu/build/bin/clang-13    -o CMakeFiles/cmTC_e80b8.dir/testCLCCompiler.bc -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/testCLCCompiler.cl -emit-llvm
-Linking CLC executable cmTC_e80b8
-/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e80b8.dir/link.txt --verbose=1
+Building CLC object CMakeFiles/cmTC_44c35.dir/testCLCCompiler.bc
+/home/mlx/repos/llvm-mlu/build/bin/clang-13    -o CMakeFiles/cmTC_44c35.dir/testCLCCompiler.bc -c /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/testCLCCompiler.cl -emit-llvm
+Linking CLC executable cmTC_44c35
+/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_44c35.dir/link.txt --verbose=1
 echo
 
 make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
@@ -693,13 +693,13 @@ make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMa
 Determining if the LLAsm compiler works passed with the following output:
 Change Dir: /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_69168/fast && /usr/bin/make  -f CMakeFiles/cmTC_69168.dir/build.make CMakeFiles/cmTC_69168.dir/build
+Run Build Command(s):/usr/bin/make cmTC_c3f29/fast && /usr/bin/make  -f CMakeFiles/cmTC_c3f29.dir/build.make CMakeFiles/cmTC_c3f29.dir/build
 make[1]: Entering directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'
-Building LLAsm object CMakeFiles/cmTC_69168.dir/testLLAsmCompiler.bc
-/home/mlx/repos/llvm-mlu/build/bin/clang-13 -E -P    -cl-no-stdinc -x cl /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/testLLAsmCompiler.ll -o CMakeFiles/cmTC_69168.dir/testLLAsmCompiler.bc.temp
-/home/mlx/repos/llvm-mlu/build/bin/llvm-as -o CMakeFiles/cmTC_69168.dir/testLLAsmCompiler.bc CMakeFiles/cmTC_69168.dir/testLLAsmCompiler.bc.temp
-Linking LLAsm executable cmTC_69168
-/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_69168.dir/link.txt --verbose=1
+Building LLAsm object CMakeFiles/cmTC_c3f29.dir/testLLAsmCompiler.bc
+/home/mlx/repos/llvm-mlu/build/bin/clang-13 -E -P     -x cl /home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp/testLLAsmCompiler.ll -o CMakeFiles/cmTC_c3f29.dir/testLLAsmCompiler.bc.temp
+/home/mlx/repos/llvm-mlu/build/bin/llvm-as -o CMakeFiles/cmTC_c3f29.dir/testLLAsmCompiler.bc CMakeFiles/cmTC_c3f29.dir/testLLAsmCompiler.bc.temp
+Linking LLAsm executable cmTC_c3f29
+/usr/local/lib/python3.6/dist-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c3f29.dir/link.txt --verbose=1
 echo
 
 make[1]: Leaving directory '/home/mlx/repos/llvm-mlu/libclc/build/CMakeFiles/CMakeTmp'

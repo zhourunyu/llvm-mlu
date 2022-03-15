@@ -80,7 +80,7 @@ macro(add_libclc_builtin_set arch_suffix)
     "${builtins_opt_path}"
     "${LIBCLC_LIBRARY_OUTPUT_INTDIR}/builtins.link.${obj_suffix}"
     DEPENDS opt "builtins.link.${arch_suffix}" )
-  add_custom_target( "opt.${obj_suffix}" ALL
+    add_custom_target( "opt.${obj_suffix}" ALL
     DEPENDS "${builtins_opt_path}" )
   set_target_properties("opt.${obj_suffix}"
     PROPERTIES TARGET_FILE "${builtins_opt_path}")
@@ -107,7 +107,7 @@ macro(add_libclc_builtin_set arch_suffix)
     DESTINATION ${CMAKE_INSTALL_DATADIR}/clc )
 
   # nvptx-- targets don't include workitem builtins
-  if( NOT ${t} MATCHES ".*ptx.*--$" )
+  if( NOT ${t} MATCHES ".*mlisa.*--$" )
     message(" === check external calls ===  ")
     add_test( NAME external-calls-${obj_suffix}
       COMMAND ./check_external_calls.sh ${LIBCLC_LIBRARY_OUTPUT_INTDIR}/${obj_suffix}

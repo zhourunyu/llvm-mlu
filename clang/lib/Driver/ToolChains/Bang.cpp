@@ -73,6 +73,11 @@ BangInstallationDetector::BangInstallationDetector(
       BangPathCandidates.push_back(neuware_home);
     }
   }
+  
+  std::string DefaultNeuwarePath = "/usr/local/neuware";
+  if (BangPathCandidates.size() == 0) {
+    BangPathCandidates.push_back(DefaultNeuwarePath);
+  }
 
   for (const auto &BangPath : BangPathCandidates) {
     if (BangPath.empty() || !D.getVFS().exists(BangPath))
@@ -196,6 +201,15 @@ void BangInstallationDetector::ParseBangVersionFile(llvm::StringRef V) {
 
 void BangInstallationDetector::WarnIfUnsupportedVersion() {
   // TODO(libaoliang): add warning information
+}
+
+void MLISA::BackendCompiler::ConstructJob(Compilation &C, const JobAction &JA,
+                                    const InputInfo &Output,
+                                    const InputInfoList &Inputs,
+                                    const ArgList &Args,
+                                    const char *LinkingOutput) const {
+                                    
+  return ;
 }
 
 
@@ -421,6 +435,7 @@ BangToolChain::BangToolChain(const Driver &D, const llvm::Triple &Triple,
       OK(OK) {
   if (BangInstallation.isValid())
     getProgramPaths().push_back(std::string(BangInstallation.getBinPath()));
+  
 }
 
 std::string BangToolChain::getInputFilename(const InputInfo &Input) const {
@@ -461,14 +476,56 @@ void BangToolChain::addClangTargetOptions(
 
   if (DeviceOffloadingKind == Action::OFK_Bang) {
     CC1Args.push_back("-fbang-is-device");
-
     if (DriverArgs.hasArg(options::OPT_noneuwarelib))
       return;
   }
 
   if (DeviceOffloadingKind == Action::OFK_SYCL) {
-    // todo
+    toolchains::SYCLToolChain::AddSYCLIncludeArgs(getDriver(), DriverArgs,
+                                                  CC1Args);
   }
+  //AddBangIncludeArgs(DriverArgs, CC1Args);
+
+  auto NoLibSpirv = DriverArgs.hasArg(options::OPT_fno_sycl_libspirv,
+                                      options::OPT_fsycl_device_only);
+  if (DeviceOffloadingKind == Action::OFK_SYCL && !NoLibSpirv) {
+    std::string LibSpirvFile;
+
+    if (DriverArgs.hasArg(clang::driver::options::OPT_fsycl_libspirv_path_EQ)) {
+      auto ProvidedPath =
+          DriverArgs
+              .getLastArgValue(
+                  clang::driver::options::OPT_fsycl_libspirv_path_EQ)
+              .str();
+      if (llvm::sys::fs::exists(ProvidedPath))
+        LibSpirvFile = ProvidedPath;
+    } else {
+      SmallVector<StringRef, 8> LibraryPaths;
+
+      // Expected path w/out install.
+      SmallString<256> LIBCLCPath("/home/mlx/repos/llvm-mlu/libclc/build/lib/clc");
+      LibraryPaths.emplace_back(LIBCLCPath.c_str());
+
+      std::string LibSpirvTargetName = "libspirv-mlisa--.bc";
+      for (StringRef LibraryPath : LibraryPaths) {
+        SmallString<128> LibSpirvTargetFile(LibraryPath);
+        llvm::sys::path::append(LibSpirvTargetFile, LibSpirvTargetName);
+        if (llvm::sys::fs::exists(LibSpirvTargetFile)) {
+          LibSpirvFile = std::string(LibSpirvTargetFile.str());
+          break;
+        }
+      }
+    }
+
+    if (LibSpirvFile.empty()) {
+      getDriver().Diag(diag::err_drv_no_sycl_libspirv);
+      return;
+    }
+
+    CC1Args.push_back("-mlink-builtin-bitcode");
+    CC1Args.push_back(DriverArgs.MakeArgString(LibSpirvFile));
+  }
+
 
   // Enable register allocation in LLVM only when compiling with -g option.
   // TODO(wangshiyu): close register allocation in LLVM.
@@ -569,7 +626,8 @@ void BangToolChain::AddBangIncludeArgs(const ArgList &DriverArgs,
   if (!DriverArgs.hasArg(options::OPT_noneuwareinc) &&
       !DriverArgs.hasArg(options::OPT_no_neuware_version_check)) {
     StringRef Arch = DriverArgs.getLastArgValue(options::OPT_march_EQ);
-    assert(!Arch.empty() && "Must have an explicit MLU arch.");
+    //assert(!Arch.empty() && "Must have an explicit MLU arch.");
+    if (Arch.empty()) Arch = "mtp_270";
     BangInstallation.CheckBangVersionSupportsArch(StringToBangArch(Arch));
   }
   BangInstallation.AddBangIncludeArgs(DriverArgs, CC1Args);
@@ -643,6 +701,10 @@ BangToolChain::TranslateArgs(const llvm::opt::DerivedArgList &Args,
     DAL->AddJoinedArg(nullptr, Opts.getOption(options::OPT_march_EQ), BoundArch);
   }
   return DAL;
+}
+
+Tool *BangToolChain::buildBackendCompiler() const {
+  return new tools::MLISA::BackendCompiler(*this);
 }
 
 Tool *BangToolChain::buildAssembler() const {

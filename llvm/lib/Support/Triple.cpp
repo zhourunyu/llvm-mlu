@@ -200,7 +200,7 @@ StringRef Triple::getOSTypeName(OSType Kind) {
   case AMDHSA: return "amdhsa";
   case AMDPAL: return "amdpal";
   case Ananas: return "ananas";
-  case CNRT: return "cnrt";
+  case BANG: return "bang";
   case CUDA: return "cuda";
   case CloudABI: return "cloudabi";
   case Contiki: return "contiki";
@@ -542,7 +542,7 @@ static Triple::OSType parseOS(StringRef OSName) {
     .StartsWith("cuda", Triple::CUDA)
     .StartsWith("nvcl", Triple::NVCL)
     .StartsWith("amdhsa", Triple::AMDHSA)
-    .StartsWith("cnrt", Triple::CNRT)
+    .StartsWith("bang", Triple::BANG)
     .StartsWith("ps4", Triple::PS4)
     .StartsWith("elfiamcu", Triple::ELFIAMCU)
     .StartsWith("tvos", Triple::TvOS)

@@ -197,7 +197,7 @@ public:
     NVCL,       // NVIDIA OpenCL
     AMDHSA,     // AMD HSA Runtime
     PS4,
-    CNRT,       // Cambricon MLU CNRT 
+    BANG,       // Cambricon MLU CNRT 
     ELFIAMCU,
     TvOS,       // Apple tvOS
     WatchOS,    // Apple watchOS
