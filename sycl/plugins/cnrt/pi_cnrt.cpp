@@ -124,7 +124,7 @@ pi_result check_error(CNresult result, const char *function, int line,
   const char *errorName = nullptr;
   cnGetErrorName(result, &errorString);
   cnGetErrorString(result, &errorString);
-  std::cerr << "\nPI CUDA ERROR:"
+  std::cerr << "\nPI CNRT ERROR:"
             << "\n\tValue:           " << result
             << "\n\tName:            " << errorName
             << "\n\tDescription:     " << errorString
@@ -503,11 +503,11 @@ pi_result _pi_program::set_binary(const char *source, size_t length) {
 
 pi_result _pi_program::build_program(const char *build_options) {
 
-  // this->buildOptions_ = build_options;
+  this->buildOptions_ = build_options;
 
   // constexpr const unsigned int numberOfOptions = 4u;
 
-  // // TODO: JIT
+  // JIT option
   // CUjit_option options[numberOfOptions];
   // void *optionVals[numberOfOptions];
 
@@ -524,18 +524,19 @@ pi_result _pi_program::build_program(const char *build_options) {
   // options[3] = CU_JIT_ERROR_LOG_BUFFER_SIZE_BYTES;
   // optionVals[3] = (void *)(long)MAX_LOG_SIZE;
 
+  auto result = PI_CHECK_ERROR(
+      cnModuleLoadFatBinary(static_cast<const void *>(binary_), &module_));
   // auto result = PI_CHECK_ERROR(
   //     cuModuleLoadDataEx(&module_, static_cast<const void *>(binary_),
   //                        numberOfOptions, options, optionVals));
 
-  // const auto success = (result == PI_SUCCESS);
+  const auto success = (result == PI_SUCCESS);
 
-  // buildStatus_ =
-  //     success ? PI_PROGRAM_BUILD_STATUS_SUCCESS :
-  //     PI_PROGRAM_BUILD_STATUS_ERROR;
+  buildStatus_ =
+      success ? PI_PROGRAM_BUILD_STATUS_SUCCESS : PI_PROGRAM_BUILD_STATUS_ERROR;
 
-  // // If no exception, result is correct
-  // return success ? PI_SUCCESS : PI_BUILD_PROGRAM_FAILURE;
+  // If no exception, result is correct
+  return success ? PI_SUCCESS : PI_BUILD_PROGRAM_FAILURE;
   return PI_SUCCESS;
 }
 
@@ -663,7 +664,7 @@ pi_result cnrt_piPlatformsGet(pi_uint32 num_entries, pi_platform *platforms,
     std::call_once(
         initFlag,
         [](pi_result &err) {
-          if (cnrtInit(0) != cnrtSuccess) {
+          if (cnInit(0) != CN_SUCCESS) {
             numPlatforms = 0;
             return;
           }
@@ -676,8 +677,6 @@ pi_result cnrt_piPlatformsGet(pi_uint32 num_entries, pi_platform *platforms,
           try {
             platformId.devices_.reserve(numDevices);
             for (int i = 0; i < numDevices; ++i) {
-              // TODO: map ordinal to cnrt device
-              // Ordinal of cnrtDevice
               CNdev device;
               err = PI_CHECK_ERROR(cnDeviceGet(&device, i));
               platformId.devices_.emplace_back(
@@ -843,7 +842,7 @@ pi_result cnrt_piextDeviceSelectBinary(pi_device device,
   // TODO: MLISA ??
   for (pi_uint32 i = 0; i < num_binaries; i++) {
     if (strcmp(binaries[i]->DeviceTargetSpec,
-               __SYCL_PI_DEVICE_BINARY_TARGET_NVPTX64) == 0) {
+               __SYCL_PI_DEVICE_BINARY_TARGET_MLISA) == 0) {
       *selected_binary = i;
       return PI_SUCCESS;
     }
@@ -1053,6 +1052,518 @@ pi_result cnrt_piDeviceGetInfo(pi_device device, pi_device_info param_name,
     // but some searching found as of SM 2.x 128 are supported.
     return getInfo(param_value_size, param_value, param_value_size_ret, 128u);
   }
+  // case PI_DEVICE_INFO_IMAGE2D_MAX_HEIGHT: {
+  //   // Take the smaller of maximum surface and maximum texture height.
+  //   int tex_height = 0;
+  //   cl::sycl::detail::pi::assertion(
+  //       cuDeviceGetAttribute(&tex_height,
+  //                            CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_HEIGHT,
+  //                            device->get()) == CUDA_SUCCESS);
+  //   cl::sycl::detail::pi::assertion(tex_height >= 0);
+  //   int surf_height = 0;
+  //   cl::sycl::detail::pi::assertion(
+  //       cuDeviceGetAttribute(&surf_height,
+  //                            CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE2D_HEIGHT,
+  //                            device->get()) == CUDA_SUCCESS);
+  //   cl::sycl::detail::pi::assertion(surf_height >= 0);
+
+  //   int min = std::min(tex_height, surf_height);
+
+  //   return getInfo(param_value_size, param_value, param_value_size_ret, min);
+  // }
+  // case PI_DEVICE_INFO_IMAGE2D_MAX_WIDTH: {
+  //   // Take the smaller of maximum surface and maximum texture width.
+  //   int tex_width = 0;
+  //   cl::sycl::detail::pi::assertion(
+  //       cuDeviceGetAttribute(&tex_width,
+  //                            CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_WIDTH,
+  //                            device->get()) == CUDA_SUCCESS);
+  //   cl::sycl::detail::pi::assertion(tex_width >= 0);
+  //   int surf_width = 0;
+  //   cl::sycl::detail::pi::assertion(
+  //       cuDeviceGetAttribute(&surf_width,
+  //                            CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE2D_WIDTH,
+  //                            device->get()) == CUDA_SUCCESS);
+  //   cl::sycl::detail::pi::assertion(surf_width >= 0);
+
+  //   int min = std::min(tex_width, surf_width);
+
+  //   return getInfo(param_value_size, param_value, param_value_size_ret, min);
+  // }
+  // case PI_DEVICE_INFO_IMAGE3D_MAX_HEIGHT: {
+  //   // Take the smaller of maximum surface and maximum texture height.
+  //   int tex_height = 0;
+  //   cl::sycl::detail::pi::assertion(
+  //       cuDeviceGetAttribute(&tex_height,
+  //                            CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE3D_HEIGHT,
+  //                            device->get()) == CUDA_SUCCESS);
+  //   cl::sycl::detail::pi::assertion(tex_height >= 0);
+  //   int surf_height = 0;
+  //   cl::sycl::detail::pi::assertion(
+  //       cuDeviceGetAttribute(&surf_height,
+  //                            CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE3D_HEIGHT,
+  //                            device->get()) == CUDA_SUCCESS);
+  //   cl::sycl::detail::pi::assertion(surf_height >= 0);
+
+  //   int min = std::min(tex_height, surf_height);
+
+  //   return getInfo(param_value_size, param_value, param_value_size_ret, min);
+  // }
+  // case PI_DEVICE_INFO_IMAGE3D_MAX_WIDTH: {
+  //   // Take the smaller of maximum surface and maximum texture width.
+  //   int tex_width = 0;
+  //   cl::sycl::detail::pi::assertion(
+  //       cuDeviceGetAttribute(&tex_width,
+  //                            CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE3D_WIDTH,
+  //                            device->get()) == CUDA_SUCCESS);
+  //   cl::sycl::detail::pi::assertion(tex_width >= 0);
+  //   int surf_width = 0;
+  //   cl::sycl::detail::pi::assertion(
+  //       cuDeviceGetAttribute(&surf_width,
+  //                            CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE3D_WIDTH,
+  //                            device->get()) == CUDA_SUCCESS);
+  //   cl::sycl::detail::pi::assertion(surf_width >= 0);
+
+  //   int min = std::min(tex_width, surf_width);
+
+  //   return getInfo(param_value_size, param_value, param_value_size_ret, min);
+  // }
+  // case PI_DEVICE_INFO_IMAGE3D_MAX_DEPTH: {
+  //   // Take the smaller of maximum surface and maximum texture depth.
+  //   int tex_depth = 0;
+  //   cl::sycl::detail::pi::assertion(
+  //       cuDeviceGetAttribute(&tex_depth,
+  //                            CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE3D_DEPTH,
+  //                            device->get()) == CUDA_SUCCESS);
+  //   cl::sycl::detail::pi::assertion(tex_depth >= 0);
+  //   int surf_depth = 0;
+  //   cl::sycl::detail::pi::assertion(
+  //       cuDeviceGetAttribute(&surf_depth,
+  //                            CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE3D_DEPTH,
+  //                            device->get()) == CUDA_SUCCESS);
+  //   cl::sycl::detail::pi::assertion(surf_depth >= 0);
+
+  //   int min = std::min(tex_depth, surf_depth);
+
+  //   return getInfo(param_value_size, param_value, param_value_size_ret, min);
+  // }
+  // case PI_DEVICE_INFO_IMAGE_MAX_BUFFER_SIZE: {
+  //   // Take the smaller of maximum surface and maximum texture width.
+  //   int tex_width = 0;
+  //   cl::sycl::detail::pi::assertion(
+  //       cuDeviceGetAttribute(&tex_width,
+  //                            CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE1D_WIDTH,
+  //                            device->get()) == CUDA_SUCCESS);
+  //   cl::sycl::detail::pi::assertion(tex_width >= 0);
+  //   int surf_width = 0;
+  //   cl::sycl::detail::pi::assertion(
+  //       cuDeviceGetAttribute(&surf_width,
+  //                            CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE1D_WIDTH,
+  //                            device->get()) == CUDA_SUCCESS);
+  //   cl::sycl::detail::pi::assertion(surf_width >= 0);
+
+  //   int min = std::min(tex_width, surf_width);
+
+  //   return getInfo(param_value_size, param_value, param_value_size_ret, min);
+  // }
+  // case PI_DEVICE_INFO_IMAGE_MAX_ARRAY_SIZE: {
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //                  size_t(0));
+  // }
+  // case PI_DEVICE_INFO_MAX_SAMPLERS: {
+  //   // This call is kind of meaningless for cuda, as samplers don't exist.
+  //   // Closest thing is textures, which is 128.
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //   128u);
+  // }
+  // case PI_DEVICE_INFO_MAX_PARAMETER_SIZE: {
+  //   //
+  //   https://docs.nvidia.com/cuda/cuda-c-programming-guide/#function-parameters
+  //   // __global__ function parameters are passed to the device via constant
+  //   // memory and are limited to 4 KB.
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //                  size_t{4000u});
+  // }
+  // case PI_DEVICE_INFO_MEM_BASE_ADDR_ALIGN: {
+  //   int mem_base_addr_align = 0;
+  //   cl::sycl::detail::pi::assertion(
+  //       cuDeviceGetAttribute(&mem_base_addr_align,
+  //                            CU_DEVICE_ATTRIBUTE_TEXTURE_ALIGNMENT,
+  //                            device->get()) == CUDA_SUCCESS);
+  //   // Multiply by 8 as clGetDeviceInfo returns this value in bits
+  //   mem_base_addr_align *= 8;
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //                  mem_base_addr_align);
+  // }
+  // case PI_DEVICE_INFO_HALF_FP_CONFIG: {
+  //   // TODO: is this config consistent across all NVIDIA GPUs?
+  //   return getInfo(param_value_size, param_value, param_value_size_ret, 0u);
+  // }
+  // case PI_DEVICE_INFO_SINGLE_FP_CONFIG: {
+  //   // TODO: is this config consistent across all NVIDIA GPUs?
+  //   auto config = PI_FP_DENORM | PI_FP_INF_NAN | PI_FP_ROUND_TO_NEAREST |
+  //                 PI_FP_ROUND_TO_ZERO | PI_FP_ROUND_TO_INF | PI_FP_FMA |
+  //                 PI_FP_CORRECTLY_ROUNDED_DIVIDE_SQRT;
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //   config);
+  // }
+  // case PI_DEVICE_INFO_DOUBLE_FP_CONFIG: {
+  //   // TODO: is this config consistent across all NVIDIA GPUs?
+  //   auto config = PI_FP_DENORM | PI_FP_INF_NAN | PI_FP_ROUND_TO_NEAREST |
+  //                 PI_FP_ROUND_TO_ZERO | PI_FP_ROUND_TO_INF | PI_FP_FMA;
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //   config);
+  // }
+  // case PI_DEVICE_INFO_GLOBAL_MEM_CACHE_TYPE: {
+  //   // TODO: is this config consistent across all NVIDIA GPUs?
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //                  CL_READ_WRITE_CACHE);
+  // }
+  // case PI_DEVICE_INFO_GLOBAL_MEM_CACHELINE_SIZE: {
+  //   // The value is documented for all existing GPUs in the CUDA programming
+  //   // guidelines, section "H.3.2. Global Memory".
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //   128u);
+  // }
+  // case PI_DEVICE_INFO_GLOBAL_MEM_CACHE_SIZE: {
+  //   int cache_size = 0;
+  //   cl::sycl::detail::pi::assertion(
+  //       cuDeviceGetAttribute(&cache_size, CU_DEVICE_ATTRIBUTE_L2_CACHE_SIZE,
+  //                            device->get()) == CUDA_SUCCESS);
+  //   cl::sycl::detail::pi::assertion(cache_size >= 0);
+  //   // The L2 cache is global to the GPU.
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //                  pi_uint64(cache_size));
+  // }
+  // case PI_DEVICE_INFO_GLOBAL_MEM_SIZE: {
+  //   size_t bytes = 0;
+  //   // Runtime API has easy access to this value, driver API info is scarse.
+  //   cl::sycl::detail::pi::assertion(cuDeviceTotalMem(&bytes, device->get())
+  //   ==
+  //                                   CUDA_SUCCESS);
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //                  pi_uint64{bytes});
+  // }
+  // case PI_DEVICE_INFO_MAX_CONSTANT_BUFFER_SIZE: {
+  //   int constant_memory = 0;
+  //   cl::sycl::detail::pi::assertion(
+  //       cuDeviceGetAttribute(&constant_memory,
+  //                            CU_DEVICE_ATTRIBUTE_TOTAL_CONSTANT_MEMORY,
+  //                            device->get()) == CUDA_SUCCESS);
+  //   cl::sycl::detail::pi::assertion(constant_memory >= 0);
+
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //                  pi_uint64(constant_memory));
+  // }
+  // case PI_DEVICE_INFO_MAX_CONSTANT_ARGS: {
+  //   // TODO: is there a way to retrieve this from CUDA driver API?
+  //   // Hard coded to value returned by clinfo for OpenCL 1.2 CUDA | GeForce
+  //   GTX
+  //   // 1060 3GB
+  //   return getInfo(param_value_size, param_value, param_value_size_ret, 9u);
+  // }
+  // case PI_DEVICE_INFO_LOCAL_MEM_TYPE: {
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //                  PI_DEVICE_LOCAL_MEM_TYPE_LOCAL);
+  // }
+  // case PI_DEVICE_INFO_LOCAL_MEM_SIZE: {
+  //   // OpenCL's "local memory" maps most closely to CUDA's "shared memory".
+  //   // CUDA has its own definition of "local memory", which maps to OpenCL's
+  //   // "private memory".
+  //   int local_mem_size = 0;
+  //   cl::sycl::detail::pi::assertion(
+  //       cuDeviceGetAttribute(&local_mem_size,
+  //                            CU_DEVICE_ATTRIBUTE_MAX_SHARED_MEMORY_PER_BLOCK,
+  //                            device->get()) == CUDA_SUCCESS);
+  //   cl::sycl::detail::pi::assertion(local_mem_size >= 0);
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //                  pi_uint64(local_mem_size));
+  // }
+  // case PI_DEVICE_INFO_ERROR_CORRECTION_SUPPORT: {
+  //   int ecc_enabled = 0;
+  //   cl::sycl::detail::pi::assertion(
+  //       cuDeviceGetAttribute(&ecc_enabled, CU_DEVICE_ATTRIBUTE_ECC_ENABLED,
+  //                            device->get()) == CUDA_SUCCESS);
+
+  //   cl::sycl::detail::pi::assertion((ecc_enabled == 0) | (ecc_enabled == 1));
+  //   auto result = static_cast<bool>(ecc_enabled);
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //   result);
+  // }
+  case PI_DEVICE_INFO_HOST_UNIFIED_MEMORY: {
+    // TODO[MLU]: Is MLU device integrated with host memory?
+    int is_integrated = 0;
+    // cl::sycl::detail::pi::assertion(
+    //     cuDeviceGetAttribute(&is_integrated, CU_DEVICE_ATTRIBUTE_INTEGRATED,
+    //                          device->get()) == CUDA_SUCCESS);
+
+    cl::sycl::detail::pi::assertion((is_integrated == 0) |
+                                    (is_integrated == 1));
+    auto result = static_cast<bool>(is_integrated);
+    return getInfo(param_value_size, param_value, param_value_size_ret, result);
+  }
+
+    // case PI_DEVICE_INFO_PROFILING_TIMER_RESOLUTION: {
+    //   // Hard coded to value returned by clinfo for OpenCL 1.2 CUDA | GeForce
+    //   GTX
+    //   // 1060 3GB
+    //   return getInfo(param_value_size, param_value, param_value_size_ret,
+    //                  size_t{1000u});
+    // }
+    // case PI_DEVICE_INFO_ENDIAN_LITTLE: {
+    //   return getInfo(param_value_size, param_value, param_value_size_ret,
+    //   true);
+    // }
+    // case PI_DEVICE_INFO_AVAILABLE: {
+    //   return getInfo(param_value_size, param_value, param_value_size_ret,
+    //   true);
+    // }
+    // case PI_DEVICE_INFO_COMPILER_AVAILABLE: {
+    //   return getInfo(param_value_size, param_value, param_value_size_ret,
+    //   true);
+    // }
+    // case PI_DEVICE_INFO_LINKER_AVAILABLE: {
+    //   return getInfo(param_value_size, param_value, param_value_size_ret,
+    //   true);
+    // }
+    // case PI_DEVICE_INFO_EXECUTION_CAPABILITIES: {
+    //   auto capability = CL_EXEC_KERNEL;
+    //   return getInfo(param_value_size, param_value, param_value_size_ret,
+    //                  capability);
+    // }
+    // case PI_DEVICE_INFO_QUEUE_ON_DEVICE_PROPERTIES: {
+    //   // The mandated minimum capability:
+    //   auto capability =
+    //       CL_QUEUE_PROFILING_ENABLE | CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE;
+    //   return getInfo(param_value_size, param_value, param_value_size_ret,
+    //                  capability);
+    // }
+    // case PI_DEVICE_INFO_QUEUE_ON_HOST_PROPERTIES: {
+    //   // The mandated minimum capability:
+    //   auto capability = CL_QUEUE_PROFILING_ENABLE;
+    //   return getInfo(param_value_size, param_value, param_value_size_ret,
+    //                  capability);
+    // }
+    // case PI_DEVICE_INFO_BUILT_IN_KERNELS: {
+    //   // An empty string is returned if no built-in kernels are supported by
+    //   the
+    //   // device.
+    //   return getInfo(param_value_size, param_value, param_value_size_ret,
+    //   "");
+    // }
+    // case PI_DEVICE_INFO_PLATFORM: {
+    //   return getInfo(param_value_size, param_value, param_value_size_ret,
+    //                  device->get_platform());
+    // // }
+
+  case PI_DEVICE_INFO_NAME: {
+    static constexpr size_t MAX_DEVICE_NAME_LENGTH = 256u;
+    char name[MAX_DEVICE_NAME_LENGTH];
+    cl::sycl::detail::pi::assertion(
+        cnDeviceGetName(name, MAX_DEVICE_NAME_LENGTH, device->get()) ==
+        CN_SUCCESS);
+    return getInfoArray(strlen(name) + 1, param_value_size, param_value,
+                        param_value_size_ret, name);
+  }
+  // case PI_DEVICE_INFO_VENDOR: {
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //                  "NVIDIA Corporation");
+  // }
+  // case PI_DEVICE_INFO_DRIVER_VERSION: {
+  //   auto version = getCudaVersionString();
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //                  version.c_str());
+  // }
+  // case PI_DEVICE_INFO_PROFILE: {
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //   "CUDA");
+  // }
+  // case PI_DEVICE_INFO_REFERENCE_COUNT: {
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //                  device->get_reference_count());
+  // }
+  // case PI_DEVICE_INFO_VERSION: {
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //                  "PI 0.0");
+  // }
+  // case PI_DEVICE_INFO_OPENCL_C_VERSION: {
+  //   return getInfo(param_value_size, param_value, param_value_size_ret, "");
+  // }
+  // case PI_DEVICE_INFO_EXTENSIONS: {
+  //   return getInfo(param_value_size, param_value, param_value_size_ret, "");
+  // }
+  // case PI_DEVICE_INFO_PRINTF_BUFFER_SIZE: {
+  //   // The minimum value for the FULL profile is 1 MB.
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //                  size_t{1024u});
+  // }
+  // case PI_DEVICE_INFO_PREFERRED_INTEROP_USER_SYNC: {
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //   true);
+  // }
+  case PI_DEVICE_INFO_PARENT_DEVICE: {
+    return getInfo(param_value_size, param_value, param_value_size_ret,
+                   nullptr);
+  }
+  // case PI_DEVICE_INFO_PARTITION_MAX_SUB_DEVICES: {
+  //   return getInfo(param_value_size, param_value, param_value_size_ret, 0u);
+  // }
+  // case PI_DEVICE_INFO_PARTITION_PROPERTIES: {
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //                  static_cast<cl_device_partition_property>(0u));
+  // }
+  // case PI_DEVICE_INFO_PARTITION_AFFINITY_DOMAIN: {
+  //   return getInfo(param_value_size, param_value, param_value_size_ret, 0u);
+  // }
+  // case PI_DEVICE_INFO_PARTITION_TYPE: {
+  //   // TODO: uncouple from OpenCL
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //                  static_cast<cl_device_partition_property>(0u));
+  // }
+
+  //   // Intel USM extensions
+
+  // case PI_DEVICE_INFO_USM_HOST_SUPPORT: {
+  //   // from cl_intel_unified_shared_memory: "The host memory access
+  //   capabilities
+  //   // apply to any host allocation."
+  //   //
+  //   // query if/how the device can access page-locked host memory, possibly
+  //   // through PCIe, using the same pointer as the host
+  //   pi_bitfield value = {};
+  //   if (getAttribute(device, CU_DEVICE_ATTRIBUTE_UNIFIED_ADDRESSING)) {
+  //     // the device shares a unified address space with the host
+  //     if (getAttribute(device, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR)
+  //     >=
+  //         6) {
+  //       // compute capability 6.x introduces operations that are atomic with
+  //       // respect to other CPUs and GPUs in the system
+  //       value = PI_USM_ACCESS | PI_USM_ATOMIC_ACCESS |
+  //               PI_USM_CONCURRENT_ACCESS | PI_USM_CONCURRENT_ATOMIC_ACCESS;
+  //     } else {
+  //       // on GPU architectures with compute capability lower than 6.x,
+  //       atomic
+  //       // operations from the GPU to CPU memory will not be atomic with
+  //       respect
+  //       // to CPU initiated atomic operations
+  //       value = PI_USM_ACCESS | PI_USM_CONCURRENT_ACCESS;
+  //     }
+  //   }
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //   value);
+  // }
+  // case PI_DEVICE_INFO_USM_DEVICE_SUPPORT: {
+  //   // from cl_intel_unified_shared_memory:
+  //   // "The device memory access capabilities apply to any device allocation
+  //   // associated with this device."
+  //   //
+  //   // query how the device can access memory allocated on the device itself
+  //   (?) pi_bitfield value = PI_USM_ACCESS | PI_USM_ATOMIC_ACCESS |
+  //                       PI_USM_CONCURRENT_ACCESS |
+  //                       PI_USM_CONCURRENT_ATOMIC_ACCESS;
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //   value);
+  // }
+  // case PI_DEVICE_INFO_USM_SINGLE_SHARED_SUPPORT: {
+  //   // from cl_intel_unified_shared_memory:
+  //   // "The single device shared memory access capabilities apply to any
+  //   shared
+  //   // allocation associated with this device."
+  //   //
+  //   // query if/how the device can access managed memory associated to it
+  //   pi_bitfield value = {};
+  //   if (getAttribute(device, CU_DEVICE_ATTRIBUTE_MANAGED_MEMORY)) {
+  //     // the device can allocate managed memory on this system
+  //     value = PI_USM_ACCESS | PI_USM_ATOMIC_ACCESS;
+  //   }
+  //   if (getAttribute(device, CU_DEVICE_ATTRIBUTE_CONCURRENT_MANAGED_ACCESS))
+  //   {
+  //     // the device can coherently access managed memory concurrently with
+  //     the
+  //     // CPU
+  //     value |= PI_USM_CONCURRENT_ACCESS;
+  //     if (getAttribute(device, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR)
+  //     >=
+  //         6) {
+  //       // compute capability 6.x introduces operations that are atomic with
+  //       // respect to other CPUs and GPUs in the system
+  //       value |= PI_USM_CONCURRENT_ATOMIC_ACCESS;
+  //     }
+  //   }
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //   value);
+  // }
+  // case PI_DEVICE_INFO_USM_CROSS_SHARED_SUPPORT: {
+  //   // from cl_intel_unified_shared_memory:
+  //   // "The cross-device shared memory access capabilities apply to any
+  //   shared
+  //   // allocation associated with this device, or to any shared memory
+  //   // allocation on another device that also supports the same cross-device
+  //   // shared memory access capability."
+  //   //
+  //   // query if/how the device can access managed memory associated to other
+  //   // devices
+  //   pi_bitfield value = {};
+  //   if (getAttribute(device, CU_DEVICE_ATTRIBUTE_MANAGED_MEMORY)) {
+  //     // the device can allocate managed memory on this system
+  //     value |= PI_USM_ACCESS;
+  //   }
+  //   if (getAttribute(device, CU_DEVICE_ATTRIBUTE_CONCURRENT_MANAGED_ACCESS))
+  //   {
+  //     // all devices with the CU_DEVICE_ATTRIBUTE_CONCURRENT_MANAGED_ACCESS
+  //     // attribute can coherently access managed memory concurrently with the
+  //     // CPU
+  //     value |= PI_USM_CONCURRENT_ACCESS;
+  //   }
+  //   if (getAttribute(device, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR) >=
+  //       6) {
+  //     // compute capability 6.x introduces operations that are atomic with
+  //     // respect to other CPUs and GPUs in the system
+  //     if (value & PI_USM_ACCESS)
+  //       value |= PI_USM_ATOMIC_ACCESS;
+  //     if (value & PI_USM_CONCURRENT_ACCESS)
+  //       value |= PI_USM_CONCURRENT_ATOMIC_ACCESS;
+  //   }
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //   value);
+  // }
+  // case PI_DEVICE_INFO_USM_SYSTEM_SHARED_SUPPORT: {
+  //   // from cl_intel_unified_shared_memory:
+  //   // "The shared system memory access capabilities apply to any allocations
+  //   // made by a system allocator, such as malloc or new."
+  //   //
+  //   // query if/how the device can access pageable host memory allocated by
+  //   the
+  //   // system allocator
+  //   pi_bitfield value = {};
+  //   if (getAttribute(device, CU_DEVICE_ATTRIBUTE_PAGEABLE_MEMORY_ACCESS)) {
+  //     // the device suppports coherently accessing pageable memory without
+  //     // calling cuMemHostRegister/cudaHostRegister on it
+  //     if (getAttribute(device,
+  //                      CU_DEVICE_ATTRIBUTE_HOST_NATIVE_ATOMIC_SUPPORTED)) {
+  //       // the link between the device and the host supports native atomic
+  //       // operations
+  //       value = PI_USM_ACCESS | PI_USM_ATOMIC_ACCESS |
+  //               PI_USM_CONCURRENT_ACCESS | PI_USM_CONCURRENT_ATOMIC_ACCESS;
+  //     } else {
+  //       // the link between the device and the host does not support native
+  //       // atomic operations
+  //       value = PI_USM_ACCESS | PI_USM_CONCURRENT_ACCESS;
+  //     }
+  //   }
+  //   return getInfo(param_value_size, param_value, param_value_size_ret,
+  //   value);
+  // }
+
+  //   // TODO: Investigate if this information is available on CUDA.
+  // case PI_DEVICE_INFO_PCI_ADDRESS:
+  // case PI_DEVICE_INFO_GPU_EU_COUNT:
+  // case PI_DEVICE_INFO_GPU_EU_SIMD_WIDTH:
+  // case PI_DEVICE_INFO_GPU_SLICES:
+  // case PI_DEVICE_INFO_GPU_SUBSLICES_PER_SLICE:
+  // case PI_DEVICE_INFO_GPU_EU_COUNT_PER_SUBSLICE:
+  // case PI_DEVICE_INFO_MAX_MEM_BANDWIDTH:
+  //   return PI_INVALID_VALUE;
 
   // TODO: Other options !!!
   // pi_cuda.cpp 1065-1525
@@ -1514,7 +2025,7 @@ pi_result cnrt_piQueueCreate(pi_context context, pi_device device,
     cnrtQueue_t cnQueue;
     // unsigned int flags = 0;
 
-    //  TODO: some properties 
+    // TODO: some properties
 
     err = PI_CHECK_ERROR(cnCreateQueue(&cnQueue, CN_QUEUE_SYNC_DEFAULT));
     if (err != PI_SUCCESS) {
