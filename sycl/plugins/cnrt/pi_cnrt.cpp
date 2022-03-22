@@ -1303,56 +1303,51 @@ pi_result cnrt_piDeviceGetInfo(pi_device device, pi_device_info param_name,
     return getInfo(param_value_size, param_value, param_value_size_ret, result);
   }
 
-    case PI_DEVICE_INFO_PROFILING_TIMER_RESOLUTION: {
-      // Hard coded to value returned by clinfo for OpenCL 1.2 CUDA | GeForce
-      // GTX 1060 3GB
-      return getInfo(param_value_size, param_value, param_value_size_ret,
-                     size_t{1000u});
-    }
-    case PI_DEVICE_INFO_ENDIAN_LITTLE: {
-      return getInfo(param_value_size, param_value, param_value_size_ret,
-      true);
-    }
-    case PI_DEVICE_INFO_AVAILABLE: {
-      return getInfo(param_value_size, param_value, param_value_size_ret,
-      true);
-    }
-    case PI_DEVICE_INFO_COMPILER_AVAILABLE: {
-      return getInfo(param_value_size, param_value, param_value_size_ret,
-      true);
-    }
-    case PI_DEVICE_INFO_LINKER_AVAILABLE: {
-      return getInfo(param_value_size, param_value, param_value_size_ret,
-      true);
-    }
-    case PI_DEVICE_INFO_EXECUTION_CAPABILITIES: {
-      auto capability = CL_EXEC_KERNEL;
-      return getInfo(param_value_size, param_value, param_value_size_ret,
-                     capability);
-    }
-    case PI_DEVICE_INFO_QUEUE_ON_DEVICE_PROPERTIES: {
-      // The mandated minimum capability:
-      auto capability =
-          CL_QUEUE_PROFILING_ENABLE | CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE;
-      return getInfo(param_value_size, param_value, param_value_size_ret,
-                     capability);
-    }
-    case PI_DEVICE_INFO_QUEUE_ON_HOST_PROPERTIES: {
-      // The mandated minimum capability:
-      auto capability = CL_QUEUE_PROFILING_ENABLE;
-      return getInfo(param_value_size, param_value, param_value_size_ret,
-                     capability);
-    }
-    case PI_DEVICE_INFO_BUILT_IN_KERNELS: {
-      // An empty string is returned if no built-in kernels are supported by
-      // the device.
-      return getInfo(param_value_size, param_value, param_value_size_ret,
-      "");
-    }
-    case PI_DEVICE_INFO_PLATFORM: {
-      return getInfo(param_value_size, param_value, param_value_size_ret,
-                     device->get_platform());
-    }
+  case PI_DEVICE_INFO_PROFILING_TIMER_RESOLUTION: {
+    // Hard coded to value returned by clinfo for OpenCL 1.2 CUDA | GeForce
+    // GTX 1060 3GB
+    return getInfo(param_value_size, param_value, param_value_size_ret,
+                   size_t{1000u});
+  }
+  case PI_DEVICE_INFO_ENDIAN_LITTLE: {
+    return getInfo(param_value_size, param_value, param_value_size_ret, true);
+  }
+  case PI_DEVICE_INFO_AVAILABLE: {
+    return getInfo(param_value_size, param_value, param_value_size_ret, true);
+  }
+  case PI_DEVICE_INFO_COMPILER_AVAILABLE: {
+    return getInfo(param_value_size, param_value, param_value_size_ret, true);
+  }
+  case PI_DEVICE_INFO_LINKER_AVAILABLE: {
+    return getInfo(param_value_size, param_value, param_value_size_ret, true);
+  }
+  case PI_DEVICE_INFO_EXECUTION_CAPABILITIES: {
+    auto capability = CL_EXEC_KERNEL;
+    return getInfo(param_value_size, param_value, param_value_size_ret,
+                   capability);
+  }
+  case PI_DEVICE_INFO_QUEUE_ON_DEVICE_PROPERTIES: {
+    // The mandated minimum capability:
+    auto capability =
+        CL_QUEUE_PROFILING_ENABLE | CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE;
+    return getInfo(param_value_size, param_value, param_value_size_ret,
+                   capability);
+  }
+  case PI_DEVICE_INFO_QUEUE_ON_HOST_PROPERTIES: {
+    // The mandated minimum capability:
+    auto capability = CL_QUEUE_PROFILING_ENABLE;
+    return getInfo(param_value_size, param_value, param_value_size_ret,
+                   capability);
+  }
+  case PI_DEVICE_INFO_BUILT_IN_KERNELS: {
+    // An empty string is returned if no built-in kernels are supported by
+    // the device.
+    return getInfo(param_value_size, param_value, param_value_size_ret, "");
+  }
+  case PI_DEVICE_INFO_PLATFORM: {
+    return getInfo(param_value_size, param_value, param_value_size_ret,
+                   device->get_platform());
+  }
 
   case PI_DEVICE_INFO_NAME: {
     static constexpr size_t MAX_DEVICE_NAME_LENGTH = 256u;
@@ -1786,22 +1781,29 @@ pi_result cnrt_piMemBufferCreate(pi_context context, pi_mem_flags flags,
     _pi_mem::mem_::buffer_mem_::alloc_mode allocMode =
         _pi_mem::mem_::buffer_mem_::alloc_mode::classic;
 
-    // TODO: buffer
-    // if ((flags & PI_MEM_FLAGS_HOST_PTR_USE) && enableUseHostPtr) {
-    //   retErr = PI_CHECK_ERROR(
-    //       cuMemHostRegister(host_ptr, size, CU_MEMHOSTREGISTER_DEVICEMAP));
-    //   retErr = PI_CHECK_ERROR(cuMemHostGetDevicePointer(&ptr, host_ptr, 0));
-    //   allocMode = _pi_mem::mem_::buffer_mem_::alloc_mode::use_host_ptr;
-    // } else if (flags & PI_MEM_FLAGS_HOST_PTR_ALLOC) {
-    //   retErr = PI_CHECK_ERROR(cuMemAllocHost(&host_ptr, size));
-    //   retErr = PI_CHECK_ERROR(cuMemHostGetDevicePointer(&ptr, host_ptr, 0));
-    //   allocMode = _pi_mem::mem_::buffer_mem_::alloc_mode::alloc_host_ptr;
-    // } else {
-    //   retErr = PI_CHECK_ERROR(cuMemAlloc(&ptr, size));
-    //   if (flags & PI_MEM_FLAGS_HOST_PTR_COPY) {
-    //     allocMode = _pi_mem::mem_::buffer_mem_::alloc_mode::copy_in;
-    //   }
-    // }
+    // TODO[MLU]: cuMemHostRegister
+    if ((flags & PI_MEM_FLAGS_HOST_PTR_USE) && enableUseHostPtr) {
+      cl::sycl::detail::pi::die("Page-locks has not implemented");
+      // retErr = PI_CHECK_ERROR(
+      //     cuMemHostRegister(host_ptr, size, CU_MEMHOSTREGISTER_DEVICEMAP));
+      // // retErr = PI_CHECK_ERROR(cuMemHostGetDevicePointer(&ptr, host_ptr, 0));
+      // retErr = PI_CHECK_ERROR(cnGetMemAttribute(&ptr,
+      //                                           CN_MEM_ATTRIBUTE_DEVICE_POINTER,
+      //                                           reinterpret_cast<CNaddr>(host_ptr)));
+      // allocMode = _pi_mem::mem_::buffer_mem_::alloc_mode::use_host_ptr;
+    } else if (flags & PI_MEM_FLAGS_HOST_PTR_ALLOC) {
+      retErr = PI_CHECK_ERROR(cnMallocHost(&host_ptr, size));
+      // retErr = PI_CHECK_ERROR(cuMemHostGetDevicePointer(&ptr, host_ptr, 0));
+      retErr = PI_CHECK_ERROR(cnGetMemAttribute(&ptr,
+                                                CN_MEM_ATTRIBUTE_DEVICE_POINTER,
+                                                reinterpret_cast<CNaddr>(host_ptr)));
+      allocMode = _pi_mem::mem_::buffer_mem_::alloc_mode::alloc_host_ptr;
+    } else {
+      retErr = PI_CHECK_ERROR(cnMalloc(&ptr, size));
+      if (flags & PI_MEM_FLAGS_HOST_PTR_COPY) {
+        allocMode = _pi_mem::mem_::buffer_mem_::alloc_mode::copy_in;
+      }
+    }
 
     if (retErr == PI_SUCCESS) {
       pi_mem parentBuffer = nullptr;
