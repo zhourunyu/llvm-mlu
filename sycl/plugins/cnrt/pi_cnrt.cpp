@@ -1303,58 +1303,56 @@ pi_result cnrt_piDeviceGetInfo(pi_device device, pi_device_info param_name,
     return getInfo(param_value_size, param_value, param_value_size_ret, result);
   }
 
-    // case PI_DEVICE_INFO_PROFILING_TIMER_RESOLUTION: {
-    //   // Hard coded to value returned by clinfo for OpenCL 1.2 CUDA | GeForce
-    //   GTX
-    //   // 1060 3GB
-    //   return getInfo(param_value_size, param_value, param_value_size_ret,
-    //                  size_t{1000u});
-    // }
-    // case PI_DEVICE_INFO_ENDIAN_LITTLE: {
-    //   return getInfo(param_value_size, param_value, param_value_size_ret,
-    //   true);
-    // }
-    // case PI_DEVICE_INFO_AVAILABLE: {
-    //   return getInfo(param_value_size, param_value, param_value_size_ret,
-    //   true);
-    // }
-    // case PI_DEVICE_INFO_COMPILER_AVAILABLE: {
-    //   return getInfo(param_value_size, param_value, param_value_size_ret,
-    //   true);
-    // }
-    // case PI_DEVICE_INFO_LINKER_AVAILABLE: {
-    //   return getInfo(param_value_size, param_value, param_value_size_ret,
-    //   true);
-    // }
-    // case PI_DEVICE_INFO_EXECUTION_CAPABILITIES: {
-    //   auto capability = CL_EXEC_KERNEL;
-    //   return getInfo(param_value_size, param_value, param_value_size_ret,
-    //                  capability);
-    // }
-    // case PI_DEVICE_INFO_QUEUE_ON_DEVICE_PROPERTIES: {
-    //   // The mandated minimum capability:
-    //   auto capability =
-    //       CL_QUEUE_PROFILING_ENABLE | CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE;
-    //   return getInfo(param_value_size, param_value, param_value_size_ret,
-    //                  capability);
-    // }
-    // case PI_DEVICE_INFO_QUEUE_ON_HOST_PROPERTIES: {
-    //   // The mandated minimum capability:
-    //   auto capability = CL_QUEUE_PROFILING_ENABLE;
-    //   return getInfo(param_value_size, param_value, param_value_size_ret,
-    //                  capability);
-    // }
-    // case PI_DEVICE_INFO_BUILT_IN_KERNELS: {
-    //   // An empty string is returned if no built-in kernels are supported by
-    //   the
-    //   // device.
-    //   return getInfo(param_value_size, param_value, param_value_size_ret,
-    //   "");
-    // }
-    // case PI_DEVICE_INFO_PLATFORM: {
-    //   return getInfo(param_value_size, param_value, param_value_size_ret,
-    //                  device->get_platform());
-    // // }
+    case PI_DEVICE_INFO_PROFILING_TIMER_RESOLUTION: {
+      // Hard coded to value returned by clinfo for OpenCL 1.2 CUDA | GeForce
+      // GTX 1060 3GB
+      return getInfo(param_value_size, param_value, param_value_size_ret,
+                     size_t{1000u});
+    }
+    case PI_DEVICE_INFO_ENDIAN_LITTLE: {
+      return getInfo(param_value_size, param_value, param_value_size_ret,
+      true);
+    }
+    case PI_DEVICE_INFO_AVAILABLE: {
+      return getInfo(param_value_size, param_value, param_value_size_ret,
+      true);
+    }
+    case PI_DEVICE_INFO_COMPILER_AVAILABLE: {
+      return getInfo(param_value_size, param_value, param_value_size_ret,
+      true);
+    }
+    case PI_DEVICE_INFO_LINKER_AVAILABLE: {
+      return getInfo(param_value_size, param_value, param_value_size_ret,
+      true);
+    }
+    case PI_DEVICE_INFO_EXECUTION_CAPABILITIES: {
+      auto capability = CL_EXEC_KERNEL;
+      return getInfo(param_value_size, param_value, param_value_size_ret,
+                     capability);
+    }
+    case PI_DEVICE_INFO_QUEUE_ON_DEVICE_PROPERTIES: {
+      // The mandated minimum capability:
+      auto capability =
+          CL_QUEUE_PROFILING_ENABLE | CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE;
+      return getInfo(param_value_size, param_value, param_value_size_ret,
+                     capability);
+    }
+    case PI_DEVICE_INFO_QUEUE_ON_HOST_PROPERTIES: {
+      // The mandated minimum capability:
+      auto capability = CL_QUEUE_PROFILING_ENABLE;
+      return getInfo(param_value_size, param_value, param_value_size_ret,
+                     capability);
+    }
+    case PI_DEVICE_INFO_BUILT_IN_KERNELS: {
+      // An empty string is returned if no built-in kernels are supported by
+      // the device.
+      return getInfo(param_value_size, param_value, param_value_size_ret,
+      "");
+    }
+    case PI_DEVICE_INFO_PLATFORM: {
+      return getInfo(param_value_size, param_value, param_value_size_ret,
+                     device->get_platform());
+    }
 
   case PI_DEVICE_INFO_NAME: {
     static constexpr size_t MAX_DEVICE_NAME_LENGTH = 256u;
