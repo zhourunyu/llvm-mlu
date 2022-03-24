@@ -237,6 +237,7 @@ pi_result getInfo<const char *>(size_t param_value_size, void *param_value,
                       param_value_size_ret, value);
 }
 
+// TODO[MLU]: not used
 // int getAttribute(pi_device device, CNdevice_attribute attribute) {
 //   int value;
 //   cl::sycl::detail::pi::assertion(
@@ -887,8 +888,9 @@ pi_result cnrt_piDeviceGetInfo(pi_device device, pi_device_info param_name,
   case PI_DEVICE_INFO_MAX_COMPUTE_UNITS: {
     int compute_units = 0;
     cl::sycl::detail::pi::assertion(
-        cnrtDeviceGetAttribute(&compute_units, cnrtAttrMaxQuadrantCount,
-                               device->get()) == cnrtSuccess);
+        cnDeviceGetAttribute(&compute_units,
+                             CN_DEVICE_ATTRIBUTE_MAX_CLUSTER_COUNT,
+                             device->get()) == CN_SUCCESS);
     cl::sycl::detail::pi::assertion(compute_units >= 0);
     return getInfo(param_value_size, param_value, param_value_size_ret,
                    pi_uint32(compute_units));
@@ -902,18 +904,18 @@ pi_result cnrt_piDeviceGetInfo(pi_device device, pi_device_info param_name,
 
     int max_x = 0, max_y = 0, max_z = 0;
     cl::sycl::detail::pi::assertion(
-        cnrtDeviceGetAttribute(&max_x, cnrtAttrMaxDimX, device->get()) ==
-        cnrtSuccess);
+        cnDeviceGetAttribute(&max_x, CN_DEVICE_ATTRIBUTE_MAX_BLOCK_TASK_DIM_X,
+                             device->get()) == CN_SUCCESS);
     cl::sycl::detail::pi::assertion(max_x >= 0);
 
     cl::sycl::detail::pi::assertion(
-        cnrtDeviceGetAttribute(&max_y, cnrtAttrMaxDimY, device->get()) ==
-        cnrtSuccess);
+        cnDeviceGetAttribute(&max_y, CN_DEVICE_ATTRIBUTE_MAX_BLOCK_TASK_DIM_Y,
+                             device->get()) == CN_SUCCESS);
     cl::sycl::detail::pi::assertion(max_y >= 0);
 
     cl::sycl::detail::pi::assertion(
-        cnrtDeviceGetAttribute(&max_z, cnrtAttrMaxDimZ, device->get()) ==
-        cnrtSuccess);
+        cnDeviceGetAttribute(&max_z, CN_DEVICE_ATTRIBUTE_MAX_BLOCK_TASK_DIM_Z,
+                             device->get()) == CN_SUCCESS);
     cl::sycl::detail::pi::assertion(max_z >= 0);
 
     return_size[0] = size_t(max_x);
@@ -927,9 +929,9 @@ pi_result cnrt_piDeviceGetInfo(pi_device device, pi_device_info param_name,
   case PI_DEVICE_INFO_MAX_WORK_GROUP_SIZE: {
     int max_work_group_size = 0;
     cl::sycl::detail::pi::assertion(
-        cnrtDeviceGetAttribute(&max_work_group_size,
-                               cnrtAttrMaxClusterPerUnionLimitTask,
-                               device->get()) == cnrtSuccess);
+        cnDeviceGetAttribute(&max_work_group_size,
+                             CN_DEVICE_ATTRIBUTE_MAX_CORE_COUNT_PER_CLUSTER,
+                             device->get()) == CN_SUCCESS);
 
     cl::sycl::detail::pi::assertion(max_work_group_size >= 0);
 
@@ -979,7 +981,7 @@ pi_result cnrt_piDeviceGetInfo(pi_device device, pi_device_info param_name,
     return getInfo(param_value_size, param_value, param_value_size_ret, 0u);
   }
 
-  // TODO: how to find max num subgroup of mlu
+  // TODO[MLU]: how to find max num subgroup of mlu
   case PI_DEVICE_INFO_MAX_NUM_SUB_GROUPS: {
   }
 
@@ -988,27 +990,33 @@ pi_result cnrt_piDeviceGetInfo(pi_device device, pi_device_info param_name,
     // TODO: Revisit for previous generation GPUs
     int major = 0;
     cl::sycl::detail::pi::assertion(
-        cnrtDeviceGetAttribute(&major, cnrtAttrComputeCapabilityMajor,
-                               device->get()) == cnrtSuccess);
-    bool ifp = (major >= 7);
+        cnDeviceGetAttribute(&major,
+                             CN_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR,
+                             device->get()) == CN_SUCCESS);
+    // TODO[MLU]: is mlu subgroup indenpendent foward progress
+    // bool ifp = (major >= 7);
+    bool ifp = false;
     return getInfo(param_value_size, param_value, param_value_size_ret, ifp);
   }
-    // case PI_DEVICE_INFO_SUB_GROUP_SIZES_INTEL: {
-    //   // NVIDIA devices only support one sub-group size (the warp size)
-    //   int warpSize = 0;
-    //   cl::sycl::detail::pi::assertion(
-    //       cnrtDeviceGetAttribute(&warpSize, CU_DEVICE_ATTRIBUTE_WARP_SIZE,
-    //                            device->get()) == CUDA_SUCCESS);
-    //   size_t sizes[1] = {static_cast<size_t>(warpSize)};
-    //   return getInfoArray<size_t>(1, param_value_size, param_value,
-    //                               param_value_size_ret, sizes);
-    // }
+    case PI_DEVICE_INFO_SUB_GROUP_SIZES_INTEL: {
+      // NVIDIA devices only support one sub-group size (the warp size)
+      int warpSize = 0;
+      // cl::sycl::detail::pi::assertion(
+      //     cnDeviceGetAttribute(&warpSize, CU_DEVICE_ATTRIBUTE_WARP_SIZE,
+      //                          device->get()) == CUDA_SUCCESS);
+      // TODO[MLU]: MLU warp size?
+      warpSize = 1;
+      size_t sizes[1] = {static_cast<size_t>(warpSize)};
+      return getInfoArray<size_t>(1, param_value_size, param_value,
+                                  param_value_size_ret, sizes);
+    }
 
   case PI_DEVICE_INFO_MAX_CLOCK_FREQUENCY: {
     int clock_freq = 0;
     cl::sycl::detail::pi::assertion(
-        cnrtDeviceGetAttribute(&clock_freq, cnrtAttrIpuClockRate,
-                               device->get()) == cnrtSuccess);
+        cnDeviceGetAttribute(&clock_freq,
+                             CN_DEVICE_ATTRIBUTE_CLUSTER_CLOCK_RATE,
+                             device->get()) == CN_SUCCESS);
     cl::sycl::detail::pi::assertion(clock_freq >= 0);
     return getInfo(param_value_size, param_value, param_value_size_ret,
                    pi_uint32(clock_freq) / 1000u);
@@ -1358,42 +1366,42 @@ pi_result cnrt_piDeviceGetInfo(pi_device device, pi_device_info param_name,
     return getInfoArray(strlen(name) + 1, param_value_size, param_value,
                         param_value_size_ret, name);
   }
-  // case PI_DEVICE_INFO_VENDOR: {
-  //   return getInfo(param_value_size, param_value, param_value_size_ret,
-  //                  "NVIDIA Corporation");
-  // }
-  // case PI_DEVICE_INFO_DRIVER_VERSION: {
-  //   auto version = getCudaVersionString();
-  //   return getInfo(param_value_size, param_value, param_value_size_ret,
-  //                  version.c_str());
-  // }
-  // case PI_DEVICE_INFO_PROFILE: {
-  //   return getInfo(param_value_size, param_value, param_value_size_ret,
-  //   "CUDA");
-  // }
-  // case PI_DEVICE_INFO_REFERENCE_COUNT: {
-  //   return getInfo(param_value_size, param_value, param_value_size_ret,
-  //                  device->get_reference_count());
-  // }
-  // case PI_DEVICE_INFO_VERSION: {
-  //   return getInfo(param_value_size, param_value, param_value_size_ret,
-  //                  "PI 0.0");
-  // }
-  // case PI_DEVICE_INFO_OPENCL_C_VERSION: {
-  //   return getInfo(param_value_size, param_value, param_value_size_ret, "");
-  // }
-  // case PI_DEVICE_INFO_EXTENSIONS: {
-  //   return getInfo(param_value_size, param_value, param_value_size_ret, "");
-  // }
-  // case PI_DEVICE_INFO_PRINTF_BUFFER_SIZE: {
-  //   // The minimum value for the FULL profile is 1 MB.
-  //   return getInfo(param_value_size, param_value, param_value_size_ret,
-  //                  size_t{1024u});
-  // }
-  // case PI_DEVICE_INFO_PREFERRED_INTEROP_USER_SYNC: {
-  //   return getInfo(param_value_size, param_value, param_value_size_ret,
-  //   true);
-  // }
+  case PI_DEVICE_INFO_VENDOR: {
+    return getInfo(param_value_size, param_value, param_value_size_ret,
+                   "Cambricon, Inc");
+  }
+  case PI_DEVICE_INFO_DRIVER_VERSION: {
+    auto version = getCnrtVersionString();
+    return getInfo(param_value_size, param_value, param_value_size_ret,
+                   version.c_str());
+  }
+  case PI_DEVICE_INFO_PROFILE: {
+    return getInfo(param_value_size, param_value, param_value_size_ret,
+    "CUDA");
+  }
+  case PI_DEVICE_INFO_REFERENCE_COUNT: {
+    return getInfo(param_value_size, param_value, param_value_size_ret,
+                   device->get_reference_count());
+  }
+  case PI_DEVICE_INFO_VERSION: {
+    return getInfo(param_value_size, param_value, param_value_size_ret,
+                   "PI 0.0");
+  }
+  case PI_DEVICE_INFO_OPENCL_C_VERSION: {
+    return getInfo(param_value_size, param_value, param_value_size_ret, "");
+  }
+  case PI_DEVICE_INFO_EXTENSIONS: {
+    return getInfo(param_value_size, param_value, param_value_size_ret, "");
+  }
+  case PI_DEVICE_INFO_PRINTF_BUFFER_SIZE: {
+    // The minimum value for the FULL profile is 1 MB.
+    return getInfo(param_value_size, param_value, param_value_size_ret,
+                   size_t{1024u});
+  }
+  case PI_DEVICE_INFO_PREFERRED_INTEROP_USER_SYNC: {
+    return getInfo(param_value_size, param_value, param_value_size_ret,
+    true);
+  }
   case PI_DEVICE_INFO_PARENT_DEVICE: {
     return getInfo(param_value_size, param_value, param_value_size_ret,
                    nullptr);
@@ -1786,17 +1794,17 @@ pi_result cnrt_piMemBufferCreate(pi_context context, pi_mem_flags flags,
       cl::sycl::detail::pi::die("Page-locks has not implemented");
       // retErr = PI_CHECK_ERROR(
       //     cuMemHostRegister(host_ptr, size, CU_MEMHOSTREGISTER_DEVICEMAP));
-      // // retErr = PI_CHECK_ERROR(cuMemHostGetDevicePointer(&ptr, host_ptr, 0));
-      // retErr = PI_CHECK_ERROR(cnGetMemAttribute(&ptr,
+      // // retErr = PI_CHECK_ERROR(cuMemHostGetDevicePointer(&ptr, host_ptr,
+      // 0)); retErr = PI_CHECK_ERROR(cnGetMemAttribute(&ptr,
       //                                           CN_MEM_ATTRIBUTE_DEVICE_POINTER,
       //                                           reinterpret_cast<CNaddr>(host_ptr)));
       // allocMode = _pi_mem::mem_::buffer_mem_::alloc_mode::use_host_ptr;
     } else if (flags & PI_MEM_FLAGS_HOST_PTR_ALLOC) {
       retErr = PI_CHECK_ERROR(cnMallocHost(&host_ptr, size));
       // retErr = PI_CHECK_ERROR(cuMemHostGetDevicePointer(&ptr, host_ptr, 0));
-      retErr = PI_CHECK_ERROR(cnGetMemAttribute(&ptr,
-                                                CN_MEM_ATTRIBUTE_DEVICE_POINTER,
-                                                reinterpret_cast<CNaddr>(host_ptr)));
+      retErr = PI_CHECK_ERROR(
+          cnGetMemAttribute(&ptr, CN_MEM_ATTRIBUTE_DEVICE_POINTER,
+                            reinterpret_cast<CNaddr>(host_ptr)));
       allocMode = _pi_mem::mem_::buffer_mem_::alloc_mode::alloc_host_ptr;
     } else {
       retErr = PI_CHECK_ERROR(cnMalloc(&ptr, size));
@@ -2456,6 +2464,7 @@ pi_result cnrt_piEnqueueKernelLaunch(
     return PI_INVALID_WORK_GROUP_SIZE;
   }
 
+  // TODO[MLU]: Do we need blocksPerGrid in MLU?
   // int blocksPerGrid[3] = {1, 1, 1};
 
   // for (size_t i = 0; i < work_dim; i++) {
@@ -2469,8 +2478,8 @@ pi_result cnrt_piEnqueueKernelLaunch(
 
   try {
     ScopedContext active(command_queue->get_context());
-    // CNqueue cnQueue = command_queue->get();
-    // CNkernel cuFunc = kernel->get();
+    CNqueue cnQueue = command_queue->get();
+    CNkernel cuFunc = kernel->get();
 
     retError = cnrt_piEnqueueEventsWait(command_queue, num_events_in_wait_list,
                                         event_wait_list, nullptr);
@@ -2483,7 +2492,7 @@ pi_result cnrt_piEnqueueKernelLaunch(
           cuda_implicit_offset[i] =
               static_cast<std::uint32_t>(global_work_offset[i]);
           if (global_work_offset[i] != 0) {
-            // cuFunc = kernel->get_with_offset_parameter();
+            cuFunc = kernel->get_with_offset_parameter();
           }
         }
       }
@@ -2503,8 +2512,9 @@ pi_result cnrt_piEnqueueKernelLaunch(
     //     cuFunc, blocksPerGrid[0], blocksPerGrid[1], blocksPerGrid[2],
     //     threadsPerBlock[0], threadsPerBlock[1], threadsPerBlock[2],
     //     kernel->get_local_size(), cnQueue, argIndices.data(), nullptr));
-    // TODO: Kernel Launch
-
+    retError = PI_CHECK_ERROR(cnInvokeKernel(
+        cuFunc, threadsPerBlock[0], threadsPerBlock[1], threadsPerBlock[2],
+        CN_KERNEL_CLASS_BLOCK, 0, cnQueue, argIndices.data(), nullptr));
     kernel->clear_local_size();
     if (event) {
       retError = retImplEv->record();
