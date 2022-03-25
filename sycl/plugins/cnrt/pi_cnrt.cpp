@@ -256,25 +256,29 @@ void guessLocalWorkSize(int *threadsPerBlock, const size_t *global_work_size,
   assert(threadsPerBlock != nullptr);
   assert(global_work_size != nullptr);
   assert(kernel != nullptr);
-  int recommendedBlockSize, minGrid;
+
+  // TODO[MLU]: threadsPerBlock = {1,1,1}
+  return;
+
+  // int recommendedBlockSize, minGrid;
 
   // TODO: cuOccupancyMaxPotentialBlockSize
   // PI_CHECK_ERROR(cuOccupancyMaxPotentialBlockSize(
   //     &minGrid, &recommendedBlockSize, kernel->get(), NULL,
   //     kernel->get_local_size(), maxThreadsPerBlock[0]));
 
-  (void)minGrid; // Not used, avoid warnings
+  // (void)minGrid; // Not used, avoid warnings
 
-  threadsPerBlock[0] =
-      std::min(static_cast<int>(maxThreadsPerBlock[0]),
-               std::min(static_cast<int>(global_work_size[0]),
-                        static_cast<int>(recommendedBlockSize)));
+  // threadsPerBlock[0] =
+  //     std::min(static_cast<int>(maxThreadsPerBlock[0]),
+  //              std::min(static_cast<int>(global_work_size[0]),
+  //                       static_cast<int>(recommendedBlockSize)));
 
   // Find a local work group size that is a divisor of the global
   // work group size to produce uniform work groups.
-  while (0u != (global_work_size[0] % threadsPerBlock[0])) {
-    --threadsPerBlock[0];
-  }
+  // while (0u != (global_work_size[0] % threadsPerBlock[0])) {
+  //   --threadsPerBlock[0];
+  // }
 }
 
 } // anonymous namespace
@@ -2416,7 +2420,9 @@ pi_result cnrt_piEnqueueKernelLaunch(
 
   // Set the number of threads per block to the number of threads per warp
   // by default unless user has provided a better number
-  int threadsPerBlock[3] = {32, 1, 1};
+  // TODO[MLU]: threadsPerBlock in mlu?
+  // int threadsPerBlock[3] = {32, 1, 1};
+  int threadsPerBlock[3] = {1, 1, 1};
   size_t maxWorkGroupSize = 0u;
   size_t maxThreadsPerBlock[3] = {};
   bool providedLocalWorkGroupSize = (local_work_size != nullptr);
