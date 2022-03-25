@@ -1734,7 +1734,7 @@ pi_result cnrt_piContextRelease(pi_context ctxt) {
     // Primary context is not destroyed, but released
     CNdev cuDev = ctxt->get_device()->get();
     cnCtxSetCurrent(NULL);
-    // TODO: Is cnSharedContextRelease the same as cuDevicePrimaryCtxRelease?
+    // TODO[MLU]: Is cnSharedContextRelease the same as cuDevicePrimaryCtxRelease?
     return PI_CHECK_ERROR(cnSharedContextRelease(cuDev));
   }
 }
@@ -2513,14 +2513,17 @@ pi_result cnrt_piEnqueueKernelLaunch(
           PI_COMMAND_TYPE_NDRANGE_KERNEL, command_queue));
       retImplEv->start();
     }
-
     // retError = PI_CHECK_ERROR(cnInvokeKernel(
     //     cuFunc, blocksPerGrid[0], blocksPerGrid[1], blocksPerGrid[2],
     //     threadsPerBlock[0], threadsPerBlock[1], threadsPerBlock[2],
     //     kernel->get_local_size(), cnQueue, argIndices.data(), nullptr));
+
+    // void *extra[] = {CN_INVOKE_PARAM_BUFFER_POINTER, (void *)params, CN_INVOKE_PARAM_BUFFER_SIZE,
+    //                  (void *)(SAMPLE_MATH_ADD_PARAM_NUM * sizeof(CNaddr)), CN_INVOKE_PARAM_END};
+                     
     retError = PI_CHECK_ERROR(cnInvokeKernel(
         cuFunc, threadsPerBlock[0], threadsPerBlock[1], threadsPerBlock[2],
-        CN_KERNEL_CLASS_BLOCK, 0, cnQueue, argIndices.data(), nullptr));
+        CN_KERNEL_CLASS_BLOCK, 0, cnQueue, nullptr, argIndices.data()));
     kernel->clear_local_size();
     if (event) {
       retError = retImplEv->record();
