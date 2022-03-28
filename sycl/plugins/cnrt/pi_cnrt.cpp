@@ -1002,18 +1002,18 @@ pi_result cnrt_piDeviceGetInfo(pi_device device, pi_device_info param_name,
     bool ifp = false;
     return getInfo(param_value_size, param_value, param_value_size_ret, ifp);
   }
-    case PI_DEVICE_INFO_SUB_GROUP_SIZES_INTEL: {
-      // NVIDIA devices only support one sub-group size (the warp size)
-      int warpSize = 0;
-      // cl::sycl::detail::pi::assertion(
-      //     cnDeviceGetAttribute(&warpSize, CU_DEVICE_ATTRIBUTE_WARP_SIZE,
-      //                          device->get()) == CUDA_SUCCESS);
-      // TODO[MLU]: MLU warp size?
-      warpSize = 1;
-      size_t sizes[1] = {static_cast<size_t>(warpSize)};
-      return getInfoArray<size_t>(1, param_value_size, param_value,
-                                  param_value_size_ret, sizes);
-    }
+  case PI_DEVICE_INFO_SUB_GROUP_SIZES_INTEL: {
+    // NVIDIA devices only support one sub-group size (the warp size)
+    int warpSize = 0;
+    // cl::sycl::detail::pi::assertion(
+    //     cnDeviceGetAttribute(&warpSize, CU_DEVICE_ATTRIBUTE_WARP_SIZE,
+    //                          device->get()) == CUDA_SUCCESS);
+    // TODO[MLU]: MLU warp size?
+    warpSize = 1;
+    size_t sizes[1] = {static_cast<size_t>(warpSize)};
+    return getInfoArray<size_t>(1, param_value_size, param_value,
+                                param_value_size_ret, sizes);
+  }
 
   case PI_DEVICE_INFO_MAX_CLOCK_FREQUENCY: {
     int clock_freq = 0;
@@ -1380,8 +1380,7 @@ pi_result cnrt_piDeviceGetInfo(pi_device device, pi_device_info param_name,
                    version.c_str());
   }
   case PI_DEVICE_INFO_PROFILE: {
-    return getInfo(param_value_size, param_value, param_value_size_ret,
-    "CUDA");
+    return getInfo(param_value_size, param_value, param_value_size_ret, "CUDA");
   }
   case PI_DEVICE_INFO_REFERENCE_COUNT: {
     return getInfo(param_value_size, param_value, param_value_size_ret,
@@ -1403,8 +1402,7 @@ pi_result cnrt_piDeviceGetInfo(pi_device device, pi_device_info param_name,
                    size_t{1024u});
   }
   case PI_DEVICE_INFO_PREFERRED_INTEROP_USER_SYNC: {
-    return getInfo(param_value_size, param_value, param_value_size_ret,
-    true);
+    return getInfo(param_value_size, param_value, param_value_size_ret, true);
   }
   case PI_DEVICE_INFO_PARENT_DEVICE: {
     return getInfo(param_value_size, param_value, param_value_size_ret,
@@ -1734,7 +1732,8 @@ pi_result cnrt_piContextRelease(pi_context ctxt) {
     // Primary context is not destroyed, but released
     CNdev cuDev = ctxt->get_device()->get();
     cnCtxSetCurrent(NULL);
-    // TODO[MLU]: Is cnSharedContextRelease the same as cuDevicePrimaryCtxRelease?
+    // TODO[MLU]: Is cnSharedContextRelease the same as
+    // cuDevicePrimaryCtxRelease?
     return PI_CHECK_ERROR(cnSharedContextRelease(cuDev));
   }
 }
@@ -2356,35 +2355,40 @@ pi_result cnrt_piextKernelSetArgMemObj(pi_kernel kernel, pi_uint32 arg_index,
 
   // TODO: cnrt_piextKernelSetArgMemObj
 
-  // assert(kernel != nullptr);
-  // assert(arg_value != nullptr);
+  assert(kernel != nullptr);
+  assert(arg_value != nullptr);
 
-  // pi_result retErr = PI_SUCCESS;
-  // try {
-  //   pi_mem arg_mem = *arg_value;
-  //   if (arg_mem->mem_type_ == _pi_mem::mem_type::surface) {
-  //     CUDA_ARRAY3D_DESCRIPTOR arrayDesc;
-  //     PI_CHECK_ERROR(cuArray3DGetDescriptor(
-  //         &arrayDesc, arg_mem->mem_.surface_mem_.get_array()));
-  //     if (arrayDesc.Format != CU_AD_FORMAT_UNSIGNED_INT32 &&
-  //         arrayDesc.Format != CU_AD_FORMAT_SIGNED_INT32 &&
-  //         arrayDesc.Format != CU_AD_FORMAT_HALF &&
-  //         arrayDesc.Format != CU_AD_FORMAT_FLOAT) {
-  //       cl::sycl::detail::pi::die(
-  //           "PI CUDA kernels only support images with channel types int32, "
-  //           "uint32, float, and half.");
-  //     }
-  //     CUsurfObject cuSurf = arg_mem->mem_.surface_mem_.get_surface();
-  //     kernel->set_kernel_arg(arg_index, sizeof(cuSurf), (void *)&cuSurf);
-  //   } else {
-  //     CUdeviceptr cuPtr = arg_mem->mem_.buffer_mem_.get();
-  //     kernel->set_kernel_arg(arg_index, sizeof(CUdeviceptr), (void *)&cuPtr);
-  //   }
-  // } catch (pi_result err) {
-  //   retErr = err;
-  // }
-  // return retErr;
-  return PI_SUCCESS;
+  pi_result retErr = PI_SUCCESS;
+  try {
+    pi_mem arg_mem = *arg_value;
+    //   if (arg_mem->mem_type_ == _pi_mem::mem_type::surface) {
+    //     CUDA_ARRAY3D_DESCRIPTOR arrayDesc;
+    //     PI_CHECK_ERROR(cuArray3DGetDescriptor(
+    //         &arrayDesc, arg_mem->mem_.surface_mem_.get_array()));
+    //     if (arrayDesc.Format != CU_AD_FORMAT_UNSIGNED_INT32 &&
+    //         arrayDesc.Format != CU_AD_FORMAT_SIGNED_INT32 &&
+    //         arrayDesc.Format != CU_AD_FORMAT_HALF &&
+    //         arrayDesc.Format != CU_AD_FORMAT_FLOAT) {
+    //       cl::sycl::detail::pi::die(
+    //           "PI CUDA kernels only support images with channel types int32,
+    //           " "uint32, float, and half.");
+    //     }
+    //     CUsurfObject cuSurf = arg_mem->mem_.surface_mem_.get_surface();
+    //     kernel->set_kernel_arg(arg_index, sizeof(cuSurf), (void *)&cuSurf);
+    //   } else {
+    //     CUdeviceptr cuPtr = arg_mem->mem_.buffer_mem_.get();
+    //     kernel->set_kernel_arg(arg_index, sizeof(CUdeviceptr), (void
+    //     *)&cuPtr);
+    //   }
+    // } catch (pi_result err) {
+    //   retErr = err;
+    // }
+
+    CNaddr cuPtr = arg_mem->mem_.buffer_mem_.get();
+    kernel->set_kernel_arg(arg_index, sizeof(CNaddr), (void *)&cuPtr);
+  } catch (pi_result err) {
+  }
+  return retErr;
 }
 
 pi_result cnrt_piextKernelSetArgSampler(pi_kernel kernel, pi_uint32 arg_index,
@@ -2465,6 +2469,7 @@ pi_result cnrt_piEnqueueKernelLaunch(
     }
   }
 
+  // TODO[MLU]: ignore work item size error
   if (maxWorkGroupSize <
       size_t(threadsPerBlock[0] * threadsPerBlock[1] * threadsPerBlock[2])) {
     return PI_INVALID_WORK_GROUP_SIZE;
@@ -2518,12 +2523,14 @@ pi_result cnrt_piEnqueueKernelLaunch(
     //     threadsPerBlock[0], threadsPerBlock[1], threadsPerBlock[2],
     //     kernel->get_local_size(), cnQueue, argIndices.data(), nullptr));
 
-    // void *extra[] = {CN_INVOKE_PARAM_BUFFER_POINTER, (void *)params, CN_INVOKE_PARAM_BUFFER_SIZE,
-    //                  (void *)(SAMPLE_MATH_ADD_PARAM_NUM * sizeof(CNaddr)), CN_INVOKE_PARAM_END};
-                     
+    void *extra[] = {CN_INVOKE_PARAM_BUFFER_POINTER, argIndices.data(),
+                     CN_INVOKE_PARAM_BUFFER_SIZE,
+                     (void *)(8 * sizeof(CNaddr)),
+                     CN_INVOKE_PARAM_END};
+
     retError = PI_CHECK_ERROR(cnInvokeKernel(
         cuFunc, threadsPerBlock[0], threadsPerBlock[1], threadsPerBlock[2],
-        CN_KERNEL_CLASS_BLOCK, 0, cnQueue, nullptr, argIndices.data()));
+        CN_KERNEL_CLASS_BLOCK, 0, cnQueue, nullptr, extra));
     kernel->clear_local_size();
     if (event) {
       retError = retImplEv->record();
