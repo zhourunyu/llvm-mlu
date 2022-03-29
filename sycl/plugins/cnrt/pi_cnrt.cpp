@@ -2033,7 +2033,7 @@ pi_result cnrt_piQueueCreate(pi_context context, pi_device device,
 
     ScopedContext active(context);
 
-    cnrtQueue_t cnQueue;
+    CNqueue cnQueue;
     // unsigned int flags = 0;
 
     // TODO: some properties
