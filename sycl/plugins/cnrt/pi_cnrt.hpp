@@ -33,7 +33,6 @@
 #include <stdint.h>
 #include <string>
 #include <vector>
-#include <map>
 
 extern "C" {
 
@@ -554,6 +553,7 @@ struct _pi_kernel {
   pi_context context_;
   pi_program program_;
   std::atomic_uint32_t refCount_;
+  CNaddr* kernel_params_;
 
   /// Structure that holds the arguments to the kernel.
   /// Note earch argument size is known, since it comes
@@ -567,13 +567,9 @@ struct _pi_kernel {
     using args_t = std::array<char, MAX_PARAM_BYTES>;
     using args_size_t = std::vector<size_t>;
     using args_index_t = std::vector<void *>;
-    using args_offset_t = std::vector<void *>;
-    using args_mapping_t = std::map<CNaddr, args_offset_t>;
     args_t storage_;
     args_size_t paramSizes_;
     args_index_t indices_;
-    args_offset_t tmp_offset_ = {(void*)256, (void*)256, (void*)0};
-    args_mapping_t mem_offset_;
     args_size_t offsetPerIndex_;
 
     std::uint32_t implicitOffsetArgs_[3] = {0, 0, 0};
@@ -608,48 +604,6 @@ struct _pi_kernel {
       offsetPerIndex_[index] = localSize;
     }
 
-
-    void add_offset_arg(size_t index, size_t size, const void *arg,
-                 size_t localSize = 0) {
-      if (index + 2 > indices_.size()) {
-        // Move implicit offset argument index with the end
-        indices_.resize(index + 2, indices_.back());
-        // Ensure enough space for the new argument
-        paramSizes_.resize(index + 1);
-        offsetPerIndex_.resize(index + 1);
-      }
-      paramSizes_[index] = size;
-      // calculate the insertion point on the array
-      size_t insertPos = std::accumulate(std::begin(paramSizes_),
-                                         std::begin(paramSizes_) + index, 0);
-      // Update the stored value for the argument
-      std::memcpy(&storage_[insertPos], arg, size);
-      indices_[index] =  &storage_[insertPos];
-      //tmp_offset_.emplace_back(&storage_[insertPos]);
-      offsetPerIndex_[index] = localSize;
-    }
-
-    void add_mem_arg(size_t index, size_t size, const CNaddr arg,
-                 size_t localSize = 0) {
-      if (index + 2 > indices_.size()) {
-        // Move implicit offset argument index with the end
-        indices_.resize(index + 2, indices_.back());
-        // Ensure enough space for the new argument
-        paramSizes_.resize(index + 1);
-        offsetPerIndex_.resize(index + 1);
-      }
-      paramSizes_[index] = size;
-      // calculate the insertion point on the array
-      //size_t insertPos = std::accumulate(std::begin(paramSizes_),
-      //                                   std::begin(paramSizes_) + index, 0);
-      // Update the stored value for the argument
-      //std::memcpy(&storage_[insertPos], (void *)arg, size);
-      indices_[index] =  (void *)arg;
-      mem_offset_[arg] = tmp_offset_;
-      //tmp_offset_.clear();
-      offsetPerIndex_[index] = localSize;
-    }
-
     void add_local_arg(size_t index, size_t size) {
       size_t localOffset = this->get_local_size();
       add_arg(index, sizeof(size_t), (const void *)&(localOffset), size);
@@ -665,7 +619,6 @@ struct _pi_kernel {
     }
 
     args_index_t get_indices() const noexcept { return indices_; }
-    args_mapping_t get_mapping() const noexcept { return mem_offset_; }
 
     pi_uint32 get_local_size() const {
       return std::accumulate(std::begin(offsetPerIndex_),
@@ -726,14 +679,6 @@ struct _pi_kernel {
     args_.add_local_arg(index, size);
   }
 
-  void set_kernel_mem_arg(int index, size_t size, const CNaddr arg) {
-    args_.add_mem_arg(index, size, arg);
-  }
-
-  void set_kernel_offset_arg(int index, size_t size, const void *arg) {
-    args_.add_offset_arg(index, size, arg);
-  }
-
 
   void set_implicit_offset_arg(size_t size, std::uint32_t *implicitOffset) {
     args_.set_implicit_offset(size, implicitOffset);
@@ -743,9 +688,27 @@ struct _pi_kernel {
     return args_.get_indices();
   }
 
-   arguments::args_mapping_t get_arg_mapping() const {
-    return args_.get_mapping();
+  void create_kernel_params() {
+    kernel_params_ = (CNaddr *)malloc(get_num_args() * sizeof(CNaddr));
+    auto argIndices = get_arg_indices();
+    const pi_uint32 MemStep = 4;
+    for(pi_uint32 i=0; i<get_num_args(); i++) {
+      if(i%MemStep == 0) kernel_params_[i] = *(CNaddr *)(argIndices[i]);
+      else kernel_params_[i] = *(int *)(argIndices[i]);
+    }
   }
+
+  CNaddr * get_kernel_params() {
+    if(kernel_params_ == nullptr) create_kernel_params();
+    return kernel_params_;
+  }
+
+  void free_kernel_params() {
+    assert(kernel_params_ != nullptr);
+    free(kernel_params_);
+    kernel_params_ = nullptr;
+  }
+  
 
   pi_uint32 get_local_size() const noexcept { return args_.get_local_size(); }
 
