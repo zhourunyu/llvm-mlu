@@ -338,17 +338,17 @@ _pi_event::_pi_event(pi_command_type type, pi_context context, pi_queue queue)
       isRecorded_{false}, isStarted_{false}, evEnd_{nullptr}, evStart_{nullptr},
       evQueued_{nullptr}, queue_{queue}, context_{context} {
 
-  // bool profilingEnabled = queue_->properties_ & PI_QUEUE_PROFILING_ENABLE;
+  bool profilingEnabled = queue_->properties_ & PI_QUEUE_PROFILING_ENABLE;
 
-  // PI_CHECK_ERROR(cnCreateNotifier(&evEnd_, profilingEnabled
-  //                                              ? CN_NOTIFIER_DEFAULT
-  //                                              :
-  //                                              CN_NOTIFIER_DISABLE_TIMING));
+  PI_CHECK_ERROR(cnCreateNotifier(&evEnd_, profilingEnabled
+                                               ? CN_NOTIFIER_DEFAULT
+                                               :
+                                               CN_NOTIFIER_DISABLE_TIMING));
 
-  // if (profilingEnabled) {
-  //   PI_CHECK_ERROR(cnCreateNotifier(&evQueued_, CN_NOTIFIER_DEFAULT));
-  //   PI_CHECK_ERROR(cnCreateNotifier(&evStart_, CN_NOTIFIER_DEFAULT));
-  // }
+  if (profilingEnabled) {
+    PI_CHECK_ERROR(cnCreateNotifier(&evQueued_, CN_NOTIFIER_DEFAULT));
+    PI_CHECK_ERROR(cnCreateNotifier(&evStart_, CN_NOTIFIER_DEFAULT));
+  }
 
   if (queue_ != nullptr) {
     cnrt_piQueueRetain(queue_);
@@ -371,8 +371,8 @@ pi_result _pi_event::start() {
     if (queue_->properties_ & PI_QUEUE_PROFILING_ENABLE) {
       // NOTE: This relies on the default stream to be unused.
       // TODO: cuEventRecord
-      // result = PI_CHECK_ERROR(cnPlaceNotifier(evQueued_, 0));
-      // result = PI_CHECK_ERROR(cnPlaceNotifier(evStart_, queue_->get()));
+      result = PI_CHECK_ERROR(cnPlaceNotifier(evQueued_, 0));
+      result = PI_CHECK_ERROR(cnPlaceNotifier(evStart_, queue_->get()));
     }
   } catch (pi_result error) {
     result = error;
@@ -440,7 +440,7 @@ pi_result _pi_event::record() {
     return PI_INVALID_QUEUE;
   }
 
-  // CNqueue cnQueue = queue_->get();
+  CNqueue cnQueue = queue_->get();
 
   try {
     eventId_ = queue_->get_next_event_id();
@@ -448,7 +448,7 @@ pi_result _pi_event::record() {
       cl::sycl::detail::pi::die(
           "Unrecoverable program state reached in event identifier overflow");
     }
-    // result = PI_CHECK_ERROR(cnPlaceNotifier(evEnd_, cnQueue));
+    result = PI_CHECK_ERROR(cnPlaceNotifier(evEnd_, cnQueue));
     result = PI_SUCCESS;
   } catch (pi_result error) {
     result = error;
@@ -478,12 +478,12 @@ pi_result _pi_event::wait() {
 
 pi_result _pi_event::release() {
   assert(queue_ != nullptr);
-  // PI_CHECK_ERROR(cnDestroyNotifier(evEnd_));
+  PI_CHECK_ERROR(cnDestroyNotifier(evEnd_));
 
-  // if (queue_->properties_ & PI_QUEUE_PROFILING_ENABLE) {
-  //   PI_CHECK_ERROR(cnDestroyNotifier(evQueued_));
-  //   PI_CHECK_ERROR(cnDestroyNotifier(evStart_));
-  // }
+  if (queue_->properties_ & PI_QUEUE_PROFILING_ENABLE) {
+    PI_CHECK_ERROR(cnDestroyNotifier(evQueued_));
+    PI_CHECK_ERROR(cnDestroyNotifier(evStart_));
+  }
 
   return PI_SUCCESS;
 }
@@ -493,8 +493,8 @@ pi_result enqueueEventWait(pi_queue queue, pi_event event) {
   // for native events, the cuStreamWaitEvent call is used.
   // This makes all future work submitted to stream wait for all
   // work captured in event.
-  // return PI_CHECK_ERROR(cnQueueWaitNotifier(queue->get(), event->get()));
-  return PI_SUCCESS;
+  return PI_CHECK_ERROR(cnQueueWaitNotifier(queue->get(), event->get()));
+  // return PI_SUCCESS;
 }
 
 _pi_program::_pi_program(pi_context ctxt)
@@ -1664,7 +1664,7 @@ pi_result cnrt_piContextCreate(const pi_context_properties *properties,
 
   std::unique_ptr<_pi_context> piContextPtr{nullptr};
   try {
-    // CNcontext current = nullptr;
+    CNcontext current = nullptr;
 
     // TODO: Primary Context？
     if (property_cuda_primary) {
@@ -1679,7 +1679,7 @@ pi_result cnrt_piContextCreate(const pi_context_properties *properties,
     } else {
       // Create a scoped context.
       CNcontext newContext;
-      // PI_CHECK_ERROR(cnCtxGetCurrent(&current));
+      PI_CHECK_ERROR(cnCtxGetCurrent(&current));
       //  TODO: CU_CTX_MAP_HOST
       errcode_ret = PI_CHECK_ERROR(
           cnCtxCreate(&newContext, CN_CTX_SCHED_SYNC_AUTO, devices[0]->get()));
@@ -1688,17 +1688,17 @@ pi_result cnrt_piContextCreate(const pi_context_properties *properties,
     }
 
     // Use default stream to record base event counter
-    // PI_CHECK_ERROR(
-    //    cnCreateNotifier(&piContextPtr->evBase_, CN_NOTIFIER_DEFAULT));
-    // PI_CHECK_ERROR(cnPlaceNotifier(piContextPtr->evBase_, 0));
+    PI_CHECK_ERROR(
+       cnCreateNotifier(&piContextPtr->evBase_, CN_NOTIFIER_DEFAULT));
+    PI_CHECK_ERROR(cnPlaceNotifier(piContextPtr->evBase_, 0));
 
     // For non-primary scoped contexts keep the last active on top of the stack
     // as `cuCtxCreate` replaces it implicitly otherwise.
     // Primary contexts are kept on top of the stack, so the previous context
     // is not queried and therefore not recovered.
-    // if (current != nullptr) {
-    //  PI_CHECK_ERROR(cnCtxSetCurrent(current));
-    //}
+    if (current != nullptr) {
+     PI_CHECK_ERROR(cnCtxSetCurrent(current));
+    }
 
     *retcontext = piContextPtr.release();
   } catch (pi_result err) {
@@ -1719,7 +1719,7 @@ pi_result cnrt_piContextRelease(pi_context ctxt) {
 
   std::unique_ptr<_pi_context> context{ctxt};
 
-  // PI_CHECK_ERROR(cnDestroyNotifier(context->evBase_));
+  PI_CHECK_ERROR(cnDestroyNotifier(context->evBase_));
 
   if (!ctxt->is_primary()) {
     CNcontext cnCtxt = ctxt->get();
@@ -2012,7 +2012,7 @@ pi_result cnrt_piQueueCreate(pi_context context, pi_device device,
       return PI_INVALID_DEVICE;
     }
 
-    // ScopedContext active(context);
+    ScopedContext active(context);
 
     CNqueue cnQueue;
     // unsigned int flags = 0;
@@ -2158,7 +2158,7 @@ pi_result cnrt_piEnqueueMemBufferWrite(pi_queue command_queue, pi_mem buffer,
   pi_result retErr = PI_SUCCESS;
   // CNqueue cnQueue = command_queue->get();
   CNaddr devPtr = buffer->mem_.buffer_mem_.get();
-  // std::unique_ptr<_pi_event> retImplEv{nullptr};
+  std::unique_ptr<_pi_event> retImplEv{nullptr};
 
   try {
     /*
