@@ -338,16 +338,17 @@ _pi_event::_pi_event(pi_command_type type, pi_context context, pi_queue queue)
       isRecorded_{false}, isStarted_{false}, evEnd_{nullptr}, evStart_{nullptr},
       evQueued_{nullptr}, queue_{queue}, context_{context} {
 
-  //bool profilingEnabled = queue_->properties_ & PI_QUEUE_PROFILING_ENABLE;
+  // bool profilingEnabled = queue_->properties_ & PI_QUEUE_PROFILING_ENABLE;
 
-  //PI_CHECK_ERROR(cnCreateNotifier(&evEnd_, profilingEnabled
-  //                                             ? CN_NOTIFIER_DEFAULT
-  //                                             : CN_NOTIFIER_DISABLE_TIMING));
+  // PI_CHECK_ERROR(cnCreateNotifier(&evEnd_, profilingEnabled
+  //                                              ? CN_NOTIFIER_DEFAULT
+  //                                              :
+  //                                              CN_NOTIFIER_DISABLE_TIMING));
 
-  //if (profilingEnabled) {
-  //  PI_CHECK_ERROR(cnCreateNotifier(&evQueued_, CN_NOTIFIER_DEFAULT));
-  //  PI_CHECK_ERROR(cnCreateNotifier(&evStart_, CN_NOTIFIER_DEFAULT));
-  //}
+  // if (profilingEnabled) {
+  //   PI_CHECK_ERROR(cnCreateNotifier(&evQueued_, CN_NOTIFIER_DEFAULT));
+  //   PI_CHECK_ERROR(cnCreateNotifier(&evStart_, CN_NOTIFIER_DEFAULT));
+  // }
 
   if (queue_ != nullptr) {
     cnrt_piQueueRetain(queue_);
@@ -370,8 +371,8 @@ pi_result _pi_event::start() {
     if (queue_->properties_ & PI_QUEUE_PROFILING_ENABLE) {
       // NOTE: This relies on the default stream to be unused.
       // TODO: cuEventRecord
-      //result = PI_CHECK_ERROR(cnPlaceNotifier(evQueued_, 0));
-      //result = PI_CHECK_ERROR(cnPlaceNotifier(evStart_, queue_->get()));
+      // result = PI_CHECK_ERROR(cnPlaceNotifier(evQueued_, 0));
+      // result = PI_CHECK_ERROR(cnPlaceNotifier(evStart_, queue_->get()));
     }
   } catch (pi_result error) {
     result = error;
@@ -382,9 +383,9 @@ pi_result _pi_event::start() {
 }
 
 bool _pi_event::is_completed() const noexcept {
-  //if (!isRecorded_) {
-  //  return false;
-  //}
+  // if (!isRecorded_) {
+  //   return false;
+  // }
   /*
   if (!hasBeenWaitedOn_) {
     const CNresult ret = cnQueryNotifier(evEnd_);
@@ -439,7 +440,7 @@ pi_result _pi_event::record() {
     return PI_INVALID_QUEUE;
   }
 
-  //CNqueue cnQueue = queue_->get();
+  // CNqueue cnQueue = queue_->get();
 
   try {
     eventId_ = queue_->get_next_event_id();
@@ -447,7 +448,7 @@ pi_result _pi_event::record() {
       cl::sycl::detail::pi::die(
           "Unrecoverable program state reached in event identifier overflow");
     }
-    //result = PI_CHECK_ERROR(cnPlaceNotifier(evEnd_, cnQueue));
+    // result = PI_CHECK_ERROR(cnPlaceNotifier(evEnd_, cnQueue));
     result = PI_SUCCESS;
   } catch (pi_result error) {
     result = error;
@@ -477,12 +478,12 @@ pi_result _pi_event::wait() {
 
 pi_result _pi_event::release() {
   assert(queue_ != nullptr);
-  //PI_CHECK_ERROR(cnDestroyNotifier(evEnd_));
+  // PI_CHECK_ERROR(cnDestroyNotifier(evEnd_));
 
-  //if (queue_->properties_ & PI_QUEUE_PROFILING_ENABLE) {
-  //  PI_CHECK_ERROR(cnDestroyNotifier(evQueued_));
-  //  PI_CHECK_ERROR(cnDestroyNotifier(evStart_));
-  //}
+  // if (queue_->properties_ & PI_QUEUE_PROFILING_ENABLE) {
+  //   PI_CHECK_ERROR(cnDestroyNotifier(evQueued_));
+  //   PI_CHECK_ERROR(cnDestroyNotifier(evStart_));
+  // }
 
   return PI_SUCCESS;
 }
@@ -492,8 +493,8 @@ pi_result enqueueEventWait(pi_queue queue, pi_event event) {
   // for native events, the cuStreamWaitEvent call is used.
   // This makes all future work submitted to stream wait for all
   // work captured in event.
- // return PI_CHECK_ERROR(cnQueueWaitNotifier(queue->get(), event->get()));
- return PI_SUCCESS;
+  // return PI_CHECK_ERROR(cnQueueWaitNotifier(queue->get(), event->get()));
+  return PI_SUCCESS;
 }
 
 _pi_program::_pi_program(pi_context ctxt)
@@ -1663,7 +1664,7 @@ pi_result cnrt_piContextCreate(const pi_context_properties *properties,
 
   std::unique_ptr<_pi_context> piContextPtr{nullptr};
   try {
-    //CNcontext current = nullptr;
+    // CNcontext current = nullptr;
 
     // TODO: Primary Context？
     if (property_cuda_primary) {
@@ -1678,8 +1679,8 @@ pi_result cnrt_piContextCreate(const pi_context_properties *properties,
     } else {
       // Create a scoped context.
       CNcontext newContext;
-      //PI_CHECK_ERROR(cnCtxGetCurrent(&current));
-      // TODO: CU_CTX_MAP_HOST
+      // PI_CHECK_ERROR(cnCtxGetCurrent(&current));
+      //  TODO: CU_CTX_MAP_HOST
       errcode_ret = PI_CHECK_ERROR(
           cnCtxCreate(&newContext, CN_CTX_SCHED_SYNC_AUTO, devices[0]->get()));
       piContextPtr = std::unique_ptr<_pi_context>(new _pi_context{
@@ -1687,15 +1688,15 @@ pi_result cnrt_piContextCreate(const pi_context_properties *properties,
     }
 
     // Use default stream to record base event counter
-    //PI_CHECK_ERROR(
+    // PI_CHECK_ERROR(
     //    cnCreateNotifier(&piContextPtr->evBase_, CN_NOTIFIER_DEFAULT));
-    //PI_CHECK_ERROR(cnPlaceNotifier(piContextPtr->evBase_, 0));
+    // PI_CHECK_ERROR(cnPlaceNotifier(piContextPtr->evBase_, 0));
 
     // For non-primary scoped contexts keep the last active on top of the stack
     // as `cuCtxCreate` replaces it implicitly otherwise.
     // Primary contexts are kept on top of the stack, so the previous context
     // is not queried and therefore not recovered.
-    //if (current != nullptr) {
+    // if (current != nullptr) {
     //  PI_CHECK_ERROR(cnCtxSetCurrent(current));
     //}
 
@@ -1718,7 +1719,7 @@ pi_result cnrt_piContextRelease(pi_context ctxt) {
 
   std::unique_ptr<_pi_context> context{ctxt};
 
-  //PI_CHECK_ERROR(cnDestroyNotifier(context->evBase_));
+  // PI_CHECK_ERROR(cnDestroyNotifier(context->evBase_));
 
   if (!ctxt->is_primary()) {
     CNcontext cnCtxt = ctxt->get();
@@ -1780,7 +1781,6 @@ pi_result cnrt_piextContextCreateWithNativeHandle(pi_native_handle, pi_uint32,
 CNaddr cn_ptr_arr[2] = {0};
 int cn_ptr_cnt = 0;
 
-
 pi_result cnrt_piMemBufferCreate(pi_context context, pi_mem_flags flags,
                                  size_t size, void *host_ptr, pi_mem *ret_mem,
                                  const pi_mem_properties *properties) {
@@ -1790,22 +1790,23 @@ pi_result cnrt_piMemBufferCreate(pi_context context, pi_mem_flags flags,
   // Currently, USE_HOST_PTR is not implemented using host register
   // since this triggers a weird segfault after program ends.
   // Setting this constant to true enables testing that behavior.
-  //const bool enableUseHostPtr = false;
-  //const bool performInitialCopy =
+  // const bool enableUseHostPtr = false;
+  // const bool performInitialCopy =
   //    (flags & PI_MEM_FLAGS_HOST_PTR_COPY) ||
   //    ((flags & PI_MEM_FLAGS_HOST_PTR_USE) && !enableUseHostPtr);
   pi_result retErr = PI_SUCCESS;
   pi_mem retMemObj = nullptr;
 
   try {
-      CNaddr ptr;
-      _pi_mem::mem_::buffer_mem_::alloc_mode allocMode = _pi_mem::mem_::buffer_mem_::alloc_mode::classic;
-      retErr = PI_CHECK_ERROR(cnMalloc(&ptr, size));
-      cn_ptr_arr[cn_ptr_cnt] = ptr;
-      cn_ptr_cnt++;
-      if (flags & PI_MEM_FLAGS_HOST_PTR_COPY) {
-        allocMode = _pi_mem::mem_::buffer_mem_::alloc_mode::copy_in;
-      }
+    CNaddr ptr;
+    _pi_mem::mem_::buffer_mem_::alloc_mode allocMode =
+        _pi_mem::mem_::buffer_mem_::alloc_mode::classic;
+    retErr = PI_CHECK_ERROR(cnMalloc(&ptr, size));
+    cn_ptr_arr[cn_ptr_cnt] = ptr;
+    cn_ptr_cnt++;
+    if (flags & PI_MEM_FLAGS_HOST_PTR_COPY) {
+      allocMode = _pi_mem::mem_::buffer_mem_::alloc_mode::copy_in;
+    }
 
     if (retErr == PI_SUCCESS) {
       pi_mem parentBuffer = nullptr;
@@ -2011,7 +2012,7 @@ pi_result cnrt_piQueueCreate(pi_context context, pi_device device,
       return PI_INVALID_DEVICE;
     }
 
-    //ScopedContext active(context);
+    // ScopedContext active(context);
 
     CNqueue cnQueue;
     // unsigned int flags = 0;
@@ -2155,11 +2156,10 @@ pi_result cnrt_piEnqueueMemBufferWrite(pi_queue command_queue, pi_mem buffer,
   assert(buffer != nullptr);
   assert(command_queue != nullptr);
   pi_result retErr = PI_SUCCESS;
-  //CNqueue cnQueue = command_queue->get();
+  // CNqueue cnQueue = command_queue->get();
   CNaddr devPtr = buffer->mem_.buffer_mem_.get();
-  //std::unique_ptr<_pi_event> retImplEv{nullptr};
+  // std::unique_ptr<_pi_event> retImplEv{nullptr};
 
-  
   try {
     /*
     ScopedContext active(command_queue->get_context());
@@ -2176,8 +2176,7 @@ pi_result cnrt_piEnqueueMemBufferWrite(pi_queue command_queue, pi_mem buffer,
     retErr =
         PI_CHECK_ERROR(cnMemcpyHtoDAsync(devPtr + offset, ptr, size, cnQueue));
     */
-    retErr =
-        PI_CHECK_ERROR(cnMemcpyHtoD(devPtr + offset, ptr, size));
+    retErr = PI_CHECK_ERROR(cnMemcpyHtoD(devPtr + offset, ptr, size));
     /*
     if (event) {
       retErr = retImplEv->record();
@@ -2189,11 +2188,11 @@ pi_result cnrt_piEnqueueMemBufferWrite(pi_queue command_queue, pi_mem buffer,
 
     if (event) {
       *event = retImplEv.release();
-    } 
+    }
     */
   } catch (pi_result err) {
     retErr = err;
-  } 
+  }
   return retErr;
 }
 
@@ -2497,7 +2496,7 @@ pi_result cnrt_piEnqueueKernelLaunch(
                                       cuda_implicit_offset);
     }
 
-    //auto argIndices = kernel->get_arg_indices();
+    // auto argIndices = kernel->get_arg_indices();
 
     if (event) {
       retImplEv = std::unique_ptr<_pi_event>(_pi_event::make_native(
@@ -2509,11 +2508,10 @@ pi_result cnrt_piEnqueueKernelLaunch(
     //     threadsPerBlock[0], threadsPerBlock[1], threadsPerBlock[2],
     //     kernel->get_local_size(), cnQueue, argIndices.data(), nullptr));
 
-
-    /*  
+    /*
     CNaddr *params = (CNaddr *)malloc(8 * sizeof(CNaddr));
 
-    
+
     CNaddr input;
     CNaddr output;
     int N = 16;
@@ -2522,15 +2520,15 @@ pi_result cnrt_piEnqueueKernelLaunch(
     //for (int i = 0; i < N; i++) {
     //  A[i] = (int)(rand() % 100);
     //}
-    
 
-    
+
+
     //cnMalloc((CNaddr *)&input, N * sizeof(int));
     //cnMalloc((CNaddr *)&output, N * sizeof(int));
-	  //cnMemcpyHtoD((CNaddr)input, A, N*sizeof(int));
+          //cnMemcpyHtoD((CNaddr)input, A, N*sizeof(int));
     //cnMalloc(&input, N * sizeof(int));
     //cnMalloc(&output, N * sizeof(int));
-	  //cnMemcpyHtoD(input, A, N*sizeof(int));
+          //cnMemcpyHtoD(input, A, N*sizeof(int));
     */
 
     /*
@@ -2545,24 +2543,24 @@ pi_result cnrt_piEnqueueKernelLaunch(
     params[7] = 0;
     */
 
-   /*
-   CNaddr *params = (CNaddr *)malloc(kernel->get_num_args() * sizeof(CNaddr));
-   pi_uint32 MemStep = 4;
-   for(pi_uint32 i=0; i<kernel->get_num_args(); i++) {
-     if(i%MemStep == 0) params[i] = *(CNaddr *)(argIndices[i]);
-     else params[i] = *(int *)(argIndices[i]);
-   }
-   */
-   
+    /*
+    CNaddr *params = (CNaddr *)malloc(kernel->get_num_args() * sizeof(CNaddr));
+    pi_uint32 MemStep = 4;
+    for(pi_uint32 i=0; i<kernel->get_num_args(); i++) {
+      if(i%MemStep == 0) params[i] = *(CNaddr *)(argIndices[i]);
+      else params[i] = *(int *)(argIndices[i]);
+    }
+    */
+
     CNaddr *params = kernel->get_kernel_params();
     void *extra[] = {CN_INVOKE_PARAM_BUFFER_POINTER, (void *)(params),
                      CN_INVOKE_PARAM_BUFFER_SIZE,
                      (void *)(kernel->get_num_args() * sizeof(CNaddr)),
                      CN_INVOKE_PARAM_END};
 
-    retError = PI_CHECK_ERROR(cnInvokeKernel(
-        cuFunc, 8, threadsPerBlock[1], threadsPerBlock[2],
-        CN_KERNEL_CLASS_BLOCK, 0, cnQueue, nullptr, extra));
+    retError = PI_CHECK_ERROR(
+        cnInvokeKernel(cuFunc, 8, threadsPerBlock[1], threadsPerBlock[2],
+                       CN_KERNEL_CLASS_BLOCK, 0, cnQueue, nullptr, extra));
 
     kernel->free_kernel_params();
     kernel->clear_local_size();
