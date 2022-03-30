@@ -2497,7 +2497,7 @@ pi_result cnrt_piEnqueueKernelLaunch(
                                       cuda_implicit_offset);
     }
 
-    auto argIndices = kernel->get_arg_indices();
+    //auto argIndices = kernel->get_arg_indices();
 
     if (event) {
       retImplEv = std::unique_ptr<_pi_event>(_pi_event::make_native(
@@ -2544,15 +2544,18 @@ pi_result cnrt_piEnqueueKernelLaunch(
     params[6] = 256;
     params[7] = 0;
     */
+
+   /*
    CNaddr *params = (CNaddr *)malloc(kernel->get_num_args() * sizeof(CNaddr));
    pi_uint32 MemStep = 4;
    for(pi_uint32 i=0; i<kernel->get_num_args(); i++) {
      if(i%MemStep == 0) params[i] = *(CNaddr *)(argIndices[i]);
      else params[i] = *(int *)(argIndices[i]);
    }
+   */
    
-
-    void *extra[] = {CN_INVOKE_PARAM_BUFFER_POINTER, (void *)params,
+    CNaddr *params = kernel->get_kernel_params();
+    void *extra[] = {CN_INVOKE_PARAM_BUFFER_POINTER, (void *)(params),
                      CN_INVOKE_PARAM_BUFFER_SIZE,
                      (void *)(kernel->get_num_args() * sizeof(CNaddr)),
                      CN_INVOKE_PARAM_END};
@@ -2561,6 +2564,7 @@ pi_result cnrt_piEnqueueKernelLaunch(
         cuFunc, 8, threadsPerBlock[1], threadsPerBlock[2],
         CN_KERNEL_CLASS_BLOCK, 0, cnQueue, nullptr, extra));
 
+    kernel->free_kernel_params();
     kernel->clear_local_size();
     if (event) {
       retError = retImplEv->record();
