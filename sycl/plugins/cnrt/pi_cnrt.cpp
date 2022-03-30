@@ -2532,18 +2532,27 @@ pi_result cnrt_piEnqueueKernelLaunch(
     //cnMalloc(&output, N * sizeof(int));
 	  //cnMemcpyHtoD(input, A, N*sizeof(int));
     */
-     CNaddr *params = (CNaddr *)malloc(kernel->get_num_args() * sizeof(CNaddr));
-    params[0] = cn_ptr_arr[1];
+
+    /*
+    CNaddr *params = (CNaddr *)malloc(kernel->get_num_args() * sizeof(CNaddr));
+    params[0] = *(CNaddr *)(argIndices[0]);
     params[1] = 256;
     params[2] = 256;
     params[3] = 0;
-    params[4] = cn_ptr_arr[0];
+    params[4] = *(CNaddr *)(argIndices[4]);
     params[5] = 256;
     params[6] = 256;
     params[7] = 0;
-    
+    */
+   CNaddr *params = (CNaddr *)malloc(kernel->get_num_args() * sizeof(CNaddr));
+   pi_uint32 MemStep = 4;
+   for(pi_uint32 i=0; i<kernel->get_num_args(); i++) {
+     if(i%MemStep == 0) params[i] = *(CNaddr *)(argIndices[i]);
+     else params[i] = *(int *)(argIndices[i]);
+   }
+   
 
-    void *extra[] = {CN_INVOKE_PARAM_BUFFER_POINTER, params,
+    void *extra[] = {CN_INVOKE_PARAM_BUFFER_POINTER, (void *)params,
                      CN_INVOKE_PARAM_BUFFER_SIZE,
                      (void *)(kernel->get_num_args() * sizeof(CNaddr)),
                      CN_INVOKE_PARAM_END};
