@@ -23,7 +23,6 @@
 #include <atomic>
 #include <cassert>
 #include <cn_api.h>
-#include <cndrv_api.h>
 #include <cnrt.h>
 #include <cstring>
 #include <functional>
@@ -554,6 +553,7 @@ struct _pi_kernel {
   pi_context context_;
   pi_program program_;
   std::atomic_uint32_t refCount_;
+  CNaddr* kernel_params_;
 
   /// Structure that holds the arguments to the kernel.
   /// Note earch argument size is known, since it comes
@@ -679,6 +679,7 @@ struct _pi_kernel {
     args_.add_local_arg(index, size);
   }
 
+
   void set_implicit_offset_arg(size_t size, std::uint32_t *implicitOffset) {
     args_.set_implicit_offset(size, implicitOffset);
   }
@@ -686,6 +687,28 @@ struct _pi_kernel {
   arguments::args_index_t get_arg_indices() const {
     return args_.get_indices();
   }
+
+  void create_kernel_params() {
+    kernel_params_ = (CNaddr *)malloc(get_num_args() * sizeof(CNaddr));
+    auto argIndices = get_arg_indices();
+    const pi_uint32 MemStep = 4;
+    for(pi_uint32 i=0; i<get_num_args(); i++) {
+      if(i%MemStep == 0) kernel_params_[i] = *(CNaddr *)(argIndices[i]);
+      else kernel_params_[i] = *(int *)(argIndices[i]);
+    }
+  }
+
+  CNaddr * get_kernel_params() {
+    if(kernel_params_ == nullptr) create_kernel_params();
+    return kernel_params_;
+  }
+
+  void free_kernel_params() {
+    assert(kernel_params_ != nullptr);
+    free(kernel_params_);
+    kernel_params_ = nullptr;
+  }
+  
 
   pi_uint32 get_local_size() const noexcept { return args_.get_local_size(); }
 
