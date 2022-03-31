@@ -2156,12 +2156,11 @@ pi_result cnrt_piEnqueueMemBufferWrite(pi_queue command_queue, pi_mem buffer,
   assert(buffer != nullptr);
   assert(command_queue != nullptr);
   pi_result retErr = PI_SUCCESS;
-  // CNqueue cnQueue = command_queue->get();
+  CNqueue cnQueue = command_queue->get();
   CNaddr devPtr = buffer->mem_.buffer_mem_.get();
   std::unique_ptr<_pi_event> retImplEv{nullptr};
 
   try {
-    /*
     ScopedContext active(command_queue->get_context());
 
     retErr = cnrt_piEnqueueEventsWait(command_queue, num_events_in_wait_list,
@@ -2175,9 +2174,8 @@ pi_result cnrt_piEnqueueMemBufferWrite(pi_queue command_queue, pi_mem buffer,
 
     retErr =
         PI_CHECK_ERROR(cnMemcpyHtoDAsync(devPtr + offset, ptr, size, cnQueue));
-    */
-    retErr = PI_CHECK_ERROR(cnMemcpyHtoD(devPtr + offset, ptr, size));
-    /*
+    // retErr = PI_CHECK_ERROR(cnMemcpyHtoD(devPtr + offset, ptr, size));
+
     if (event) {
       retErr = retImplEv->record();
     }
@@ -2189,7 +2187,6 @@ pi_result cnrt_piEnqueueMemBufferWrite(pi_queue command_queue, pi_mem buffer,
     if (event) {
       *event = retImplEv.release();
     }
-    */
   } catch (pi_result err) {
     retErr = err;
   }
