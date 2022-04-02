@@ -2555,9 +2555,20 @@ pi_result cnrt_piEnqueueKernelLaunch(
                      (void *)(kernel->get_num_args() * sizeof(CNaddr)),
                      CN_INVOKE_PARAM_END};
 
+    auto chooseKernelClass = [](int n) -> KernelClass {
+      assert(n > 0);
+      if (n % 64 == 0) return CN_KERNEL_CLASS_UNION16;
+      if (n % 32 == 0) return CN_KERNEL_CLASS_UNION8;
+      if (n % 16 == 0) return CN_KERNEL_CLASS_UNION4;
+      if (n % 8 == 0) return CN_KERNEL_CLASS_UNION2;
+      if (n % 4 == 0) return CN_KERNEL_CLASS_UNION;
+      return CN_KERNEL_CLASS_BLOCK;
+    };
+    KernelClass kc = chooseKernelClass(threadsPerBlock[0]);
+
     retError = PI_CHECK_ERROR(
         cnInvokeKernel(cuFunc, threadsPerBlock[0], threadsPerBlock[1], threadsPerBlock[2],
-                       CN_KERNEL_CLASS_BLOCK, 0, cnQueue, nullptr, extra));
+                       kc, 0, cnQueue, nullptr, extra));
 
     kernel->free_kernel_params();
     kernel->clear_local_size();
