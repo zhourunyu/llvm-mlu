@@ -256,7 +256,7 @@ void guessLocalWorkSize(int *threadsPerBlock, const size_t *global_work_size,
   assert(global_work_size != nullptr);
   assert(kernel != nullptr);
 
-  // TODO[MLU]: threadsPerBlock = {1,1,1}
+  threadsPerBlock[0] = global_work_size[0];
   return;
 
   // int recommendedBlockSize, minGrid;
@@ -2452,10 +2452,10 @@ pi_result cnrt_piEnqueueKernelLaunch(
   }
 
   // TODO[MLU]: ignore work item size error
-  if (maxWorkGroupSize <
-      size_t(threadsPerBlock[0] * threadsPerBlock[1] * threadsPerBlock[2])) {
-    return PI_INVALID_WORK_GROUP_SIZE;
-  }
+  // if (maxWorkGroupSize <
+  //     size_t(threadsPerBlock[0] * threadsPerBlock[1] * threadsPerBlock[2])) {
+  //   return PI_INVALID_WORK_GROUP_SIZE;
+  // }
 
   // TODO[MLU]: Do we need blocksPerGrid in MLU?
   // int blocksPerGrid[3] = {1, 1, 1};
@@ -2556,7 +2556,7 @@ pi_result cnrt_piEnqueueKernelLaunch(
                      CN_INVOKE_PARAM_END};
 
     retError = PI_CHECK_ERROR(
-        cnInvokeKernel(cuFunc, 8, threadsPerBlock[1], threadsPerBlock[2],
+        cnInvokeKernel(cuFunc, threadsPerBlock[0], threadsPerBlock[1], threadsPerBlock[2],
                        CN_KERNEL_CLASS_BLOCK, 0, cnQueue, nullptr, extra));
 
     kernel->free_kernel_params();
