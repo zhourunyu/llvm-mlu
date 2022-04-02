@@ -10989,6 +10989,201 @@ public:
 } // end anonymous namespace
 
 //===----------------------------------------------------------------------===//
+// MLISA Implementation
+//===----------------------------------------------------------------------===//
+
+namespace {
+
+class MLISATargetCodeGenInfo;
+class MLISAABIInfo : public ABIInfo {
+  MLISATargetCodeGenInfo &CGInfo;
+
+public:
+  MLISAABIInfo(CodeGenTypes &CGT, MLISATargetCodeGenInfo &Info)
+      : ABIInfo(CGT), CGInfo(Info) {}
+
+  ABIArgInfo classifyReturnType(QualType RetTy) const;
+  ABIArgInfo classifyArgumentType(QualType Ty) const;
+
+  void computeInfo(CGFunctionInfo &FI) const override;
+  Address EmitVAArg(CodeGenFunction &CGF, Address VAListAddr,
+                    QualType Ty) const override;
+  bool isUnsupportedType(QualType T) const;
+  ABIArgInfo coerceToIntArrayWithLimit(QualType Ty, unsigned MaxSize) const;
+};
+
+class MLISATargetCodeGenInfo : public TargetCodeGenInfo {
+public:
+  MLISATargetCodeGenInfo(CodeGenTypes &CGT)
+      : TargetCodeGenInfo(std::make_unique<MLISAABIInfo>(CGT, *this)) {}
+
+  void setTargetAttributes(const Decl *D, llvm::GlobalValue *GV,
+                          CodeGen::CodeGenModule &M) const override; 
+private:
+  static void addMLVMMetadata(llvm::GlobalValue *GV, StringRef Name,
+                              int Operand);
+};
+
+void MLISATargetCodeGenInfo::addMLVMMetadata(llvm::GlobalValue *GV,
+                                             StringRef Name, int Operand) {
+  llvm::Module *M = GV->getParent();
+  llvm::LLVMContext &Ctx = M->getContext();
+
+  // Get "nvvm.annotations" metadata node
+  llvm::NamedMDNode *MD = M->getOrInsertNamedMetadata("mlvm.annotations");
+
+  llvm::Metadata *MDVals[] = {
+      llvm::ConstantAsMetadata::get(GV), llvm::MDString::get(Ctx, Name),
+      llvm::ConstantAsMetadata::get(
+          llvm::ConstantInt::get(llvm::Type::getInt32Ty(Ctx), Operand))};
+  // Append metadata to nvvm.annotations
+  MD->addOperand(llvm::MDNode::get(Ctx, MDVals));
+}
+
+void MLISATargetCodeGenInfo::setTargetAttributes(
+    const Decl *D, llvm::GlobalValue *GV, CodeGen::CodeGenModule &M) const {
+  if (GV->isDeclaration())
+    return;
+  const FunctionDecl *FD = dyn_cast_or_null<FunctionDecl>(D);
+  if (!FD) return;
+
+  llvm::Function *F = cast<llvm::Function>(GV);
+
+  // Perform special handling in OpenCL mode
+  if (M.getLangOpts().OpenCL || M.getLangOpts().SYCLIsDevice) {
+    // Use OpenCL function attributes to check for kernel functions
+    // By default, all functions are device functions
+    if (FD->hasAttr<OpenCLKernelAttr>()) {
+      // OpenCL __kernel functions get kernel metadata
+      // Create !{<func-ref>, metadata !"kernel", i32 1} node
+      addMLVMMetadata(F, "kernel", 1);
+      // And kernel functions are not subject to inlining
+      F->addFnAttr(llvm::Attribute::NoInline);
+    }
+  }
+}
+
+/// Checks if the type is unsupported directly by the current target.
+bool MLISAABIInfo::isUnsupportedType(QualType T) const {
+  ASTContext &Context = getContext();
+  if (!Context.getTargetInfo().hasFloat16Type() && T->isFloat16Type())
+    return true;
+  if (!Context.getTargetInfo().hasFloat128Type() &&
+      (T->isFloat128Type() ||
+       (T->isRealFloatingType() && Context.getTypeSize(T) == 128)))
+    return true;
+  if (const auto *EIT = T->getAs<ExtIntType>())
+    return EIT->getNumBits() >
+           (Context.getTargetInfo().hasInt128Type() ? 128U : 64U);
+  if (!Context.getTargetInfo().hasInt128Type() && T->isIntegerType() &&
+      Context.getTypeSize(T) > 64U)
+    return true;
+  if (const auto *AT = T->getAsArrayTypeUnsafe())
+    return isUnsupportedType(AT->getElementType());
+  const auto *RT = T->getAs<RecordType>();
+  if (!RT)
+    return false;
+  const RecordDecl *RD = RT->getDecl();
+
+  // If this is a C++ record, check the bases first.
+  if (const CXXRecordDecl *CXXRD = dyn_cast<CXXRecordDecl>(RD))
+    for (const CXXBaseSpecifier &I : CXXRD->bases())
+      if (isUnsupportedType(I.getType()))
+        return true;
+
+  for (const FieldDecl *I : RD->fields())
+    if (isUnsupportedType(I->getType()))
+      return true;
+  return false;
+}
+
+/// Coerce the given type into an array with maximum allowed size of elements.
+ABIArgInfo MLISAABIInfo::coerceToIntArrayWithLimit(QualType Ty,
+                                                   unsigned MaxSize) const {
+  // Alignment and Size are measured in bits.
+  const uint64_t Size = getContext().getTypeSize(Ty);
+  const uint64_t Alignment = getContext().getTypeAlign(Ty);
+  const unsigned Div = std::min<unsigned>(MaxSize, Alignment);
+  llvm::Type *IntType = llvm::Type::getIntNTy(getVMContext(), Div);
+  const uint64_t NumElements = (Size + Div - 1) / Div;
+  return ABIArgInfo::getDirect(llvm::ArrayType::get(IntType, NumElements));
+}
+
+ABIArgInfo MLISAABIInfo::classifyReturnType(QualType RetTy) const {
+  if (RetTy->isVoidType())
+    return ABIArgInfo::getIgnore();
+
+  if (getContext().getLangOpts().OpenMP &&
+      getContext().getLangOpts().OpenMPIsDevice && isUnsupportedType(RetTy))
+    return coerceToIntArrayWithLimit(RetTy, 64);
+
+  // note: this is different from default ABI
+  if (!RetTy->isScalarType())
+    return ABIArgInfo::getDirect();
+
+  // Treat an enum type as its underlying type.
+  if (const EnumType *EnumTy = RetTy->getAs<EnumType>())
+    RetTy = EnumTy->getDecl()->getIntegerType();
+
+  return (isPromotableIntegerTypeForABI(RetTy) ? ABIArgInfo::getExtend(RetTy)
+                                               : ABIArgInfo::getDirect());
+}
+
+ABIArgInfo MLISAABIInfo::classifyArgumentType(QualType Ty) const {
+  // Treat an enum type as its underlying type.
+  if (const EnumType *EnumTy = Ty->getAs<EnumType>())
+    Ty = EnumTy->getDecl()->getIntegerType();
+
+  // Return aggregates type as indirect by value
+  if (isAggregateTypeForABI(Ty)) {
+    // Under CUDA device compilation, tex/surf builtin types are replaced with
+    // object types and passed directly.
+    if (getContext().getLangOpts().CUDAIsDevice) {
+      if (Ty->isCUDADeviceBuiltinSurfaceType())
+        return ABIArgInfo::getDirect(
+            CGInfo.getCUDADeviceBuiltinSurfaceDeviceType());
+      if (Ty->isCUDADeviceBuiltinTextureType())
+        return ABIArgInfo::getDirect(
+            CGInfo.getCUDADeviceBuiltinTextureDeviceType());
+    }
+    return getNaturalAlignIndirect(Ty, /* byval */ true);
+  }
+
+  if (const auto *EIT = Ty->getAs<ExtIntType>()) {
+    if ((EIT->getNumBits() > 128) ||
+        (!getContext().getTargetInfo().hasInt128Type() &&
+         EIT->getNumBits() > 64))
+      return getNaturalAlignIndirect(Ty, /* byval */ true);
+  }
+
+  return (isPromotableIntegerTypeForABI(Ty) ? ABIArgInfo::getExtend(Ty)
+                                            : ABIArgInfo::getDirect());
+}
+
+void MLISAABIInfo::computeInfo(CGFunctionInfo &FI) const {
+  if (!getCXXABI().classifyReturnType(FI))
+    FI.getReturnInfo() = classifyReturnType(FI.getReturnType());
+  for (auto &I : FI.arguments())
+    I.info = classifyArgumentType(I.type);
+
+  // Always honor user-specified calling convention.
+  if (FI.getCallingConvention() != llvm::CallingConv::C)
+    return;
+
+  FI.setEffectiveCallingConvention(getRuntimeCC());
+}
+
+Address MLISAABIInfo::EmitVAArg(CodeGenFunction &CGF, Address VAListAddr,
+                                QualType Ty) const {
+  llvm_unreachable("MLISA does not support varargs");
+}
+
+// bool MLISATargetCodeGenInfo::shouldEmitStaticExternCAliases() const {
+//   return false;
+// }
+}
+
+//===----------------------------------------------------------------------===//
 // Driver code
 //===----------------------------------------------------------------------===//
 
@@ -11199,6 +11394,8 @@ const TargetCodeGenInfo &CodeGenModule::getTargetCodeGenInfo() {
     return SetCGInfo(new SPIRTargetCodeGenInfo(Types));
   case llvm::Triple::ve:
     return SetCGInfo(new VETargetCodeGenInfo(Types));
+  case llvm::Triple::mlisa:
+    return SetCGInfo(new MLISATargetCodeGenInfo(Types));
   }
 }
 
