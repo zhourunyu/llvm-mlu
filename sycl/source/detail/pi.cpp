@@ -238,12 +238,14 @@ bool findPlugins(vector_class<std::pair<std::string, backend>> &PluginNames) {
                              backend::level_zero);
     PluginNames.emplace_back(__SYCL_CUDA_PLUGIN_NAME, backend::cuda);
     PluginNames.emplace_back(__SYCL_ROCM_PLUGIN_NAME, backend::rocm);
+    PluginNames.emplace_back(__SYCL_CNRT_PLUGIN_NAME, backend::cnrt);
   } else {
     std::vector<device_filter> Filters = FilterList->get();
     bool OpenCLFound = false;
     bool LevelZeroFound = false;
     bool CudaFound = false;
     bool RocmFound = false;
+    bool CnrtFound = false;
     for (const device_filter &Filter : Filters) {
       backend Backend = Filter.Backend;
       if (!OpenCLFound &&
@@ -264,6 +266,10 @@ bool findPlugins(vector_class<std::pair<std::string, backend>> &PluginNames) {
       if (!RocmFound && (Backend == backend::rocm || Backend == backend::all)) {
         PluginNames.emplace_back(__SYCL_ROCM_PLUGIN_NAME, backend::rocm);
         RocmFound = true;
+      }
+      if (!CnrtFound && (Backend == backend::cnrt || Backend == backend::all)) {
+        PluginNames.emplace_back(__SYCL_CNRT_PLUGIN_NAME, backend::cnrt);
+        CnrtFound = true;
       }
     }
   }
@@ -374,6 +380,11 @@ static void initializePlugins(vector_class<plugin> *Plugins) {
       // Use the ROCM plugin as the GlobalPlugin
       GlobalPlugin =
           std::make_shared<plugin>(PluginInformation, backend::rocm, Library);
+    } else if (InteropBE == backend::cnrt &&
+               PluginNames[I].first.find("cnrt") != std::string::npos) {
+      // Use the CNRT plugin as the GlobalPlugin
+      GlobalPlugin =
+          std::make_shared<plugin>(PluginInformation, backend::cnrt, Library);
     } else if (InteropBE == backend::level_zero &&
                PluginNames[I].first.find("level_zero") != std::string::npos) {
       // Use the LEVEL_ZERO plugin as the GlobalPlugin

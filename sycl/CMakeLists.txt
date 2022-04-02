@@ -93,6 +93,9 @@ option(SYCL_BUILD_PI_CUDA
 option(SYCL_BUILD_PI_ROCM
   "Enables the ROCM backend for the Plugin Interface" OFF)
 
+option(SYCL_BUILD_PI_CNRT
+  "Enables the CNRT backend for the Plugin Interface" OFF)
+
 # Configure SYCL version macro
 set(sycl_inc_dir ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(sycl_src_dir ${CMAKE_CURRENT_SOURCE_DIR}/source)
@@ -286,6 +289,18 @@ if(SYCL_BUILD_PI_ROCM)
 
   add_dependencies(sycl-toolchain libspirv-builtins pi_rocm)
   list(APPEND SYCL_TOOLCHAIN_DEPLOY_COMPONENTS libspirv-builtins pi_rocm)
+endif()
+
+if(SYCL_BUILD_PI_CNRT)
+  # Ensure that libclc is enabled.
+  list(FIND LLVM_ENABLE_PROJECTS libclc LIBCLC_FOUND)
+  if( LIBCLC_FOUND EQUAL -1 )
+    message(FATAL_ERROR
+      "CNRT support requires adding \"libclc\" to the CMake argument \"LLVM_ENABLE_PROJECTS\"")
+  endif()
+
+  add_dependencies(sycl-toolchain libspirv-builtins pi_cnrt)
+  list(APPEND SYCL_TOOLCHAIN_DEPLOY_COMPONENTS libspirv-builtins pi_cnrt)
 endif()
 
 # Use it as fake dependency in order to force another command(s) to execute.

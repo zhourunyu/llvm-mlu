@@ -12,6 +12,10 @@ if(SYCL_BUILD_PI_ROCM)
   add_subdirectory(rocm)
 endif()
 
+if(SYCL_BUILD_PI_BANG)
+  add_subdirectory(cnrt)
+endif()
+
 #add_subdirectory(opencl)
 #add_subdirectory(level_zero)
 
