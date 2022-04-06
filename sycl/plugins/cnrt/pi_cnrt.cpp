@@ -2557,8 +2557,7 @@ pi_result cnrt_piEnqueueKernelLaunch(
 
     auto chooseKernelClass = [](int n) -> KernelClass {
       assert(n > 0);
-      if (n % 64 == 0) return CN_KERNEL_CLASS_UNION16;
-      if (n % 32 == 0) return CN_KERNEL_CLASS_UNION8;
+      // 4 clusters are available
       if (n % 16 == 0) return CN_KERNEL_CLASS_UNION4;
       if (n % 8 == 0) return CN_KERNEL_CLASS_UNION2;
       if (n % 4 == 0) return CN_KERNEL_CLASS_UNION;
