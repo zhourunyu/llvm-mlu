@@ -383,10 +383,9 @@ pi_result _pi_event::start() {
 }
 
 bool _pi_event::is_completed() const noexcept {
-  // if (!isRecorded_) {
-  //   return false;
-  // }
-  /*
+  if (!isRecorded_) {
+    return false;
+  }
   if (!hasBeenWaitedOn_) {
     const CNresult ret = cnQueryNotifier(evEnd_);
     if (ret != CN_SUCCESS && ret != CN_ERROR_NOT_READY) {
@@ -397,7 +396,6 @@ bool _pi_event::is_completed() const noexcept {
       return false;
     }
   }
-  */
   return true;
 }
 
@@ -463,15 +461,12 @@ pi_result _pi_event::record() {
 
 pi_result _pi_event::wait() {
   pi_result retErr;
-  /*
   try {
     retErr = PI_CHECK_ERROR(cnWaitNotifier(evEnd_));
     hasBeenWaitedOn_ = true;
   } catch (pi_result error) {
     retErr = error;
   }
-  */
-  retErr = PI_SUCCESS;
 
   return retErr;
 }
