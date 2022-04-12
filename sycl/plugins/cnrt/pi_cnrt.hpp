@@ -276,18 +276,6 @@ struct _pi_mem {
       }
     } buffer_mem_;
 
-    // Handler data for surface object (i.e. Images)
-    //   struct surface_mem_ {
-    //     CUarray array_;
-    //     CUsurfObject surfObj_;
-    //     pi_mem_type imageType_;
-
-    //     CUarray get_array() const noexcept { return array_; }
-
-    //     CUsurfObject get_surface() const noexcept { return surfObj_; }
-
-    //     pi_mem_type get_image_type() const noexcept { return imageType_; }
-    //   } surface_mem_;
   } mem_;
 
   /// Constructs the PI MEM handler for a non-typed allocation ("buffer")
@@ -308,19 +296,6 @@ struct _pi_mem {
       cnrt_piContextRetain(context_);
     }
   };
-
-  /// Constructs the PI allocation for an Image object (surface in CUDA)
-  // _pi_mem(pi_context ctxt, CUarray array, CUsurfObject surf,
-  //         pi_mem_type image_type, void *host_ptr)
-  //     : context_{ctxt}, refCount_{1}, mem_type_{mem_type::surface} {
-  //   // Ignore unused parameter
-  //   (void)host_ptr;
-
-  //   mem_.surface_mem_.array_ = array;
-  //   mem_.surface_mem_.surfObj_ = surf;
-  //   mem_.surface_mem_.imageType_ = image_type;
-  //   cnrt_piContextRetain(context_);
-  // }
 
   ~_pi_mem() {
     if (mem_type_ == mem_type::buffer) {
