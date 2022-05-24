@@ -15870,6 +15870,32 @@ Value *CodeGenFunction::EmitMLISABuiltinExpr(unsigned BuiltinID,
     return EmitAMDGPUGridSize(*this, 2);
   */
 
+  case MLISA::BI__mlvm_stream_add_f32: {
+    llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_add_f32);
+    // return Builder.CreateCall(F);
+
+    // Address Src0 = EmitPointerWithAlignment(E->getArg(0));
+    // Address Src1 = EmitPointerWithAlignment(E->getArg(1));
+    // Address Src2 = EmitPointerWithAlignment(E->getArg(2));
+    Value *Src0x = EmitScalarExpr(E->getArg(0));
+    Value *Src0 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src0x, Int8PtrTy);
+    Value *Src1x = EmitScalarExpr(E->getArg(1));
+    Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
+    Value *Src2x = EmitScalarExpr(E->getArg(2));
+    Value *Src2 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src2x, Int8PtrTy);
+    Value *Src3 = EmitScalarExpr(E->getArg(3));
+
+    // llvm::Value *Src0 = EmitScalarExpr(E->getArg(0));
+    // llvm::Value *Src1 = EmitScalarExpr(E->getArg(1));
+    // llvm::Value *Src2 = EmitScalarExpr(E->getArg(2));
+    // llvm::Value *Src3 = EmitScalarExpr(E->getArg(3));
+
+    // llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_add_f32,
+    //                                     Src0->getType());
+    return Builder.CreateCall(F, {Src0, Src1, Src2, Src3});
+    // return emitRangeBuiltin(*this, Intrinsic::mlvm_stream_add_f32, 0, 1024);
+  }
+
   default:
     return nullptr;
   }
