@@ -42,7 +42,6 @@
 #include <cassert>
 #include <cstdint>
 #include <vector>
-#include <iostream>
 
 using namespace llvm;
 
@@ -486,33 +485,6 @@ void CallInst::init(FunctionType *FTy, Value *Func, ArrayRef<Value *> Args,
   setCalledOperand(Func);
 
 #ifndef NDEBUG
-  if (Args.size() != FTy->getNumParams()) {
-    std::cout << "--a--" << std::endl;
-    std::cout << "Args.size: " << Args.size() << ", FTy->getNumParams():" << FTy->getNumParams() << std::endl;
-    std::cout << "Type:" << std::endl;
-    // for (unsigned i = 0; i != Args.size(); ++i) {
-    //   Args[i]->getType()->print(outs(), true);
-    // }
-    // std::cout << std::endl;
-    std::cout << "A" << std::endl;
-    for (unsigned i = 0; i != Args.size(); ++i) {
-      Args[i]->getType()->print(outs(), true);
-    } 
-
-    std::cout << std::endl << "B" << std::endl;
-
-    for (unsigned i = 0; i != FTy->getNumParams(); ++i) {
-      FTy->getParamType(i)->print(outs(), true);
-    }
-    std::cout << std::endl;
-    std::cout << "-----" << std::endl;
-  }
-  if (!(FTy->isVarArg() && Args.size() > FTy->getNumParams())) {
-    std::cout << "--b--" << std::endl;
-    std::cout << "Args.size()" << Args.size() << ", FTy->getNumParams():" << FTy->getNumParams() << std::endl;
-    std::cout << "-----" << std::endl;
-  }
-
   assert((Args.size() == FTy->getNumParams() ||
           (FTy->isVarArg() && Args.size() > FTy->getNumParams())) &&
          "Calling a function with bad signature!");
