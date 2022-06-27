@@ -1538,6 +1538,11 @@ def OpenCLLocalAddressSpace : TypeAttr {
   let Documentation = [OpenCLAddressSpaceLocalDocs];
 }
 
+def OpenCLWRAMAddressSpace : TypeAttr {
+  let Spellings = [Keyword<"__wram">, Keyword<"wram">, Clang<"opencl_wram">];
+  let Documentation = [OpenCLAddressSpaceWRAMDocs];
+}
+
 def OpenCLConstantAddressSpace : TypeAttr {
   let Spellings = [Keyword<"__constant">, Keyword<"constant">, Clang<"opencl_constant">];
   let Documentation = [OpenCLAddressSpaceConstantDocs];
