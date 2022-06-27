@@ -4780,6 +4780,19 @@ space are allowed. Local address space variables cannot have an initializer.
   }];
 }
 
+def OpenCLAddressSpaceWRAMDocs : Documentation {
+  let Category = DocOpenCLAddressSpaces;
+  let Heading = "__wram, wram, [[clang::opencl_wram]]";
+  let Content = [{
+The wram address space specifies that an object is allocated in the local (work
+group) memory area, which is accessible to all work items in the same work
+group. The content stored in this memory region is not accessible after
+the kernel execution ends. In a kernel function scope, any variable can be in
+the local address space. In other scopes, only pointer types to the local address
+space are allowed. Local address space variables cannot have an initializer.
+  }];
+}
+
 def OpenCLAddressSpacePrivateDocs : Documentation {
   let Category = DocOpenCLAddressSpaces;
   let Heading = "__private, private, [[clang::opencl_private]]";

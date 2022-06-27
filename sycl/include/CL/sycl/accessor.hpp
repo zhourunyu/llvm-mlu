@@ -1975,6 +1975,200 @@ public:
   bool operator!=(const accessor &Rhs) const { return !(*this == Rhs); }
 };
 
+
+/// wram accessor
+///
+/// \ingroup sycl_api_acc
+template <typename DataT, int Dimensions, access::mode AccessMode,
+          access::placeholder IsPlaceholder>
+class accessor<DataT, Dimensions, AccessMode, access::target::wram,
+               IsPlaceholder> :
+#ifndef __SYCL_DEVICE_ONLY__
+    public detail::LocalAccessorBaseHost,
+#endif
+    public detail::accessor_common<DataT, Dimensions, AccessMode,
+                                   access::target::wram, IsPlaceholder> {
+protected:
+  constexpr static int AdjustedDim = Dimensions == 0 ? 1 : Dimensions;
+
+  using AccessorCommonT =
+      detail::accessor_common<DataT, Dimensions, AccessMode,
+                              access::target::wram, IsPlaceholder>;
+
+  using AccessorCommonT::AS;
+  using AccessorCommonT::IsAccessAnyWrite;
+  template <int Dims>
+  using AccessorSubscript =
+      typename AccessorCommonT::template AccessorSubscript<Dims>;
+
+  using ConcreteASPtrType = typename detail::DecoratedType<DataT, AS>::type *;
+
+  using RefType = detail::const_if_const_AS<AS, DataT> &;
+  using PtrType = detail::const_if_const_AS<AS, DataT> *;
+
+#ifdef __SYCL_DEVICE_ONLY__
+  detail::LocalAccessorBaseDevice<AdjustedDim> impl;
+
+  sycl::range<AdjustedDim> &getSize() { return impl.MemRange; }
+  const sycl::range<AdjustedDim> &getSize() const { return impl.MemRange; }
+
+  void __init(ConcreteASPtrType Ptr, range<AdjustedDim> AccessRange,
+              range<AdjustedDim>, id<AdjustedDim>) {
+    MData = Ptr;
+#pragma unroll
+    for (int I = 0; I < AdjustedDim; ++I)
+      getSize()[I] = AccessRange[I];
+  }
+
+public:
+  // Default constructor for objects later initialized with __init member.
+  accessor()
+      : impl(detail::InitializedVal<AdjustedDim, range>::template get<0>()) {}
+
+protected:
+  ConcreteASPtrType getQualifiedPtr() const { return MData; }
+
+  ConcreteASPtrType MData;
+
+#else
+
+  char padding[sizeof(detail::LocalAccessorBaseDevice<AdjustedDim>) +
+               sizeof(PtrType) - sizeof(detail::LocalAccessorBaseHost)];
+  using detail::LocalAccessorBaseHost::getSize;
+
+  PtrType getQualifiedPtr() const {
+    return reinterpret_cast<PtrType>(LocalAccessorBaseHost::getPtr());
+  }
+
+#endif // __SYCL_DEVICE_ONLY__
+
+  // Method which calculates linear offset for the ID using Range and Offset.
+  template <int Dims = AdjustedDim> size_t getLinearIndex(id<Dims> Id) const {
+    size_t Result = 0;
+    for (int I = 0; I < Dims; ++I)
+      Result = Result * getSize()[I] + Id[I];
+    return Result;
+  }
+
+public:
+  using value_type = DataT;
+  using reference = DataT &;
+  using const_reference = const DataT &;
+
+  template <int Dims = Dimensions, typename = detail::enable_if_t<Dims == 0>>
+  accessor(handler &)
+#ifdef __SYCL_DEVICE_ONLY__
+      : impl(range<AdjustedDim>{1}) {
+  }
+#else
+      : LocalAccessorBaseHost(range<3>{1, 1, 1}, AdjustedDim, sizeof(DataT)) {
+  }
+#endif
+
+  template <int Dims = Dimensions, typename = detail::enable_if_t<Dims == 0>>
+  accessor(handler &, const property_list &propList)
+#ifdef __SYCL_DEVICE_ONLY__
+      : impl(range<AdjustedDim>{1}) {
+    (void)propList;
+  }
+#else
+      : LocalAccessorBaseHost(range<3>{1, 1, 1}, AdjustedDim, sizeof(DataT)) {
+    (void)propList;
+  }
+#endif
+
+  template <int Dims = Dimensions, typename = detail::enable_if_t<(Dims > 0)>>
+  accessor(range<Dimensions> AllocationSize, handler &)
+#ifdef __SYCL_DEVICE_ONLY__
+      : impl(AllocationSize) {
+  }
+#else
+      : LocalAccessorBaseHost(detail::convertToArrayOfN<3, 1>(AllocationSize),
+                              AdjustedDim, sizeof(DataT)) {
+  }
+#endif
+
+  template <int Dims = Dimensions, typename = detail::enable_if_t<(Dims > 0)>>
+  accessor(range<Dimensions> AllocationSize, handler &,
+           const property_list &propList)
+#ifdef __SYCL_DEVICE_ONLY__
+      : impl(AllocationSize) {
+    (void)propList;
+  }
+#else
+      : LocalAccessorBaseHost(detail::convertToArrayOfN<3, 1>(AllocationSize),
+                              AdjustedDim, sizeof(DataT)) {
+    (void)propList;
+  }
+#endif
+
+  size_t get_size() const { return getSize().size() * sizeof(DataT); }
+
+  __SYCL2020_DEPRECATED("get_count() is deprecated, please use size() instead")
+  size_t get_count() const { return size(); }
+  size_t size() const noexcept { return getSize().size(); }
+
+  template <int Dims = Dimensions, typename = detail::enable_if_t<(Dims > 0)>>
+  range<Dims> get_range() const {
+    return detail::convertToArrayOfN<Dims, 1>(getSize());
+  }
+
+  template <int Dims = Dimensions,
+            typename = detail::enable_if_t<Dims == 0 && IsAccessAnyWrite>>
+  operator RefType() const {
+    return *getQualifiedPtr();
+  }
+
+  template <int Dims = Dimensions,
+            typename = detail::enable_if_t<(Dims > 0) && IsAccessAnyWrite>>
+  RefType operator[](id<Dimensions> Index) const {
+    const size_t LinearIndex = getLinearIndex(Index);
+    return getQualifiedPtr()[LinearIndex];
+  }
+
+  template <int Dims = Dimensions,
+            typename = detail::enable_if_t<Dims == 1 && IsAccessAnyWrite>>
+  RefType operator[](size_t Index) const {
+    return getQualifiedPtr()[Index];
+  }
+
+  template <int Dims = Dimensions>
+  operator typename detail::enable_if_t<
+      Dims == 0 && AccessMode == access::mode::atomic, atomic<DataT, AS>>()
+      const {
+    return atomic<DataT, AS>(multi_ptr<DataT, AS>(getQualifiedPtr()));
+  }
+
+  template <int Dims = Dimensions>
+  typename detail::enable_if_t<(Dims > 0) && AccessMode == access::mode::atomic,
+                               atomic<DataT, AS>>
+  operator[](id<Dimensions> Index) const {
+    const size_t LinearIndex = getLinearIndex(Index);
+    return atomic<DataT, AS>(
+        multi_ptr<DataT, AS>(getQualifiedPtr() + LinearIndex));
+  }
+
+  template <int Dims = Dimensions>
+  typename detail::enable_if_t<Dims == 1 && AccessMode == access::mode::atomic,
+                               atomic<DataT, AS>>
+  operator[](size_t Index) const {
+    return atomic<DataT, AS>(multi_ptr<DataT, AS>(getQualifiedPtr() + Index));
+  }
+
+  template <int Dims = Dimensions, typename = detail::enable_if_t<(Dims > 1)>>
+  typename AccessorCommonT::template AccessorSubscript<Dims - 1>
+  operator[](size_t Index) const {
+    return AccessorSubscript<Dims - 1>(*this, Index);
+  }
+
+  local_ptr<DataT> get_pointer() const {
+    return local_ptr<DataT>(getQualifiedPtr());
+  }
+
+  bool operator==(const accessor &Rhs) const { return impl == Rhs.impl; }
+  bool operator!=(const accessor &Rhs) const { return !(*this == Rhs); }
+};
+
 /// Image accessors.
 ///
 /// Available only when accessTarget == access::target::image.

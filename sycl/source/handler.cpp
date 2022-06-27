@@ -340,6 +340,7 @@ void handler::processArg(void *Ptr, const detail::kernel_param_kind_t &Kind,
                                MNDRDesc.GlobalSize.size(), MArgs, IsESIMD);
       break;
     }
+    case access::target::wram:
     case access::target::local: {
       detail::LocalAccessorImplHost *LAcc =
           static_cast<detail::LocalAccessorImplHost *>(Ptr);

@@ -940,6 +940,7 @@ static const LangASMap *getAddressSpaceMap(const TargetInfo &T,
         5,  // sycl_global_device
         6,  // sycl_global_host
         3,  // sycl_local
+        4,  // sycl_wram
         0,  // sycl_private
         10, // ptr32_sptr
         11, // ptr32_uptr
