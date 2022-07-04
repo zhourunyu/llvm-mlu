@@ -15909,8 +15909,8 @@ Value *CodeGenFunction::EmitMLISABuiltinExpr(unsigned BuiltinID,
     
   }
 
-  case MLISA::BI__mlvm_stream_conv_f32_f32_f32: {
-    llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_conv_f32_f32_f32);
+  case MLISA::BI__mlvm_stream_conv_fix16_fix16_fix16: {
+    llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_conv_fix16_fix16_fix16);
     
     Value *Src0x = EmitScalarExpr(E->getArg(0));
     Value *Src0 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src0x, Int8PtrTy);
@@ -15927,8 +15927,9 @@ Value *CodeGenFunction::EmitMLISABuiltinExpr(unsigned BuiltinID,
     Value *Src8 = EmitScalarExpr(E->getArg(8));
     Value *Src9 = EmitScalarExpr(E->getArg(9));
     Value *Src10 = EmitScalarExpr(E->getArg(10));
+    Value *Src11 = EmitScalarExpr(E->getArg(11));
     
-    return Builder.CreateCall(F, {Src0, Src1, Src2, Src3, Src4, Src5, Src6, Src7, Src8, Src9, Src10});
+    return Builder.CreateCall(F, {Src0, Src1, Src2, Src3, Src4, Src5, Src6, Src7, Src8, Src9, Src10, Src11});
     
   }
 

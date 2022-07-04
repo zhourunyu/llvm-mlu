@@ -2161,8 +2161,8 @@ public:
     return AccessorSubscript<Dims - 1>(*this, Index);
   }
 
-  local_ptr<DataT> get_pointer() const {
-    return local_ptr<DataT>(getQualifiedPtr());
+  wram_ptr<DataT> get_pointer() const {
+    return wram_ptr<DataT>(getQualifiedPtr());
   }
 
   bool operator==(const accessor &Rhs) const { return impl == Rhs.impl; }
