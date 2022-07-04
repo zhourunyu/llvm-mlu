@@ -451,7 +451,8 @@ void handler::extractArgsAndReqsFromLambda(
         detail::AccessorBaseHost *AccBase =
             static_cast<detail::AccessorBaseHost *>(Ptr);
         Ptr = detail::getSyclObjImpl(*AccBase).get();
-      } else if (AccTarget == access::target::local) {
+      } else if (AccTarget == access::target::local ||
+                 AccTarget == access::target::wram) {
         detail::LocalAccessorBaseHost *LocalAccBase =
             static_cast<detail::LocalAccessorBaseHost *>(Ptr);
         Ptr = detail::getSyclObjImpl(*LocalAccBase).get();
