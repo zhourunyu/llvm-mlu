@@ -37,7 +37,8 @@ enum class mode {
 enum class fence_space {
   local_space = 0,
   global_space = 1,
-  global_and_local = 2
+  global_and_local = 2,
+  wram_space = 3,
 };
 
 enum class placeholder { false_t = 0, true_t = 1 };

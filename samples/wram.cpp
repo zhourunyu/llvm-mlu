@@ -3,10 +3,11 @@
 #include <CL/sycl.hpp>
 #include <array>
 #include <sys/time.h>
+#include <iostream>
+using namespace std;
 using namespace sycl;
 
-constexpr int M = 10000;
-constexpr int N = 1024;
+constexpr int N = 256;
 
 long long getTime() {
     struct timeval tv;
@@ -19,69 +20,61 @@ int main() {
     gpu_selector Selector;
     queue Q(Selector);
 
-    // float *f = (float *)malloc(sizeof(float) * N);
-    float *d = (float *)malloc(sizeof(float) * N);
-    float *a = (float *)malloc(sizeof(float) * N);
-    float *b = (float *)malloc(sizeof(float) * N);
-    float *c = (float *)malloc(sizeof(float) * N);
+    // short *f = (short *)malloc(sizeof(short) * N);
+    short *d = (short *)malloc(sizeof(short) * N);
+    short *a = (short *)malloc(sizeof(short) * N);
+    short *b = (short *)malloc(sizeof(short) * N);
+    short *c = (short *)malloc(sizeof(short) * N);
 
     for (int i = 0; i < N; i++) {
-        a[i] = 1.0;
-        b[i] = 2.0;
+        a[i] = 1;
+        b[i] = 2;
         c[i] = 0;
     }
 
     cl::sycl::range<1> arr_range{N};
 
-    // buffer<float, 1> bufferF((float *)f, arr_range);
-    buffer<float, 1> bufferD((float *)d, arr_range);
-    buffer<float, 1> bufferA((float *)a, arr_range);
-    buffer<float, 1> bufferB((float *)b, arr_range);
-    buffer<float, 1> bufferC((float *)c, arr_range);
+    // buffer<short, 1> bufferF((short *)f, arr_range);
+    buffer<short, 1> bufferD((short *)d, arr_range);
+    buffer<short, 1> bufferA((short *)a, arr_range);
+    buffer<short, 1> bufferB((short *)b, arr_range);
+    buffer<short, 1> bufferC((short *)c, arr_range);
 
     auto startTime = getTime();
 
     // Submit our job to the queue
     Q.submit([&](cl::sycl::handler &cgh) {
-        accessor accessorD(bufferD, cgh, read_only);
-        accessor accessorA(bufferA, cgh, read_only);
-        accessor accessorB(bufferB, cgh, read_only);
         accessor accessorC(bufferC, cgh, write_only);
-        // Local Accessor for NRAM
-        cl::sycl::accessor<float, 1, cl::sycl::access::mode::read_write,
-                           cl::sycl::access::target::local>
-            localAccA(cl::sycl::range<1>(N), cgh);
         // AccB is temp 
-        cl::sycl::accessor<float, 1, cl::sycl::access::mode::read_write,
+       cl::sycl::accessor<short, 1, cl::sycl::access::mode::read_write,
                            cl::sycl::access::target::local>
             localAccB(cl::sycl::range<1>(N), cgh);
          
         // Local Accessor for WRAM
-        cl::sycl::accessor<float, 1, cl::sycl::access::mode::read_write,
+        cl::sycl::accessor<short, 1, cl::sycl::access::mode::read_write,
                            cl::sycl::access::target::wram>
             localAccC(cl::sycl::range<1>(N), cgh);
 
-        cl::sycl::accessor<float, 1, cl::sycl::access::mode::read_write,
+        cl::sycl::accessor<short, 1, cl::sycl::access::mode::read_write,
                             cl::sycl::access::target::local>
             localAccD(cl::sycl::range<1>(N), cgh);
 
         cgh.parallel_for<class mm>(1, [=](id<1> i) {
-            auto aPtr =
-                reinterpret_cast<float_t *>(localAccA.get_pointer().get());
             auto bPtr =
-                reinterpret_cast<float_t *>(localAccB.get_pointer().get());
+                reinterpret_cast<short *>(localAccB.get_pointer().get());
             auto cPtr =
-                reinterpret_cast<float_t *>(localAccC.get_pointer().get());
+                reinterpret_cast<short *>(localAccC.get_pointer().get());
+
             auto dPtr =
-                reinterpret_cast<float_t *>(localAccD.get_pointer().get());
+                reinterpret_cast<short *>(localAccD.get_pointer().get());
             for (int j = 0; j < N; ++j) {
-                localAccA[j] = accessorA[j];
-                localAccB[j] = accessorB[j];
+                localAccB[j] = 0;
+                localAccD[j] = 4;
             }
 
             #ifdef __SYCL_DEVICE_ONLY__
-            __mlvm_memcpy_nram_to_wram(cPtr, bPtr, N*sizeof(half));
-            __mlvm_stream_conv_f32_f32_f32(dPtr, aPtr, cPtr, 32, 32, 1, 1, 1, 1, 1, 32);
+            __mlvm_memcpy_nram_to_wram(cPtr, dPtr, N*sizeof(short));
+            __mlvm_stream_conv_fix16_fix16_fix16(bPtr, dPtr, cPtr, 32, 32, 1, 1, 1, 1, 1, 256, 32);
             #endif
 
             for (int j = 0; j < N; ++j) {
@@ -91,7 +84,11 @@ int main() {
     });
 
     host_accessor host_accC(bufferC, read_only);
-    std::cout << "Result: " << host_accC[0] << " .. " << host_accC[N - 1] << std::endl;
+    for(int i=0; i<N; i++){
+        if(host_accC[i] != 0)
+		    std::cout<<host_accC[i]<<std::endl;
+    }
+    //std::cout << "Result: " << host_accC[0] << " .. " << host_accC[N - 1] << std::endl;
     auto endTime = getTime();
     std::cout << "Time: " << endTime - startTime << std::endl;
     return 0;
