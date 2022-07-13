@@ -1312,8 +1312,6 @@ pi_result cnrt_piextContextCreateWithNativeHandle(pi_native_handle, pi_uint32,
 /// \TODO Implement USE_HOST_PTR using cuHostRegister
 ///
 
-CNaddr cn_ptr_arr[2] = {0};
-int cn_ptr_cnt = 0;
 
 pi_result cnrt_piMemBufferCreate(pi_context context, pi_mem_flags flags,
                                  size_t size, void *host_ptr, pi_mem *ret_mem,
@@ -1336,8 +1334,6 @@ pi_result cnrt_piMemBufferCreate(pi_context context, pi_mem_flags flags,
     _pi_mem::mem_::buffer_mem_::alloc_mode allocMode =
         _pi_mem::mem_::buffer_mem_::alloc_mode::classic;
     retErr = PI_CHECK_ERROR(cnMalloc(&ptr, size));
-    cn_ptr_arr[cn_ptr_cnt] = ptr;
-    cn_ptr_cnt++;
     if (flags & PI_MEM_FLAGS_HOST_PTR_COPY) {
       allocMode = _pi_mem::mem_::buffer_mem_::alloc_mode::copy_in;
     }
