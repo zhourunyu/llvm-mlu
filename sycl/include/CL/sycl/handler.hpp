@@ -815,22 +815,22 @@ private:
       // will yield a rounded-up value for the total range.
       size_t NewValX =
           ((NumWorkItems[0] + GoodFactorX - 1) / GoodFactorX) * GoodFactorX;
-      using NameWT = typename detail::get_kernel_wrapper_name_t<NameT>::name;
+      //using NameWT = typename detail::get_kernel_wrapper_name_t<NameT>::name;
       if (getenv("SYCL_PARALLEL_FOR_RANGE_ROUNDING_TRACE") != nullptr)
         std::cout << "parallel_for range adjusted from " << NumWorkItems[0]
                   << " to " << NewValX << std::endl;
 
-      auto Wrapper = getRangeRoundedKernelLambda<TransformedArgType, Dims>(
-          KernelFunc, NumWorkItems);
+      //auto Wrapper = getRangeRoundedKernelLambda<TransformedArgType, Dims>(
+      //    KernelFunc, NumWorkItems);
 
       range<Dims> AdjustedRange = NumWorkItems;
       AdjustedRange.set_range_dim0(NewValX);
-      kernel_parallel_for_wrapper<NameWT, TransformedArgType>(Wrapper);
+      //kernel_parallel_for_wrapper<NameWT, TransformedArgType>(Wrapper);
 #ifndef __SYCL_DEVICE_ONLY__
       detail::checkValueRange<Dims>(AdjustedRange);
       MNDRDesc.set(std::move(AdjustedRange));
-      StoreLambda<NameWT, decltype(Wrapper), Dims, TransformedArgType>(
-          std::move(Wrapper));
+      //StoreLambda<NameWT, decltype(Wrapper), Dims, TransformedArgType>(
+      //    std::move(Wrapper));
       setType(detail::CG::KERNEL);
 #endif
     } else
