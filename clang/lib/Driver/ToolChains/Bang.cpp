@@ -503,7 +503,7 @@ void BangToolChain::addClangTargetOptions(
       SmallVector<StringRef, 8> LibraryPaths;
 
       // Expected path w/out install.
-      SmallString<256> LIBCLCPath("/home/mlx/repos/llvm-mlu/libclc/build/lib/clc");
+      SmallString<256> LIBCLCPath("/home/wzy/repos/llvm-mlu/libclc/build/lib/clc");
       LibraryPaths.emplace_back(LIBCLCPath.c_str());
 
       std::string LibSpirvTargetName = "libspirv-mlisa--.bc";
