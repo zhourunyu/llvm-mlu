@@ -1,8 +1,8 @@
-# Install script for directory: /home/mlx/repos/llvm-mlu/build/_deps/vc-intrinsics-src/GenXIntrinsics/lib/GenXIntrinsics
+# Install script for directory: /home/wzy/repos/llvm-mlu/build/_deps/vc-intrinsics-src/GenXIntrinsics/lib/GenXIntrinsics
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/mlx/repos/llvm-mlu/build/install")
+  set(CMAKE_INSTALL_PREFIX "/home/wzy/repos/llvm-mlu/build/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -43,6 +43,6 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xLLVMGenXIntrinsicsx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "/home/mlx/repos/llvm-mlu/build/lib/libLLVMGenXIntrinsics.a")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "/home/wzy/repos/llvm-mlu/build/lib/libLLVMGenXIntrinsics.a")
 endif()
 

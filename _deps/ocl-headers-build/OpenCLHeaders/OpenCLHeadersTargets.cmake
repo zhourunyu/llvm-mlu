@@ -50,7 +50,7 @@ add_library(OpenCL::Headers INTERFACE IMPORTED)
 
 set_target_properties(OpenCL::Headers PROPERTIES
   INTERFACE_COMPILE_DEFINITIONS "CL_TARGET_OPENCL_VERSION=220"
-  INTERFACE_INCLUDE_DIRECTORIES "/home/mlx/repos/llvm-mlu/build/_deps/ocl-headers-src"
+  INTERFACE_INCLUDE_DIRECTORIES "/home/wzy/repos/llvm-mlu/build/_deps/ocl-headers-src"
 )
 
 # This file does not depend on other imported targets which have

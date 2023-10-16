@@ -36,7 +36,7 @@ _clang()
     fi
   done
 
-  # expand ~ to $HOME
+  # expand ~ to /home/wzy
   eval local path=${COMP_WORDS[0]}
   # Use $'\t' so that bash expands the \t for older versions of sed.
   flags=$( "$path" --autocomplete="$arg" 2>/dev/null | sed -e $'s/\t.*//' )

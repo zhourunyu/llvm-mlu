@@ -12,8 +12,8 @@ project(ocl-headers-populate NONE)
 include(ExternalProject)
 ExternalProject_Add(ocl-headers-populate
                      "UPDATE_DISCONNECTED" "False" "GIT_REPOSITORY" "https://github.com/KhronosGroup/OpenCL-Headers.git" "GIT_TAG" "23710f1b99186065c1768fc3098ba681adc0f253"
-                    SOURCE_DIR          "/home/mlx/repos/llvm-mlu/build/_deps/ocl-headers-src"
-                    BINARY_DIR          "/home/mlx/repos/llvm-mlu/build/_deps/ocl-headers-build"
+                    SOURCE_DIR          "/home/wzy/repos/llvm-mlu/build/_deps/ocl-headers-src"
+                    BINARY_DIR          "/home/wzy/repos/llvm-mlu/build/_deps/ocl-headers-build"
                     CONFIGURE_COMMAND   ""
                     BUILD_COMMAND       ""
                     INSTALL_COMMAND     ""

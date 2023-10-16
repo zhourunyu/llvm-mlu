@@ -2,37 +2,37 @@
 	"sources" : 
 	[
 		{
-			"file" : "/home/mlx/repos/llvm-mlu/build/_deps/ocl-icd-subbuild/CMakeFiles/ocl-icd-populate"
+			"file" : "/home/wzy/repos/llvm-mlu/build/_deps/ocl-icd-subbuild/CMakeFiles/ocl-icd-populate"
 		},
 		{
-			"file" : "/home/mlx/repos/llvm-mlu/build/_deps/ocl-icd-subbuild/CMakeFiles/ocl-icd-populate.rule"
+			"file" : "/home/wzy/repos/llvm-mlu/build/_deps/ocl-icd-subbuild/CMakeFiles/ocl-icd-populate.rule"
 		},
 		{
-			"file" : "/home/mlx/repos/llvm-mlu/build/_deps/ocl-icd-subbuild/CMakeFiles/ocl-icd-populate-complete.rule"
+			"file" : "/home/wzy/repos/llvm-mlu/build/_deps/ocl-icd-subbuild/CMakeFiles/ocl-icd-populate-complete.rule"
 		},
 		{
-			"file" : "/home/mlx/repos/llvm-mlu/build/_deps/ocl-icd-subbuild/ocl-icd-populate-prefix/src/ocl-icd-populate-stamp/ocl-icd-populate-install.rule"
+			"file" : "/home/wzy/repos/llvm-mlu/build/_deps/ocl-icd-subbuild/ocl-icd-populate-prefix/src/ocl-icd-populate-stamp/ocl-icd-populate-install.rule"
 		},
 		{
-			"file" : "/home/mlx/repos/llvm-mlu/build/_deps/ocl-icd-subbuild/ocl-icd-populate-prefix/src/ocl-icd-populate-stamp/ocl-icd-populate-mkdir.rule"
+			"file" : "/home/wzy/repos/llvm-mlu/build/_deps/ocl-icd-subbuild/ocl-icd-populate-prefix/src/ocl-icd-populate-stamp/ocl-icd-populate-mkdir.rule"
 		},
 		{
-			"file" : "/home/mlx/repos/llvm-mlu/build/_deps/ocl-icd-subbuild/ocl-icd-populate-prefix/src/ocl-icd-populate-stamp/ocl-icd-populate-download.rule"
+			"file" : "/home/wzy/repos/llvm-mlu/build/_deps/ocl-icd-subbuild/ocl-icd-populate-prefix/src/ocl-icd-populate-stamp/ocl-icd-populate-download.rule"
 		},
 		{
-			"file" : "/home/mlx/repos/llvm-mlu/build/_deps/ocl-icd-subbuild/ocl-icd-populate-prefix/src/ocl-icd-populate-stamp/ocl-icd-populate-update.rule"
+			"file" : "/home/wzy/repos/llvm-mlu/build/_deps/ocl-icd-subbuild/ocl-icd-populate-prefix/src/ocl-icd-populate-stamp/ocl-icd-populate-update.rule"
 		},
 		{
-			"file" : "/home/mlx/repos/llvm-mlu/build/_deps/ocl-icd-subbuild/ocl-icd-populate-prefix/src/ocl-icd-populate-stamp/ocl-icd-populate-patch.rule"
+			"file" : "/home/wzy/repos/llvm-mlu/build/_deps/ocl-icd-subbuild/ocl-icd-populate-prefix/src/ocl-icd-populate-stamp/ocl-icd-populate-patch.rule"
 		},
 		{
-			"file" : "/home/mlx/repos/llvm-mlu/build/_deps/ocl-icd-subbuild/ocl-icd-populate-prefix/src/ocl-icd-populate-stamp/ocl-icd-populate-configure.rule"
+			"file" : "/home/wzy/repos/llvm-mlu/build/_deps/ocl-icd-subbuild/ocl-icd-populate-prefix/src/ocl-icd-populate-stamp/ocl-icd-populate-configure.rule"
 		},
 		{
-			"file" : "/home/mlx/repos/llvm-mlu/build/_deps/ocl-icd-subbuild/ocl-icd-populate-prefix/src/ocl-icd-populate-stamp/ocl-icd-populate-build.rule"
+			"file" : "/home/wzy/repos/llvm-mlu/build/_deps/ocl-icd-subbuild/ocl-icd-populate-prefix/src/ocl-icd-populate-stamp/ocl-icd-populate-build.rule"
 		},
 		{
-			"file" : "/home/mlx/repos/llvm-mlu/build/_deps/ocl-icd-subbuild/ocl-icd-populate-prefix/src/ocl-icd-populate-stamp/ocl-icd-populate-test.rule"
+			"file" : "/home/wzy/repos/llvm-mlu/build/_deps/ocl-icd-subbuild/ocl-icd-populate-prefix/src/ocl-icd-populate-stamp/ocl-icd-populate-test.rule"
 		}
 	],
 	"target" : 

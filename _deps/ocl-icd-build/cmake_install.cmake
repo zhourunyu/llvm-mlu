@@ -1,8 +1,8 @@
-# Install script for directory: /home/mlx/repos/llvm-mlu/build/_deps/ocl-icd-src
+# Install script for directory: /home/wzy/repos/llvm-mlu/build/_deps/ocl-icd-src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/mlx/repos/llvm-mlu/build/install")
+  set(CMAKE_INSTALL_PREFIX "/home/wzy/repos/llvm-mlu/build/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -55,8 +55,8 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
     endif()
   endforeach()
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES
-    "/home/mlx/repos/llvm-mlu/build/lib/libOpenCL.so.1.2"
-    "/home/mlx/repos/llvm-mlu/build/lib/libOpenCL.so.1"
+    "/home/wzy/repos/llvm-mlu/build/lib/libOpenCL.so.1.2"
+    "/home/wzy/repos/llvm-mlu/build/lib/libOpenCL.so.1"
     )
   foreach(file
       "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libOpenCL.so.1.2"
@@ -78,7 +78,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libOpenCL.so"
          RPATH "")
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "/home/mlx/repos/llvm-mlu/build/lib/libOpenCL.so")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "/home/wzy/repos/llvm-mlu/build/lib/libOpenCL.so")
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libOpenCL.so" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libOpenCL.so")
     if(CMAKE_INSTALL_DO_STRIP)

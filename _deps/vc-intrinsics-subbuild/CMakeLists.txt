@@ -12,8 +12,8 @@ project(vc-intrinsics-populate NONE)
 include(ExternalProject)
 ExternalProject_Add(vc-intrinsics-populate
                      "UPDATE_DISCONNECTED" "False" "GIT_REPOSITORY" "https://github.com/intel/vc-intrinsics.git" "GIT_TAG" "19e6ddafc545bc96ceaacbf7c81cacbff59a39b6"
-                    SOURCE_DIR          "/home/mlx/repos/llvm-mlu/build/_deps/vc-intrinsics-src"
-                    BINARY_DIR          "/home/mlx/repos/llvm-mlu/build/_deps/vc-intrinsics-build"
+                    SOURCE_DIR          "/home/wzy/repos/llvm-mlu/build/_deps/vc-intrinsics-src"
+                    BINARY_DIR          "/home/wzy/repos/llvm-mlu/build/_deps/vc-intrinsics-build"
                     CONFIGURE_COMMAND   ""
                     BUILD_COMMAND       ""
                     INSTALL_COMMAND     ""

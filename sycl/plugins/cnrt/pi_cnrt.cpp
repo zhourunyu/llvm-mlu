@@ -341,6 +341,7 @@ pi_result _pi_event::start() {
   try {
     if (queue_->properties_ & PI_QUEUE_PROFILING_ENABLE) {
       // NOTE: This relies on the default stream to be unused.
+      result = PI_CHECK_ERROR(cnrtPlaceNotifier(evQueued_, 0));
       result = PI_CHECK_ERROR(cnPlaceNotifier(evQueued_, 0));
       result = PI_CHECK_ERROR(cnPlaceNotifier(evStart_, queue_->get()));
     }

@@ -1,8 +1,8 @@
-# Install script for directory: /home/mlx/repos/llvm-mlu/build/_deps/ocl-headers-src
+# Install script for directory: /home/wzy/repos/llvm-mlu/build/_deps/ocl-headers-src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/mlx/repos/llvm-mlu/build/install")
+  set(CMAKE_INSTALL_PREFIX "/home/wzy/repos/llvm-mlu/build/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -43,14 +43,14 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "/home/mlx/repos/llvm-mlu/build/_deps/ocl-headers-src/CL")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "/home/wzy/repos/llvm-mlu/build/_deps/ocl-headers-src/CL")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/share/cmake/OpenCLHeaders/OpenCLHeadersTargets.cmake")
     file(DIFFERENT EXPORT_FILE_CHANGED FILES
          "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/share/cmake/OpenCLHeaders/OpenCLHeadersTargets.cmake"
-         "/home/mlx/repos/llvm-mlu/build/_deps/ocl-headers-build/CMakeFiles/Export/share/cmake/OpenCLHeaders/OpenCLHeadersTargets.cmake")
+         "/home/wzy/repos/llvm-mlu/build/_deps/ocl-headers-build/CMakeFiles/Export/share/cmake/OpenCLHeaders/OpenCLHeadersTargets.cmake")
     if(EXPORT_FILE_CHANGED)
       file(GLOB OLD_CONFIG_FILES "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/share/cmake/OpenCLHeaders/OpenCLHeadersTargets-*.cmake")
       if(OLD_CONFIG_FILES)
@@ -59,14 +59,14 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
       endif()
     endif()
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/cmake/OpenCLHeaders" TYPE FILE FILES "/home/mlx/repos/llvm-mlu/build/_deps/ocl-headers-build/CMakeFiles/Export/share/cmake/OpenCLHeaders/OpenCLHeadersTargets.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/cmake/OpenCLHeaders" TYPE FILE FILES "/home/wzy/repos/llvm-mlu/build/_deps/ocl-headers-build/CMakeFiles/Export/share/cmake/OpenCLHeaders/OpenCLHeadersTargets.cmake")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/cmake/OpenCLHeaders" TYPE FILE FILES "/home/mlx/repos/llvm-mlu/build/_deps/ocl-headers-build/OpenCLHeaders/OpenCLHeadersConfig.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/cmake/OpenCLHeaders" TYPE FILE FILES "/home/wzy/repos/llvm-mlu/build/_deps/ocl-headers-build/OpenCLHeaders/OpenCLHeadersConfig.cmake")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/cmake/OpenCLHeaders" TYPE FILE FILES "/home/mlx/repos/llvm-mlu/build/_deps/ocl-headers-build/OpenCLHeaders/OpenCLHeadersConfigVersion.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/cmake/OpenCLHeaders" TYPE FILE FILES "/home/wzy/repos/llvm-mlu/build/_deps/ocl-headers-build/OpenCLHeaders/OpenCLHeadersConfigVersion.cmake")
 endif()
 

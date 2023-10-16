@@ -151,13 +151,13 @@ You may also build Scudo like this:
   clang++ -fPIC -std=c++17 -msse4.2 -O2 -pthread -shared \
     -I scudo/standalone/include \
     scudo/standalone/*.cpp \
-    -o $HOME/libscudo.so
+    -o /home/wzy/libscudo.so
 
 and then use it with existing binaries as follows:
 
 .. code:: console
 
-  LD_PRELOAD=$HOME/libscudo.so ./a.out
+  LD_PRELOAD=/home/wzy/libscudo.so ./a.out
 
 Clang
 -----

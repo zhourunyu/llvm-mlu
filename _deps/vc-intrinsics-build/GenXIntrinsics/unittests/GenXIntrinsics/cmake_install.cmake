@@ -1,8 +1,8 @@
-# Install script for directory: /home/mlx/repos/llvm-mlu/build/_deps/vc-intrinsics-src/GenXIntrinsics/unittests/GenXIntrinsics
+# Install script for directory: /home/wzy/repos/llvm-mlu/build/_deps/vc-intrinsics-src/GenXIntrinsics/unittests/GenXIntrinsics
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/mlx/repos/llvm-mlu/build/install")
+  set(CMAKE_INSTALL_PREFIX "/home/wzy/repos/llvm-mlu/build/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 

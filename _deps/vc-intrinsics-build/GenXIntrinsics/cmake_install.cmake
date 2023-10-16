@@ -1,8 +1,8 @@
-# Install script for directory: /home/mlx/repos/llvm-mlu/build/_deps/vc-intrinsics-src/GenXIntrinsics
+# Install script for directory: /home/wzy/repos/llvm-mlu/build/_deps/vc-intrinsics-src/GenXIntrinsics
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/mlx/repos/llvm-mlu/build/install")
+  set(CMAKE_INSTALL_PREFIX "/home/wzy/repos/llvm-mlu/build/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -44,9 +44,9 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/mlx/repos/llvm-mlu/build/_deps/vc-intrinsics-build/GenXIntrinsics/include/llvm/cmake_install.cmake")
-  include("/home/mlx/repos/llvm-mlu/build/_deps/vc-intrinsics-build/GenXIntrinsics/lib/cmake_install.cmake")
-  include("/home/mlx/repos/llvm-mlu/build/_deps/vc-intrinsics-build/GenXIntrinsics/unittests/cmake_install.cmake")
+  include("/home/wzy/repos/llvm-mlu/build/_deps/vc-intrinsics-build/GenXIntrinsics/include/llvm/cmake_install.cmake")
+  include("/home/wzy/repos/llvm-mlu/build/_deps/vc-intrinsics-build/GenXIntrinsics/lib/cmake_install.cmake")
+  include("/home/wzy/repos/llvm-mlu/build/_deps/vc-intrinsics-build/GenXIntrinsics/unittests/cmake_install.cmake")
 
 endif()
 

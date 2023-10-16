@@ -12,8 +12,8 @@ project(ocl-icd-populate NONE)
 include(ExternalProject)
 ExternalProject_Add(ocl-icd-populate
                      "UPDATE_DISCONNECTED" "False" "GIT_REPOSITORY" "https://github.com/KhronosGroup/OpenCL-ICD-Loader.git" "GIT_TAG" "5f8249691ec8c25775789498951f8e9eb62c201d"
-                    SOURCE_DIR          "/home/mlx/repos/llvm-mlu/build/_deps/ocl-icd-src"
-                    BINARY_DIR          "/home/mlx/repos/llvm-mlu/build/_deps/ocl-icd-build"
+                    SOURCE_DIR          "/home/wzy/repos/llvm-mlu/build/_deps/ocl-icd-src"
+                    BINARY_DIR          "/home/wzy/repos/llvm-mlu/build/_deps/ocl-icd-build"
                     CONFIGURE_COMMAND   ""
                     BUILD_COMMAND       ""
                     INSTALL_COMMAND     ""

@@ -317,7 +317,7 @@ Easy steps for installing GCC 5.1.0:
   % cd ..
   % mkdir gcc-${gcc_version}-build
   % cd gcc-${gcc_version}-build
-  % $PWD/../gcc-${gcc_version}/configure --prefix=$HOME/toolchains --enable-languages=c,c++
+  % $PWD/../gcc-${gcc_version}/configure --prefix=/home/wzy/toolchains --enable-languages=c,c++
   % make -j$(nproc)
   % make install
 
@@ -338,8 +338,8 @@ binaries:
 
   % mkdir build
   % cd build
-  % CC=$HOME/toolchains/bin/gcc CXX=$HOME/toolchains/bin/g++ \
-    cmake .. -DCMAKE_CXX_LINK_FLAGS="-Wl,-rpath,$HOME/toolchains/lib64 -L$HOME/toolchains/lib64"
+  % CC=/home/wzy/toolchains/bin/gcc CXX=/home/wzy/toolchains/bin/g++ \
+    cmake .. -DCMAKE_CXX_LINK_FLAGS="-Wl,-rpath,/home/wzy/toolchains/lib64 -L/home/wzy/toolchains/lib64"
 
 If you fail to set rpath, most LLVM binaries will fail on startup with a message
 from the loader similar to ``libstdc++.so.6: version `GLIBCXX_3.4.20' not
@@ -351,7 +351,7 @@ so that they can run on older systems, copy ``libstdc++.so.6`` into the
 ``lib/`` directory.  All of LLVM's shipping binaries have an rpath pointing at
 ``$ORIGIN/../lib``, so they will find ``libstdc++.so.6`` there.  Non-distributed
 binaries don't have an rpath set and won't find ``libstdc++.so.6``. Pass
-``-DLLVM_LOCAL_RPATH="$HOME/toolchains/lib64"`` to cmake to add an absolute
+``-DLLVM_LOCAL_RPATH="/home/wzy/toolchains/lib64"`` to cmake to add an absolute
 path to ``libstdc++.so.6`` as above. Since these binaries are not distributed,
 having an absolute local path is fine for them.
 
@@ -359,7 +359,7 @@ When you build Clang, you will need to give *it* access to modern C++
 standard library in order to use it as your new host in part of a bootstrap.
 There are two easy ways to do this, either build (and install) libc++ along
 with Clang and then use it with the ``-stdlib=libc++`` compile and link flag,
-or install Clang into the same prefix (``$HOME/toolchains`` above) as GCC.
+or install Clang into the same prefix (``/home/wzy/toolchains`` above) as GCC.
 Clang will look within its own prefix for libstdc++ and use it if found. You
 can also add an explicit prefix for Clang to look in for a GCC toolchain with
 the ``--gcc-toolchain=/opt/my/gcc/prefix`` flag, passing it to both compile and
