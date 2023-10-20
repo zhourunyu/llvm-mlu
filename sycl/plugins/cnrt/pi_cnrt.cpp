@@ -23,17 +23,19 @@
 namespace {
 std::string getCnrtVersionString() {
   std::stringstream stream;
-  unsigned int version;
-  cnrtRet_t result = cnrtGetVersion(&version);
+  int major_version;
+  int minor_version;
+  int patch_version;
+  cnrtRet_t result = cnrtGetLibVersion(&major_version,&minor_version,&patch_version);
   if (result != CNRT_RET_SUCCESS) {
     return "Unknown CNRT Version";
   }
-  const unsigned int majorVersion = version / 10000;
-  const unsigned int minorVersion = (version % 10000) / 100;
-  const unsigned int patchVersion = version % 100;
+  // const unsigned int majorVersion = major_version;
+  // const unsigned int minorVersion = minor_version;
+  // const unsigned int patchVersion = version % 100;
 
-  stream << "CNRT " << majorVersion << "." << minorVersion << "."
-         << patchVersion;
+  stream << "CNRT " << major_version << "." << minor_version << "."
+         << patch_version;
   return stream.str();
 }
 
@@ -341,7 +343,6 @@ pi_result _pi_event::start() {
   try {
     if (queue_->properties_ & PI_QUEUE_PROFILING_ENABLE) {
       // NOTE: This relies on the default stream to be unused.
-      result = PI_CHECK_ERROR(cnrtPlaceNotifier(evQueued_, 0));
       result = PI_CHECK_ERROR(cnPlaceNotifier(evQueued_, 0));
       result = PI_CHECK_ERROR(cnPlaceNotifier(evStart_, queue_->get()));
     }
@@ -1814,21 +1815,22 @@ pi_result cnrt_piKernelCreate(pi_program program, const char *kernel_name,
     CNkernel cnFunc;
     retErr =
         PI_CHECK_ERROR(cnModuleGetKernel(program->get(), kernel_name, &cnFunc));
-
+    
+    /*
     std::string kernel_name_woffset = std::string(kernel_name) + "_with_offset";
     CNkernel cnFuncWithOffsetParam;
     CNresult offsetRes = cnModuleGetKernel(
         program->get(), kernel_name_woffset.c_str(), &cnFuncWithOffsetParam);
-
+    
     // If there is no kernel with global offset parameter we mark it as missing
     if (offsetRes == CN_ERROR_NOT_FOUND) {
       cnFuncWithOffsetParam = nullptr;
     } else {
       retErr = PI_CHECK_ERROR(offsetRes);
-    }
+    }*/
 
     retKernel = std::unique_ptr<_pi_kernel>(
-        new _pi_kernel{cnFunc, cnFuncWithOffsetParam, kernel_name, program,
+        new _pi_kernel{cnFunc, nullptr, kernel_name, program,
                        program->get_context()});
   } catch (pi_result err) {
     retErr = err;
