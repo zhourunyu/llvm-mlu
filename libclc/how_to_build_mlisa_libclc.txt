@@ -1,0 +1,3 @@
+ln -s /usr/local/neuware/lib/llvm-mm/bin/llvm-as  /home/mlx/repos/llvm-mm/build/bin/llvm-as
+ln -s /usr/local/neuware/lib/llvm-mm/bin/opt  /home/mlx/repos/llvm-mm/build/bin/opt
+

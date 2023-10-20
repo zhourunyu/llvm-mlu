@@ -40,22 +40,22 @@ include( AddLibclc )
 
 # List of all targets
 set( LIBCLC_TARGETS_ALL
-  amdgcn--
-  amdgcn--amdhsa
-  clspv--
-  r600--
-  nvptx--
-  nvptx64--
-  nvptx--nvidiacl
-  nvptx64--nvidiacl
-  spirv-mesa3d-
-  spirv64-mesa3d-
+	#amdgcn--
+	#amdgcn--amdhsa
+	#clspv--
+	#r600--
+	#nvptx--
+	#nvptx64--
+	#nvptx--nvidiacl
+	#nvptx64--nvidiacl
+	#spirv-mesa3d-
+	#spirv64-mesa3d-
   mlisa--
 )
-set( LIBCLC_TEST_TARGETS_ALL
-  nvptx--nvidiacl
-  nvptx64--nvidiacl
-)
+#set( LIBCLC_TEST_TARGETS_ALL
+#  nvptx--nvidiacl
+#  nvptx64--nvidiacl
+#)
 
 set( LIBCLC_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} )
 set( LIBCLC_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR} )
@@ -208,20 +208,19 @@ add_custom_command(
 	COMMAND ${Python3_EXECUTABLE} ${core_script_loc} > convert-core.cl
 	DEPENDS ${core_script_loc} )
 add_custom_target( "generate_convert_core.cl" DEPENDS convert-core.cl )
-
 add_custom_command(
 	OUTPUT convert-spirv.cl
 	COMMAND ${Python3_EXECUTABLE} ${spirv_script_loc} > convert-spirv.cl
 	DEPENDS ${spirv_script_loc} )
 add_custom_target( "generate_convert_spirv.cl" DEPENDS convert-spirv.cl )
-
+#[[
 add_custom_command(
 	OUTPUT convert-clc.cl
 	COMMAND ${Python3_EXECUTABLE} ${clc_script_loc} > convert-clc.cl
 	DEPENDS ${clc_script_loc} )
 add_custom_target( "generate_convert_clc.cl" DEPENDS convert-clc.cl )
-
-enable_testing()
+]]
+#enable_testing()
 
 if (LIBCLC_STANDALONE_BUILD)
   set(LIBCLC_LIBRARY_OUTPUT_INTDIR ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/lib${LLVM_LIBDIR_SUFFIX})
@@ -229,6 +228,7 @@ else(LIBCLC_STANDALONE_BUILD)
   set(LIBCLC_LIBRARY_OUTPUT_INTDIR ${LLVM_LIBRARY_OUTPUT_INTDIR})
 endif(LIBCLC_STANDALONE_BUILD)
 file( TO_CMAKE_PATH ${LIBCLC_LIBRARY_OUTPUT_INTDIR}/clc LIBCLC_LIBRARY_OUTPUT_INTDIR )
+
 
 foreach( t ${LIBCLC_TARGETS_TO_BUILD} )
 	message( "BUILDING ${t}" )
@@ -238,10 +238,11 @@ foreach( t ${LIBCLC_TARGETS_TO_BUILD} )
 	list( GET TRIPLE 2 OS )
 
 	set( dirs )
-
+        #[[
 	if ( NOT ${ARCH} STREQUAL spirv AND NOT ${ARCH} STREQUAL spirv64 AND NOT ${ARCH} STREQUAL clspv )
 		LIST( APPEND dirs generic )
 	endif()
+	]]
 
 	if( ${ARCH} STREQUAL r600 OR ${ARCH} STREQUAL amdgcn )
 		list( APPEND dirs amdgpu )
@@ -254,11 +255,13 @@ foreach( t ${LIBCLC_TARGETS_TO_BUILD} )
 		set( DARCH ${ARCH} )
 	endif()
 
+	 #[[
 	set( lib_files )
 	libclc_configure_lib_source(lib_files
 		LIB_DIR lib
 		DIRS ${dirs} ${DARCH} ${DARCH}-${OS} ${DARCH}-${VENDOR}-${OS}
 		DEPS convert-clc.cl )
+	]]
 	set( libspirv_files )
 	libclc_configure_lib_source(libspirv_files
 		LIB_DIR libspirv
@@ -356,7 +359,7 @@ foreach( t ${LIBCLC_TARGETS_TO_BUILD} )
 			ALIASES ${${d}_aliases}
 			GENERATE_TARGET "generate_convert_spirv.cl" "generate_convert_core.cl"
 			PARENT_TARGET libspirv-builtins)
-
+                #[[
 		add_libclc_builtin_set(clc-${arch_suffix}
 			TRIPLE ${t}
 			TARGET_ENV clc
@@ -367,6 +370,7 @@ foreach( t ${LIBCLC_TARGETS_TO_BUILD} )
 			ALIASES ${${d}_aliases}
 			GENERATE_TARGET "generate_convert_clc.cl"
 			PARENT_TARGET libclc-builtins)
+		]]
 	endforeach( d )
 endforeach( t )
 
@@ -380,4 +384,4 @@ install(DIRECTORY ${LIBCLC_LIBRARY_OUTPUT_INTDIR}
 				COMPONENT clc-builtins
 				FILES_MATCHING PATTERN "clc-*")
 
-add_subdirectory(test)
+			#add_subdirectory(test)
