@@ -13,7 +13,7 @@ def do_configure(args):
     if not os.path.isdir(abs_obj_dir):
       os.makedirs(abs_obj_dir)
 
-    llvm_external_projects = 'sycl;llvm-spirv;opencl;libdevice;xpti;xptifw'
+    llvm_external_projects = 'sycl;llvm-spirv;opencl;libdevice;xpti;xptifw;'
 
     llvm_dir = os.path.join(abs_src_dir, "llvm")
     sycl_dir = os.path.join(abs_src_dir, "sycl")
@@ -22,7 +22,7 @@ def do_configure(args):
     xptifw_dir = os.path.join(abs_src_dir, "xptifw")
     libdevice_dir = os.path.join(abs_src_dir, "libdevice")
     llvm_targets_to_build = 'X86'
-    llvm_enable_projects = 'clang;' +  llvm_external_projects
+    llvm_enable_projects = 'clang;' + 'llvm/tools;'+ llvm_external_projects
     libclc_targets_to_build = ''
     sycl_build_pi_cuda = 'OFF'
     sycl_build_pi_esimd_cpu = 'OFF'

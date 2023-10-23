@@ -734,7 +734,7 @@ void CudaToolChain::addClangTargetOptions(
     }
 
     if (LibSpirvFile.empty()) {
-      getDriver().Diag(diag::err_drv_no_sycl_libspirv);
+      getDriver().Diag(diag::err_drv_no_sycl_libspirv)<<"libspirv-nvptx64--nvidiacl.bc";
       return;
     }
 

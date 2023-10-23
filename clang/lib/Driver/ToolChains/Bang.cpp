@@ -26,6 +26,7 @@
 #include "llvm/Support/TargetParser.h"
 #include "llvm/Support/VirtualFileSystem.h"
 #include <system_error>
+#include <iostream>
 
 using namespace clang::driver;
 using namespace clang::driver::toolchains;
@@ -510,6 +511,7 @@ void BangToolChain::addClangTargetOptions(
       for (StringRef LibraryPath : LibraryPaths) {
         SmallString<128> LibSpirvTargetFile(LibraryPath);
         llvm::sys::path::append(LibSpirvTargetFile, LibSpirvTargetName);
+	      std::cout<<"MLISA LIBCLC PATH: "<<std::string(LibSpirvTargetFile.str())<<std::endl;
         if (llvm::sys::fs::exists(LibSpirvTargetFile)) {
           LibSpirvFile = std::string(LibSpirvTargetFile.str());
           break;
@@ -518,7 +520,7 @@ void BangToolChain::addClangTargetOptions(
     }
 
     if (LibSpirvFile.empty()) {
-      getDriver().Diag(diag::err_drv_no_sycl_libspirv);
+      getDriver().Diag(diag::err_drv_no_sycl_libspirv)<<"libspirv-mlisa--.bc";
       return;
     }
 

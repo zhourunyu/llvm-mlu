@@ -3,6 +3,7 @@
 #include <CL/sycl.hpp>
 #include <array>
 #include <sys/time.h>
+#include <iostream>
 using namespace sycl;
 
 constexpr int M = 10000;
@@ -18,6 +19,10 @@ int main() {
 
     gpu_selector Selector;
     queue Q(Selector);
+    sycl::device dev {Selector};
+    std::cout<<"default gpu_selector select device info : "<<&dev<<std::endl;
+    std::cout<<"default gpu_selector select device vendor id : "<<dev.get_info<sycl::info::device::vendor_id>()<<std::endl;
+    std::cout<<"default gpu_selector select device vendor name : "<<dev.get_info<sycl::info::device::name>()<<std::endl;
 
     float *d = (float *)malloc(sizeof(float) * N);
     float *a = (float *)malloc(sizeof(float) * N);
