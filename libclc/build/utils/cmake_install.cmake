@@ -1,4 +1,4 @@
-# Install script for directory: /home/mlx/repos/llvm-mlu/libclc/utils
+# Install script for directory: /home/wzy/repos/llvm-mlu/libclc/utils
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/prepare_builtins.dir/prepare-builtins.cpp.o"
+  "CMakeFiles/prepare_builtins.dir/prepare-builtins.cpp.o.d"
   "prepare_builtins"
   "prepare_builtins.pdb"
 )

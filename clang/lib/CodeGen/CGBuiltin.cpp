@@ -15896,6 +15896,176 @@ Value *CodeGenFunction::EmitMLISABuiltinExpr(unsigned BuiltinID,
     // return emitRangeBuiltin(*this, Intrinsic::mlvm_stream_add_f32, 0, 1024);
   }
 
+   case MLISA::BI__mlvm_stream_sub_f32: {
+    llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_sub_f32);
+    Value *Src0x = EmitScalarExpr(E->getArg(0));
+    Value *Src0 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src0x, Int8PtrTy);
+    Value *Src1x = EmitScalarExpr(E->getArg(1));
+    Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
+    Value *Src2x = EmitScalarExpr(E->getArg(2));
+    Value *Src2 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src2x, Int8PtrTy);
+    Value *Src3 = EmitScalarExpr(E->getArg(3));
+    return Builder.CreateCall(F, {Src0, Src1, Src2, Src3});
+  }
+  case MLISA::BI__mlvm_stream_mul_f32: {
+    llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_mul_f32);
+    Value *Src0x = EmitScalarExpr(E->getArg(0));
+    Value *Src0 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src0x, Int8PtrTy);
+    Value *Src1x = EmitScalarExpr(E->getArg(1));
+    Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
+    Value *Src2x = EmitScalarExpr(E->getArg(2));
+    Value *Src2 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src2x, Int8PtrTy);
+    Value *Src3 = EmitScalarExpr(E->getArg(3));
+    return Builder.CreateCall(F, {Src0, Src1, Src2, Src3});
+  }
+  case MLISA::BI__mlvm_stream_div_f32: {
+    llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_div_f32);
+    Value *Src0x = EmitScalarExpr(E->getArg(0));
+    Value *Src0 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src0x, Int8PtrTy);
+    Value *Src1x = EmitScalarExpr(E->getArg(1));
+    Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
+    Value *Src2x = EmitScalarExpr(E->getArg(2));
+    Value *Src2 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src2x, Int8PtrTy);
+    Value *Src3 = EmitScalarExpr(E->getArg(3));
+    return Builder.CreateCall(F, {Src0, Src1, Src2, Src3});
+  }  
+  case MLISA::BI__mlvm_stream_pow2_f32: {
+    llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_pow2_f32);
+    Value *Src0x = EmitScalarExpr(E->getArg(0));
+    Value *Src0 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src0x, Int8PtrTy);
+    Value *Src1x = EmitScalarExpr(E->getArg(1));
+    Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
+    Value *Src2 = EmitScalarExpr(E->getArg(2));
+    return Builder.CreateCall(F, {Src0, Src1, Src2});
+  }  
+  case MLISA::BI__mlvm_stream_log_f32: {
+    llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_log_f32);
+    Value *Src0x = EmitScalarExpr(E->getArg(0));
+    Value *Src0 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src0x, Int8PtrTy);
+    Value *Src1x = EmitScalarExpr(E->getArg(1));
+    Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
+    Value *Src2 = EmitScalarExpr(E->getArg(2));
+    return Builder.CreateCall(F, {Src0, Src1, Src2});
+  }  
+  case MLISA::BI__mlvm_stream_sqrt_f32: {
+    llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_sqrt_f32);
+    Value *Src0x = EmitScalarExpr(E->getArg(0));
+    Value *Src0 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src0x, Int8PtrTy);
+    Value *Src1x = EmitScalarExpr(E->getArg(1));
+    Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
+    Value *Src2 = EmitScalarExpr(E->getArg(2));
+    return Builder.CreateCall(F, {Src0, Src1, Src2});
+  }
+  case MLISA::BI__mlvm_stream_sin_f32: {
+    llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_sin_f32);
+    Value *Src0x = EmitScalarExpr(E->getArg(0));
+    Value *Src0 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src0x, Int8PtrTy);
+    Value *Src1x = EmitScalarExpr(E->getArg(1));
+    Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
+    Value *Src2 = EmitScalarExpr(E->getArg(2));
+    return Builder.CreateCall(F, {Src0, Src1, Src2});
+  }
+  case MLISA::BI__mlvm_stream_cos_f32: {
+    llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_cos_f32);
+    Value *Src0x = EmitScalarExpr(E->getArg(0));
+    Value *Src0 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src0x, Int8PtrTy);
+    Value *Src1x = EmitScalarExpr(E->getArg(1));
+    Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
+    Value *Src2 = EmitScalarExpr(E->getArg(2));
+    return Builder.CreateCall(F, {Src0, Src1, Src2});
+  }
+  case MLISA::BI__mlvm_stream_active_abs_f32: {
+    llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_active_abs_f32);
+    Value *Src0x = EmitScalarExpr(E->getArg(0));
+    Value *Src0 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src0x, Int8PtrTy);
+    Value *Src1x = EmitScalarExpr(E->getArg(1));
+    Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
+    Value *Src2 = EmitScalarExpr(E->getArg(2));
+    return Builder.CreateCall(F, {Src0, Src1, Src2});
+  }  
+  case MLISA::BI__mlvm_stream_active_exp_f32: {
+    llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_active_exp_f32);
+    Value *Src0x = EmitScalarExpr(E->getArg(0));
+    Value *Src0 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src0x, Int8PtrTy);
+    Value *Src1x = EmitScalarExpr(E->getArg(1));
+    Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
+    Value *Src2 = EmitScalarExpr(E->getArg(2));
+    return Builder.CreateCall(F, {Src0, Src1, Src2});
+  }  
+  case MLISA::BI__mlvm_stream_active_exphp_f32: {
+    llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_active_exphp_f32);
+    Value *Src0x = EmitScalarExpr(E->getArg(0));
+    Value *Src0 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src0x, Int8PtrTy);
+    Value *Src1x = EmitScalarExpr(E->getArg(1));
+    Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
+    Value *Src2 = EmitScalarExpr(E->getArg(2));
+    return Builder.CreateCall(F, {Src0, Src1, Src2});
+  }  
+  case MLISA::BI__mlvm_stream_active_log_f32: {
+    llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_active_log_f32);
+    Value *Src0x = EmitScalarExpr(E->getArg(0));
+    Value *Src0 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src0x, Int8PtrTy);
+    Value *Src1x = EmitScalarExpr(E->getArg(1));
+    Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
+    Value *Src2 = EmitScalarExpr(E->getArg(2));
+    return Builder.CreateCall(F, {Src0, Src1, Src2});
+  }   
+  case MLISA::BI__mlvm_stream_active_pow2_f32: {
+    llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_active_pow2_f32);
+    Value *Src0x = EmitScalarExpr(E->getArg(0));
+    Value *Src0 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src0x, Int8PtrTy);
+    Value *Src1x = EmitScalarExpr(E->getArg(1));
+    Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
+    Value *Src2 = EmitScalarExpr(E->getArg(2));
+    return Builder.CreateCall(F, {Src0, Src1, Src2});
+  }
+  case MLISA::BI__mlvm_stream_active_relu_f32: {
+    llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_active_relu_f32);
+    Value *Src0x = EmitScalarExpr(E->getArg(0));
+    Value *Src0 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src0x, Int8PtrTy);
+    Value *Src1x = EmitScalarExpr(E->getArg(1));
+    Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
+    Value *Src2 = EmitScalarExpr(E->getArg(2));
+    return Builder.CreateCall(F, {Src0, Src1, Src2});
+  }  
+  case MLISA::BI__mlvm_stream_active_sigmoid_f32: {
+    llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_active_sigmoid_f32);
+    Value *Src0x = EmitScalarExpr(E->getArg(0));
+    Value *Src0 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src0x, Int8PtrTy);
+    Value *Src1x = EmitScalarExpr(E->getArg(1));
+    Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
+    Value *Src2 = EmitScalarExpr(E->getArg(2));
+    return Builder.CreateCall(F, {Src0, Src1, Src2});
+  }  
+  case MLISA::BI__mlvm_stream_active_sin_f32: {
+    llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_active_sin_f32);
+    Value *Src0x = EmitScalarExpr(E->getArg(0));
+    Value *Src0 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src0x, Int8PtrTy);
+    Value *Src1x = EmitScalarExpr(E->getArg(1));
+    Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
+    Value *Src2 = EmitScalarExpr(E->getArg(2));
+    return Builder.CreateCall(F, {Src0, Src1, Src2});
+  } 
+  case MLISA::BI__mlvm_stream_active_cos_f32: {
+    llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_active_cos_f32);
+    Value *Src0x = EmitScalarExpr(E->getArg(0));
+    Value *Src0 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src0x, Int8PtrTy);
+    Value *Src1x = EmitScalarExpr(E->getArg(1));
+    Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
+    Value *Src2 = EmitScalarExpr(E->getArg(2));
+    return Builder.CreateCall(F, {Src0, Src1, Src2});
+  }   
+  case MLISA::BI__mlvm_stream_active_tanh_f32: {
+    llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_active_tanh_f32);
+    Value *Src0x = EmitScalarExpr(E->getArg(0));
+    Value *Src0 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src0x, Int8PtrTy);
+    Value *Src1x = EmitScalarExpr(E->getArg(1));
+    Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
+    Value *Src2 = EmitScalarExpr(E->getArg(2));
+    return Builder.CreateCall(F, {Src0, Src1, Src2});
+  }
+
+
   case MLISA::BI__mlvm_memcpy_nram_to_wram: {
     llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_nram_to_wram);
     

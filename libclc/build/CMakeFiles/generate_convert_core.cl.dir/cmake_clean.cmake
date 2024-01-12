@@ -4,6 +4,6 @@ file(REMOVE_RECURSE
 )
 
 # Per-language clean rules from dependency scanning.
-foreach(lang CLC)
+foreach(lang )
   include(CMakeFiles/generate_convert_core.cl.dir/cmake_clean_${lang}.cmake OPTIONAL)
 endforeach()

@@ -30,7 +30,7 @@ add_library(pi_cnrt SHARED
   "pi_cnrt.hpp"
   "pi_cnrt.cpp"
   "$ENV{NEUWARE_HOME}/include/cnrt.h"
-  # "$ENV{NEUWARE_HOME}/include/cndrv_api.h"
+  "$ENV{NEUWARE_HOME}/include/cndrv_api.h"
   "$ENV{NEUWARE_HOME}/include/cn_api.h"
 )
 

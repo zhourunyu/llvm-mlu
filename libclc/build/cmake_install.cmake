@@ -1,4 +1,4 @@
-# Install script for directory: /home/mlx/repos/llvm-mlu/libclc
+# Install script for directory: /home/wzy/repos/llvm-mlu/libclc
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -42,34 +42,29 @@ if(NOT DEFINED CMAKE_OBJDUMP)
   set(CMAKE_OBJDUMP "/usr/bin/objdump")
 endif()
 
-if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/pkgconfig" TYPE FILE FILES "/home/mlx/repos/llvm-mlu/libclc/build/libclc.pc")
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/pkgconfig" TYPE FILE FILES "/home/wzy/repos/llvm-mlu/libclc/build/libclc.pc")
 endif()
 
-if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "/home/mlx/repos/llvm-mlu/libclc/generic/include/clc")
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "/home/wzy/repos/llvm-mlu/libclc/generic/include/clc")
 endif()
 
-if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/clc" TYPE FILE FILES "/home/mlx/repos/llvm-mlu/libclc/build/./lib/clc/libspirv-mlisa--.bc")
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/clc" TYPE FILE FILES "/home/wzy/repos/llvm-mlu/libclc/build/./lib/clc/libspirv-mlisa--.bc")
 endif()
 
-if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/clc" TYPE FILE FILES "/home/mlx/repos/llvm-mlu/libclc/build/./lib/clc/clc-mlisa--.bc")
+if(CMAKE_INSTALL_COMPONENT STREQUAL "libspirv-builtins" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE DIRECTORY FILES "/home/wzy/repos/llvm-mlu/libclc/build/./lib/clc" FILES_MATCHING REGEX "/libspirv\\-[^/]*$")
 endif()
 
-if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xlibspirv-builtinsx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE DIRECTORY FILES "/home/mlx/repos/llvm-mlu/libclc/build/./lib/clc" FILES_MATCHING REGEX "/libspirv\\-[^/]*$")
-endif()
-
-if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xclc-builtinsx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE DIRECTORY FILES "/home/mlx/repos/llvm-mlu/libclc/build/./lib/clc" FILES_MATCHING REGEX "/clc\\-[^/]*$")
+if(CMAKE_INSTALL_COMPONENT STREQUAL "clc-builtins" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE DIRECTORY FILES "/home/wzy/repos/llvm-mlu/libclc/build/./lib/clc" FILES_MATCHING REGEX "/clc\\-[^/]*$")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/mlx/repos/llvm-mlu/libclc/build/utils/cmake_install.cmake")
-  include("/home/mlx/repos/llvm-mlu/libclc/build/test/cmake_install.cmake")
+  include("/home/wzy/repos/llvm-mlu/libclc/build/utils/cmake_install.cmake")
 
 endif()
 
@@ -81,5 +76,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/mlx/repos/llvm-mlu/libclc/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/wzy/repos/llvm-mlu/libclc/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
