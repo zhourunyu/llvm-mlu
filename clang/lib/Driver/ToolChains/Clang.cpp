@@ -4449,9 +4449,9 @@ void Clang::ConstructJob(Compilation &C, const JobAction &JA,
 
   // Construct llc command.
   // The output is an asm file
-  // "/usr/local/neuware/lib/llvm-mm/bin/llc" "--filetype=asm"   "--march=mlisa" "--mcpu=mtp_270" "/tmp/vector_add-2870aa.bc" "-o" "/tmp/vector_add-74376d.s"
+  // "/usr/local/neuware/lib/llvm-mm/bin/llc" "--filetype=asm"   "--march=mlisa" "--mcpu=mtp_372" "/tmp/vector_add-2870aa.bc" "-o" "/tmp/vector_add-74376d.s"
   if (IsSYCL && JA.getType() == types::TY_PP_Asm && Triple.isMLISA()){
-    ArgStringList LlcArgs{"-filetype=asm", "--march=mlisa", "--mcpu=mtp_270", "-o", Output.getFilename()};
+    ArgStringList LlcArgs{"-filetype=asm", "--march=mlisa", "--mcpu=mtp_372", "-o", Output.getFilename()};
     for (const auto &II : Inputs) {
       addDashXForInput(Args, II, LlcArgs);
       if (II.isFilename())

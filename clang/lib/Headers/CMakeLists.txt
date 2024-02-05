@@ -62,6 +62,8 @@ set(files
   __clang_hip_cmath.h
   __clang_hip_math.h
   __clang_hip_runtime_wrapper.h
+  __clang_bang_libdevice_declares.h
+  __clang_bang_math.h
   #__clang_bang_builtin_vars.h
   #__clang_bang_math_forward_declares.h
   #__clang_bang_intrinsics.h

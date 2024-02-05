@@ -6,7 +6,7 @@
 using namespace sycl;
 
 constexpr int M = 10000;
-constexpr int N = 2048;
+constexpr int N = 32;
 
 long long getTime() {
     struct timeval tv;
@@ -26,7 +26,7 @@ int main() {
     float *c = (float *)malloc(sizeof(float) * N);
 
     for (int i = 0; i < N; i++) {
-        a[i] = 1.0;
+        a[i] = 0.5;
         b[i] = 2.0;
         c[i] = 0;
     }
@@ -43,7 +43,7 @@ int main() {
 
     // Submit our job to the queue
     Q.submit([&](cl::sycl::handler &cgh) {
-        accessor accessorD(bufferD, cgh, read_only);
+        //accessor accessorD(bufferD, cgh, read_only);
         accessor accessorA(bufferA, cgh, read_only);
         accessor accessorB(bufferB, cgh, read_only);
         accessor accessorC(bufferC, cgh, write_only);
@@ -77,7 +77,8 @@ int main() {
             }
 
             for (int j = 0; j < N; ++j) {
-                accessorC[j] = localAccC[j];
+                //accessorC[j] = localAccC[j];
+		accessorC[j] = accessorA[j];
             }
         });
     });

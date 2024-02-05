@@ -26,7 +26,7 @@ int main(){
     float *c_host = (float *)malloc(sizeof(float) * N);
 
     for(int i = 0;i < N;i++){
-        a[i] = 2.0f;b[i] = 0.0f;c_host[i] = 1.414f;
+        a[i] = 0.5f;b[i] = 0.0f;c_host[i] = 1.414f;
     }
 
     range<1> arr_range(N);
@@ -56,11 +56,10 @@ int main(){
             //     reinterpret_cast<float *>(localAccC.get_pointer().get()); 
             for (int j = 0; j < N; ++j) {
                 localAccA[j] = aA[j];
-                localAccB[j] = aB[j];
             }
             for (int j = 0;j < N;++j){
             #ifdef __SYCL_DEVICE_ONLY__
-                __mlvm_stream_pow2_f32(bPtr,aPtr,N);
+                __mlvm_stream_active_pow2_f32(bPtr,aPtr,N);
             #endif
             }
 

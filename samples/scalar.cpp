@@ -5,8 +5,8 @@
 #include <sys/time.h>
 using namespace sycl;
 
-constexpr int M = 10000;
-constexpr int N = 2048;
+constexpr int M = 1;
+constexpr int N = 32;
 
 long long getTime() {
     struct timeval tv;
@@ -41,7 +41,7 @@ int main() {
 
     // Submit our job to the queue
     Q.submit([&](cl::sycl::handler &cgh) {
-        accessor accessorD(bufferD, cgh, read_only);
+        //accessor accessorD(bufferD, cgh, read_only);
         accessor accessorA(bufferA, cgh, read_only);
         accessor accessorB(bufferB, cgh, read_only);
         accessor accessorC(bufferC, cgh, write_only);
@@ -49,14 +49,16 @@ int main() {
         cgh.parallel_for<class mm>(1, [=](id<1> i) {
             for (int k = 0; k < M; ++k) {
                 for (int j = 0; j < N; ++j) {
-                    accessorC[j] = accessorA[j] + accessorB[j];
+                    //accessorC[j] = accessorA[j] + accessorB[j];
+		    accessorC[j] = accessorA[j];
                 }
             }
         });
     });
 
     host_accessor host_accC(bufferC, read_only);
-    std::cout << "Result: " << host_accC[0] << " .. " << host_accC[N - 1] << std::endl;
+    for (int i=0; i<N; i++)
+        std::cout << "Result: " << host_accC[i] << std::endl;
     auto endTime = getTime();
     std::cout << "Time: " << endTime - startTime << std::endl;
     return 0;

@@ -20,6 +20,7 @@
 #include <sstream>
 #include <string>
 
+
 namespace {
 std::string getCnrtVersionString() {
   std::stringstream stream;
@@ -1232,9 +1233,9 @@ pi_result cnrt_piContextCreate(const pi_context_properties *properties,
     // as `cuCtxCreate` replaces it implicitly otherwise.
     // Primary contexts are kept on top of the stack, so the previous context
     // is not queried and therefore not recovered.
-    if (current != nullptr) {
-      PI_CHECK_ERROR(cnCtxSetCurrent(current));
-    }
+    //if (current != nullptr) {
+    //  PI_CHECK_ERROR(cnCtxSetCurrent(current));
+    //}
 
     *retcontext = piContextPtr.release();
   } catch (pi_result err) {
@@ -1330,7 +1331,6 @@ pi_result cnrt_piMemBufferCreate(pi_context context, pi_mem_flags flags,
   //    ((flags & PI_MEM_FLAGS_HOST_PTR_USE) && !enableUseHostPtr);
   pi_result retErr = PI_SUCCESS;
   pi_mem retMemObj = nullptr;
-
   try {
     CNaddr ptr;
     _pi_mem::mem_::buffer_mem_::alloc_mode allocMode =
@@ -1342,7 +1342,7 @@ pi_result cnrt_piMemBufferCreate(pi_context context, pi_mem_flags flags,
 
     if (retErr == PI_SUCCESS) {
       pi_mem parentBuffer = nullptr;
-
+      //std::cout<<"buffer create ptr: "<<ptr<<" size: "<<size<<std::endl;
       auto piMemObj = std::unique_ptr<_pi_mem>(
           new _pi_mem{context, parentBuffer, allocMode, ptr, host_ptr, size});
       if (piMemObj != nullptr) {
@@ -1680,7 +1680,7 @@ pi_result cnrt_piEnqueueMemBufferWrite(pi_queue command_queue, pi_mem buffer,
                                        pi_event *event) {
 
   assert(buffer != nullptr);
-  assert(command_queue != nullptr);
+  //assert(command_queue != nullptr);
   pi_result retErr = PI_SUCCESS;
   CNqueue cnQueue = command_queue->get();
   CNaddr devPtr = buffer->mem_.buffer_mem_.get();
@@ -1697,15 +1697,15 @@ pi_result cnrt_piEnqueueMemBufferWrite(pi_queue command_queue, pi_mem buffer,
           PI_COMMAND_TYPE_MEM_BUFFER_WRITE, command_queue));
       retImplEv->start();
     }
-
-    retErr =
-        PI_CHECK_ERROR(cnMemcpyHtoDAsync(devPtr + offset, ptr, size, cnQueue));
-    // retErr = PI_CHECK_ERROR(cnMemcpyHtoD(devPtr + offset, ptr, size));
+    //std::cout<<"Memcpy H2D devptr: "<<devPtr<<" ptr: "<<ptr<<" offset: "<<offset<<" size: "<<size<<std::endl;
+    //retErr =
+    //    PI_CHECK_ERROR(cnMemcpyHtoDAsync(devPtr + offset, ptr, size, cnQueue));
+    retErr = PI_CHECK_ERROR(cnMemcpyHtoD(devPtr + offset, ptr, size));
 
     if (event) {
       retErr = retImplEv->record();
     }
-
+    
     if (blocking_write) {
       retErr = PI_CHECK_ERROR(cnQueueSync(cnQueue));
     }
@@ -1745,8 +1745,13 @@ pi_result cnrt_piEnqueueMemBufferRead(pi_queue command_queue, pi_mem buffer,
       retImplEv->start();
     }
 
+    //retErr =
+    //    PI_CHECK_ERROR(cnMemcpyDtoHAsync(ptr, devPtr + offset, size, cnQueue));
+
     retErr =
-        PI_CHECK_ERROR(cnMemcpyDtoHAsync(ptr, devPtr + offset, size, cnQueue));
+        PI_CHECK_ERROR(cnMemcpyDtoH(ptr, devPtr + offset, size));
+
+    //std::cout<<"memcpy D2H ptr: "<<ptr<<" devptr: "<<devPtr<<" offset: "<<offset<<" size: "<<size<<std::endl;
 
     if (event) {
       retErr = retImplEv->record();
@@ -2007,7 +2012,6 @@ pi_result cnrt_piEnqueueKernelLaunch(
                      CN_INVOKE_PARAM_BUFFER_SIZE,
                      (void *)(kernel->get_num_args() * sizeof(CNaddr)),
                      CN_INVOKE_PARAM_END};
-
     auto chooseKernelClass = [](int n) -> KernelClass {
       assert(n > 0);
       // 4 clusters are available
@@ -2020,16 +2024,21 @@ pi_result cnrt_piEnqueueKernelLaunch(
       return CN_KERNEL_CLASS_BLOCK;
     };
     KernelClass kc = chooseKernelClass(threadsPerBlock[0]);
-
+    kc = CN_KERNEL_CLASS_BLOCK;
     retError = PI_CHECK_ERROR(
         cnInvokeKernel(cuFunc, threadsPerBlock[0], threadsPerBlock[1],
                        threadsPerBlock[2], kc, 0, cnQueue, nullptr, extra));
+
+
+    retError = PI_CHECK_ERROR(cnQueueSync(cnQueue));
 
     kernel->free_kernel_params();
     kernel->clear_local_size();
     if (event) {
       retError = retImplEv->record();
     }
+
+    
 
     if (event) {
       *event = retImplEv.release();
