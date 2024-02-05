@@ -34,6 +34,8 @@
 #include <string>
 #include <vector>
 
+#include <iostream>
+
 extern "C" {
 
 /// \cond IGNORE_BLOCK_IN_DOXYGEN
@@ -690,6 +692,7 @@ struct _pi_kernel {
       } else {
         kernel_params_[i] = *(int *)(argIndices[i]);
       }
+      //std::cout<<"arg: "<<kernel_params_[i]<<std::endl;
     }
   }
 

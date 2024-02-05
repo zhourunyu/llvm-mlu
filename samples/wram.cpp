@@ -84,11 +84,11 @@ int main() {
     });
 
     host_accessor host_accC(bufferC, read_only);
-    for(int i=0; i<N; i++){
-        if(host_accC[i] != 0)
-		    std::cout<<host_accC[i]<<std::endl;
-    }
-    //std::cout << "Result: " << host_accC[0] << " .. " << host_accC[N - 1] << std::endl;
+    // for(int i=0; i<N; i++){
+    //     if(host_accC[i] != 0)
+	// 	    std::cout<<host_accC[i]<<std::endl;
+    // }
+    std::cout << "Result: " << host_accC[0] << " .. " << host_accC[N - 1] << std::endl;
     auto endTime = getTime();
     std::cout << "Time: " << endTime - startTime << std::endl;
     return 0;

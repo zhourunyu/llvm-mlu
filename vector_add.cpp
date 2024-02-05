@@ -1,7 +1,8 @@
 #include <CL/sycl.hpp>
 #include <array>
 using namespace sycl;
-constexpr int N = 256;
+constexpr int N = 4096;
+constexpr int M = 4096;
 
 int main() {
 
@@ -15,29 +16,38 @@ int main() {
     std::cout << E.what() << std::endl;
   }
 */  
-    std::array<int, N> a,b,c;
+    std::array<int, N> a;
     for(int i=0; i<N; i++) {
-        a[i] = b[i] = 1;
-        c[i] = 0;
+        a[i] = 2;
     }
 
-    buffer A{a};
-    buffer B{b};
-    buffer C{c};
+    std::array<int, M> b, c;
+    for (int i=0; i<M; i++) {
+    	b[i] = 2;
+	c[i] = 0;
+    }
+
+    buffer A(a);
+    buffer B(b);
+    buffer C(c);
 
   
     Q.submit([&](handler &h) {
          accessor accA(A, h, read_only);
-         accessor accB(B, h, read_only);
-         accessor accC(C, h, write_only);
+	 accessor accB(B, h, read_only);
+         accessor accC(C, h, read_write);
          h.parallel_for<class vector_add>(
-           N,
-           [=](id<1> i) {accC[i] = accB[i] + accA[i];});
+           1,
+           [=](id<1> i) {
+	       for(int j=0; j<M; j++)
+	           accC[j] = accA[j] + accB[j];
+	 });
      });
       
-     host_accessor host_accC(C, read_only);
+     auto host_accC = C.get_access<access::mode::read>();
      double ret = 0;
-     for(int i=0; i<N; i++) {
+     for(int i=M-1; i>M-10; i--) {
+	 //std::cout<<"ele is: "<<host_accC[i]i<<std::endl;
          ret += host_accC[i];
      }
      std::cout<<"result is:"<<ret<<"\n";

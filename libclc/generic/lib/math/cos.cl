@@ -25,7 +25,7 @@
 
 #include <clcmacro.h>
 
-_CLC_OVERLOAD _CLC_DEF float cos(float x)
+_CLC_OVERLOAD _CLC_DEF _CLC_INLINE float cos(float x)
 {
     return __spirv_ocl_cos(x);
 }
@@ -36,7 +36,7 @@ _CLC_UNARY_VECTORIZE(_CLC_OVERLOAD _CLC_DEF, float, cos, float);
 
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 
-_CLC_OVERLOAD _CLC_DEF double cos(double x) {
+_CLC_OVERLOAD _CLC_DEF _CLC_INLINE  double cos(double x) {
     return __spirv_ocl_cos(x);
 }
 

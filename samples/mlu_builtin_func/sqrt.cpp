@@ -60,7 +60,8 @@ int main(){
             }
             for (int j = 0;j < N;++j){
             #ifdef __SYCL_DEVICE_ONLY__
-                __mlvm_stream_sqrt_f32(bPtr,aPtr,N);
+                __mlvm_stream_active_sqrt_f32(bPtr,aPtr,N);
+                // __mlvm_stream_sqrt_f32(bPtr,aPtr,N);
             #endif
             }
 

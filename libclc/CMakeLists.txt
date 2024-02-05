@@ -12,12 +12,14 @@ set(CMAKE_MODULE_PATH
 # If we are not building as a part of LLVM, build libclc as an
 # standalone project, using LLVM/Clang as external tools.
 if( CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR )
+  message(STATUS "building libclc as a standalone project.")
   project( libclc VERSION 0.2.0 LANGUAGES CXX C )
 
   set( LIBCLC_STANDALONE_BUILD 1 )
 
   include(HandleOutOfTreeLLVM)
 else()
+  message(STATUS "building libclc as a part of llvm.")
   include(HandleInLLVMTree)
 endif()
 

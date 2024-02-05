@@ -4,7 +4,7 @@
 #include <iostream>
 
 constexpr int M = 10000;
-constexpr int N = 256;
+constexpr int N = 32;
 
 using namespace std;
 using namespace sycl;
@@ -69,15 +69,16 @@ int main(){
             }
 
         });
-    });
+    }).wait();
 
     host_accessor result{bufferC,read_only};
 
-    std::cout << "add Result: " << result[0] << " .. " << result[N - 1] << std::endl;
     // for(int i = 0; i<N; i++){
     //     if(abs(c_host[i]-result[i]) >= 1e-5)
 	// 	    std::cout<<result[i]<<std::endl;
     // }
+
+    std::cout << "add Result: " << result[0] << " .. " << result[N - 1] << std::endl;
 
     auto endTime = getTime();
     std::cout << "Time : " << endTime - startTime <<" us "<< std::endl;

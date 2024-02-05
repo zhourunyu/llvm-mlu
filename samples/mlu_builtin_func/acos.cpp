@@ -87,8 +87,11 @@ int main(){
             #endif
             }
 
+
+
             for(int j = 0;j < N;++j){
                 aB[j] = localAccB[j];
+		aB[j] = acos(localAccB[j]);
             }
 
         });

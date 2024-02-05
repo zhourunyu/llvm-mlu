@@ -105,8 +105,8 @@ BangInstallationDetector::BangInstallationDetector(
       LibPath = InstallPath + "/lib";
     else
       continue;
-
-#if 0  // TODO(zhouxiaoyong): check the device-side library libdevice.bc
+   /*
+// TODO(zhouxiaoyong): check the device-side library libdevice.bc
     llvm::ErrorOr<std::unique_ptr<llvm::MemoryBuffer>> VersionFile =
         FS.getBufferForFile(InstallPath + "/mlvm/version.txt");
     if (!VersionFile) {
@@ -139,10 +139,11 @@ BangInstallationDetector::BangInstallationDetector(
         LibDeviceMap["1H8"] = FilePath;
       }
     }
-#endif
+    */
 
     IsValid = true;
     break;
+
   }
 }
 
@@ -526,6 +527,10 @@ void BangToolChain::addClangTargetOptions(
 
     CC1Args.push_back("-mlink-builtin-bitcode");
     CC1Args.push_back(DriverArgs.MakeArgString(LibSpirvFile));
+
+    CC1Args.push_back("-mlink-builtin-bitcode");
+    CC1Args.push_back("/usr/local/neuware/mlvm/libdevice/libdevice.compute_30.bc");
+
   }
 
 
@@ -543,7 +548,27 @@ void BangToolChain::addClangTargetOptions(
       options::OPT_fprofile_generate_EQ,
       options::OPT_fprofile_instr_generate,
       options::OPT_fprofile_instr_generate_EQ);
+  /* 
+  CC1Args.push_back("-mllvm");
+  CC1Args.push_back("-mlisa-enable-stack-promote=false");
 
+  CC1Args.push_back("-mllvm");
+  CC1Args.push_back("-disable-loop-idiom");
+
+  CC1Args.push_back("-mllvm");
+  CC1Args.push_back("-disable-memcpy-opt=true");
+  CC1Args.push_back("-mllvm");
+  CC1Args.push_back("-disable-bitcast-for-load=true");
+  CC1Args.push_back("-mllvm");
+  CC1Args.push_back("-disable-sext-entend-to-dst-type=true");
+
+  // Using this option to disable the float constant folding
+  CC1Args.push_back("-mllvm");
+  CC1Args.push_back("-disable-float-folding");
+
+  CC1Args.push_back("-mllvm");
+  CC1Args.push_back("-mlisa-address-alignment=64");
+  */
   /*
   if (DriverArgs.hasArg(options::OPT_bang_stack_on_ldram) || ProfileArg) {
     CC1Args.push_back("-bang-auto-vars-on-ldram");
@@ -629,7 +654,7 @@ void BangToolChain::AddBangIncludeArgs(const ArgList &DriverArgs,
       !DriverArgs.hasArg(options::OPT_no_neuware_version_check)) {
     StringRef Arch = DriverArgs.getLastArgValue(options::OPT_march_EQ);
     //assert(!Arch.empty() && "Must have an explicit MLU arch.");
-    if (Arch.empty()) Arch = "mtp_270";
+    if (Arch.empty()) Arch = "mtp_372";
     BangInstallation.CheckBangVersionSupportsArch(StringToBangArch(Arch));
   }
   BangInstallation.AddBangIncludeArgs(DriverArgs, CC1Args);

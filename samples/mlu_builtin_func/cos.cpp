@@ -47,24 +47,18 @@ int main(){
         // accessor<float,1,access::mode::read_write,access::target::local> localAccC(range<1>(N), h);
       
         h.parallel_for<class mm>(1,[=](id<1> i) {
-            // aC[i] = aA[i] + aB[i];
             auto aPtr =
                 reinterpret_cast<float *>(localAccA.get_pointer().get());
             auto bPtr =
                 reinterpret_cast<float *>(localAccB.get_pointer().get());
-            // auto cPtr =
-            //     reinterpret_cast<float *>(localAccC.get_pointer().get()); 
             for (int j = 0; j < N; ++j) {
                 localAccA[j] = aA[j];
-                // localAccB[j] = aB[j];
             }
             for (int j = 0;j < N;++j){
             #ifdef __SYCL_DEVICE_ONLY__
-                // __mlvm_stream_sin_f32(bPtr,aPtr,N);
                 __mlvm_stream_active_cos_f32(bPtr,aPtr,N);
             #endif
             }
-
             for(int j = 0;j < N;++j){
                 aB[j] = localAccB[j];
             }

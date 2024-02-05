@@ -1166,7 +1166,7 @@ cl_int MemCpyCommand::enqueueImp() {
   RT::PiEvent &Event = MEvent->getHandleRef();
 
   auto RawEvents = getPiEvents(EventImpls);
-
+ 
   MemoryManager::copy(
       MSrcAllocaCmd->getSYCLMemObj(), MSrcAllocaCmd->getMemAllocation(),
       MSrcQueue, MSrcReq.MDims, MSrcReq.MMemoryRange, MSrcReq.MAccessRange,
@@ -1777,7 +1777,6 @@ cl_int ExecCGCommand::enqueueImp() {
   RT::PiEvent &Event = MEvent->getHandleRef();
 
   switch (MCommandGroup->getType()) {
-
   case CG::CGTYPE::UPDATE_HOST: {
     throw runtime_error("Update host should be handled by the Scheduler.",
                         PI_INVALID_OPERATION);

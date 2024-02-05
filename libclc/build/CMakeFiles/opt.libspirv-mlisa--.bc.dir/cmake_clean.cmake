@@ -4,6 +4,6 @@ file(REMOVE_RECURSE
 )
 
 # Per-language clean rules from dependency scanning.
-foreach(lang )
+foreach(lang CLC)
   include(CMakeFiles/opt.libspirv-mlisa--.bc.dir/cmake_clean_${lang}.cmake OPTIONAL)
 endforeach()
