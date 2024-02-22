@@ -2,3 +2,6 @@ build/
 .vscode
 libclc/build/
 samples/*.out
+build-*.sh
+build-debug/
+gen_asm.sh
