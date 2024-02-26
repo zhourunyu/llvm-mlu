@@ -5,3 +5,4 @@ samples/*.out
 build-*.sh
 build-debug/
 gen_asm.sh
+samples/libdevice/*.out
