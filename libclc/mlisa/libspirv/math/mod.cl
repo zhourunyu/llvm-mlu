@@ -14,4 +14,4 @@
 #define __CLC_FUNCTION __spirv_ocl_mod
 #define __CLC_BUILTIN  __cn_scalar_mod_f32
 #define __CLC_BUILTIN_F  __cn_scalar_mod_f32
-#include <math/unary_builtin.inc>
+#include <math/binary_builtin.inc>

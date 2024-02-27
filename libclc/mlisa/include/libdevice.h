@@ -14,10 +14,10 @@
 // _CLC_INLINE float __cn_scalar_cos_f32(float);
 // _CLC_INLINE float __cn_scalar_acos_f32(float);
 
-_CLC_INLINE float __cn_scalar_add_f32_rn(float);
-_CLC_INLINE float __cn_scalar_sub_f32_rn(float);
-_CLC_INLINE float __cn_scalar_mul_f32_rn(float);
-_CLC_INLINE float __cn_scalar_div_f32_rn(float);
+_CLC_INLINE float __cn_scalar_add_f32_rn(float,float);
+_CLC_INLINE float __cn_scalar_sub_f32_rn(float,float);
+_CLC_INLINE float __cn_scalar_mul_f32_rn(float,float);
+_CLC_INLINE float __cn_scalar_div_f32_rn(float,float);
 _CLC_INLINE float __cn_scalar_sin_f32(float);
 _CLC_INLINE float __cn_scalar_cos_f32(float);
 _CLC_INLINE float __cn_scalar_tan_f32(float);
@@ -43,7 +43,7 @@ _CLC_INLINE float __cn_scalar_rsqrt_f32(float);
 
 _CLC_INLINE float __cn_scalar_isinf_f32(float);
 _CLC_INLINE float __cn_scalar_isnan_f32(float);
-_CLC_INLINE float __cn_scalar_mod_f32(float);
-_CLC_INLINE float __cn_scalar_pow_f32(float);
+_CLC_INLINE float __cn_scalar_mod_f32(float,float);
+_CLC_INLINE float __cn_scalar_pow_f32(float,float);
 
 #endif
