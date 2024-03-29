@@ -3,7 +3,7 @@
 #include <CL/sycl.hpp>
 #include <array>
 #include <sys/time.h>
-// #include <math.h>
+#include <math.h>
 using namespace sycl;
 
 constexpr int N = 32;
@@ -25,9 +25,9 @@ int main() {
     float *c_host = (float *)malloc(sizeof(float) * N);
 
     for (int i = 0; i < N; i++) {
-        a[i] = 0.5;
+        a[i] = INFINITY;
         c[i] = 0.0;
-        c_host[i] = 3.1415926/3;
+        c_host[i] = 0;
         // c_host[i] = M_PI/3;
     }
 
@@ -60,7 +60,7 @@ int main() {
             for (int j = 0; j < N; ++j) {
                 localAccA[j] = accessorA[j];
                 //accessorC[j] = localAccC[j];
-		        accessorC[j] = acos(localAccA[j]);
+		        accessorC[j] = (abs(isinf(localAccA[j]))==1)?0:1;
             }
         });
     });
