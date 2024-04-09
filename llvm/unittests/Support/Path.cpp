@@ -710,7 +710,7 @@ TEST_F(FileSystemTest, RealPath) {
 
   SmallString<64> HomeDir;
 
-  // This can fail if /home/wzy is not set and getpwuid fails.
+  // This can fail if $HOME is not set and getpwuid fails.
   bool Result = llvm::sys::path::home_directory(HomeDir);
   if (Result) {
     ASSERT_NO_ERROR(fs::real_path(HomeDir, Expected));
@@ -728,7 +728,7 @@ TEST_F(FileSystemTest, ExpandTilde) {
   SmallString<64> Actual;
   SmallString<64> HomeDir;
 
-  // This can fail if /home/wzy is not set and getpwuid fails.
+  // This can fail if $HOME is not set and getpwuid fails.
   bool Result = llvm::sys::path::home_directory(HomeDir);
   if (Result) {
     fs::expand_tilde(HomeDir, Expected);

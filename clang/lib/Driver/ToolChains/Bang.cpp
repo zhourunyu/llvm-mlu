@@ -501,24 +501,25 @@ void BangToolChain::addClangTargetOptions(
               .str();
       if (llvm::sys::fs::exists(ProvidedPath))
         LibSpirvFile = ProvidedPath;
-    } else {
-      SmallVector<StringRef, 8> LibraryPaths;
+    } 
+    // else {
+    //   SmallVector<StringRef, 8> LibraryPaths;
 
-      // Expected path w/out install.
-      SmallString<256> LIBCLCPath("/home/wzy/repos/llvm-mlu/libclc/build/lib/clc");
-      LibraryPaths.emplace_back(LIBCLCPath.c_str());
+    //   // Expected path w/out install.
+    //   SmallString<256> LIBCLCPath("/home/wzy/repos/llvm-mlu/libclc/build/lib/clc");
+    //   LibraryPaths.emplace_back(LIBCLCPath.c_str());
 
-      std::string LibSpirvTargetName = "libspirv-mlisa--.bc";
-      for (StringRef LibraryPath : LibraryPaths) {
-        SmallString<128> LibSpirvTargetFile(LibraryPath);
-        llvm::sys::path::append(LibSpirvTargetFile, LibSpirvTargetName);
-	      std::cout<<"MLISA LIBCLC PATH: "<<std::string(LibSpirvTargetFile.str())<<std::endl;
-        if (llvm::sys::fs::exists(LibSpirvTargetFile)) {
-          LibSpirvFile = std::string(LibSpirvTargetFile.str());
-          break;
-        }
-      }
-    }
+    //   std::string LibSpirvTargetName = "libspirv-mlisa--.bc";
+    //   for (StringRef LibraryPath : LibraryPaths) {
+    //     SmallString<128> LibSpirvTargetFile(LibraryPath);
+    //     llvm::sys::path::append(LibSpirvTargetFile, LibSpirvTargetName);
+	  //     std::cout<<"MLISA LIBCLC PATH: "<<std::string(LibSpirvTargetFile.str())<<std::endl;
+    //     if (llvm::sys::fs::exists(LibSpirvTargetFile)) {
+    //       LibSpirvFile = std::string(LibSpirvTargetFile.str());
+    //       break;
+    //     }
+    //   }
+    // }
 
     if (LibSpirvFile.empty()) {
       getDriver().Diag(diag::err_drv_no_sycl_libspirv)<<"libspirv-mlisa--.bc";
