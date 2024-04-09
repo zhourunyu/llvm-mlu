@@ -1,0 +1,9 @@
+[submodule "_deps/ocl-headers-src"]
+	path = _deps/ocl-headers-src
+	url = https://github.com/KhronosGroup/OpenCL-Headers.git
+[submodule "_deps/ocl-icd-src"]
+	path = _deps/ocl-icd-src
+	url = https://github.com/KhronosGroup/OpenCL-ICD-Loader.git
+[submodule "_deps/vc-intrinsics-src"]
+	path = _deps/vc-intrinsics-src
+	url = https://github.com/intel/vc-intrinsics.git
