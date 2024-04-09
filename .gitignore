@@ -1,8 +1,12 @@
-build/
+# Build folder
+build
+libclc/build
+
+# Generated sample binary
+samples/**/*.out
+
+# Python cache
+__pycache__
+
+# VSCode
 .vscode
-libclc/build/
-samples/*.out
-build-*.sh
-build-debug/
-gen_asm.sh
-samples/libdevice/*.out
