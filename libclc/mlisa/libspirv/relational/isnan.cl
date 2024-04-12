@@ -9,9 +9,8 @@
 #include <spirv/spirv.h>
 
 #include "../../include/libdevice.h"
-#include <clcmacro.h>
+#include <relational.h>
 
-#define __CLC_FUNCTION __spirv_ocl_isnan
-#define __CLC_BUILTIN  __cn_scalar_isnan_f32
-#define __CLC_BUILTIN_F  __cn_scalar_isnan_f32
-#include <math/unary_builtin.inc>
+_CLC_DEF _CLC_OVERLOAD bool __spirv_IsNan(float x) { return __cn_scalar_isnan_f32(x); }
+
+_CLC_DEFINE_RELATIONAL_UNARY_VEC_ALL(schar, __spirv_IsNan, float)
