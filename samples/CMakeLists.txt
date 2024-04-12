@@ -1,0 +1,28 @@
+cmake_minimum_required(VERSION 3.13)
+set(CMAKE_CXX_COMPILER ${CMAKE_SOURCE_DIR}/../build/bin/clang++)
+project(samples)
+
+set(CMAKE_CXX_STANDARD 14)
+include_directories(${CMAKE_SOURCE_DIR})
+add_link_options(-fsycl -fsycl-targets=mlisa-cambricon-bang)
+add_compile_options(-fsycl -fsycl-targets=mlisa-cambricon-bang -fsycl-libspirv-path=${CMAKE_SOURCE_DIR}/../libclc/build/lib/clc/builtins.opt.libspirv-mlisa--.bc)
+
+function(add_executable_and_test target)
+  add_executable(${target} ${ARGN})
+  add_test(NAME ${target} COMMAND ${target})
+endfunction()
+
+include(CTest)
+enable_testing()
+
+add_executable_and_test(acos libdevice/acos.cpp)
+add_executable_and_test(cbrt libdevice/cbrt.cpp)
+add_executable_and_test(ceil libdevice/ceil.cpp)
+add_executable_and_test(cos libdevice/cos.cpp)
+add_executable_and_test(cosh libdevice/cosh.cpp)
+add_executable_and_test(exp libdevice/exp.cpp)
+add_executable_and_test(isfinite libdevice/isfinite.cpp)
+add_executable_and_test(isinf libdevice/isinf.cpp)
+add_executable_and_test(sinh libdevice/sinh.cpp)
+add_executable_and_test(sqrt libdevice/sqrt.cpp)
+add_executable_and_test(tanh libdevice/tanh.cpp)
