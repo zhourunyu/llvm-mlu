@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.13)
+set(CMAKE_C_COMPILER ${CMAKE_SOURCE_DIR}/../build/bin/clang)
 set(CMAKE_CXX_COMPILER ${CMAKE_SOURCE_DIR}/../build/bin/clang++)
 project(samples)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 include_directories(${CMAKE_SOURCE_DIR})
 add_link_options(-fsycl -fsycl-targets=mlisa-cambricon-bang)
 add_compile_options(-fsycl -fsycl-targets=mlisa-cambricon-bang -fsycl-libspirv-path=${CMAKE_SOURCE_DIR}/../libclc/build/lib/clc/builtins.opt.libspirv-mlisa--.bc)

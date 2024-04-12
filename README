@@ -1,3 +1,0 @@
-### Build Command
-- source env-cnrt.sh
-- clang++ -fsycl -fsycl-targets=mlisa-cambricon-bang samples/wram.cpp -o samples/wram
