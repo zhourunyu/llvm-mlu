@@ -7,22 +7,20 @@ include_directories(${CMAKE_SOURCE_DIR})
 add_link_options(-fsycl -fsycl-targets=mlisa-cambricon-bang)
 add_compile_options(-fsycl -fsycl-targets=mlisa-cambricon-bang -fsycl-libspirv-path=${CMAKE_SOURCE_DIR}/../libclc/build/lib/clc/builtins.opt.libspirv-mlisa--.bc)
 
+include(CTest)
+enable_testing()
+
 function(add_executable_and_test target)
   add_executable(${target} ${ARGN})
   add_test(NAME ${target} COMMAND ${target})
 endfunction()
 
-include(CTest)
-enable_testing()
+file(GLOB SOURCE_FILES 
+  "libdevice/*.cpp"
+)
 
-add_executable_and_test(acos libdevice/acos.cpp)
-add_executable_and_test(cbrt libdevice/cbrt.cpp)
-add_executable_and_test(ceil libdevice/ceil.cpp)
-add_executable_and_test(cos libdevice/cos.cpp)
-add_executable_and_test(cosh libdevice/cosh.cpp)
-add_executable_and_test(exp libdevice/exp.cpp)
-add_executable_and_test(isfinite libdevice/isfinite.cpp)
-add_executable_and_test(isinf libdevice/isinf.cpp)
-add_executable_and_test(sinh libdevice/sinh.cpp)
-add_executable_and_test(sqrt libdevice/sqrt.cpp)
-add_executable_and_test(tanh libdevice/tanh.cpp)
+foreach(source_file ${SOURCE_FILES})
+  get_filename_component(file_name ${source_file} NAME)
+  string(REPLACE ".cpp" "" target_name ${file_name})
+  add_executable_and_test(${target_name} ${source_file})
+endforeach()

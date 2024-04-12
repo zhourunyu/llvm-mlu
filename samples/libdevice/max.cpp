@@ -3,7 +3,7 @@
 #include <vector>
 #include <math.h>
 
-#define BINARY_OP(x, y) ((x) * (y))
+#define BINARY_OP sycl::max
 #include "binary_op.h"
 
 constexpr int N = 1024;
@@ -25,12 +25,12 @@ int main() {
     std::cout << "Time: " << endTime - startTime << "us" << std::endl;
 
     for (int i = 0; i < N; i++) {
-        c_host[i] = a[i] * b[i];
+        c_host[i] = std::max(a[i], b[i]);
     }
     int ret = compareResult(c, c_host);
 
     if (ret) {
-        std::cout << "Test failed for mul()." << std::endl;
+        std::cout << "Test failed for max()." << std::endl;
         return ret;
     }
     std::cout << "Test passed." << std::endl;
