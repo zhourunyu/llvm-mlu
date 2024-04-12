@@ -23,6 +23,8 @@ else()
   include(HandleInLLVMTree)
 endif()
 
+add_compile_options(-Wno-macro-redefined)
+
 include( GNUInstallDirs )
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
   amdgcn-amdhsa/lib/SOURCES;
