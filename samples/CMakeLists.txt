@@ -4,7 +4,7 @@ set(CMAKE_CXX_COMPILER ${CMAKE_SOURCE_DIR}/../build/bin/clang++)
 project(samples)
 
 set(CMAKE_CXX_STANDARD 17)
-include_directories(${CMAKE_SOURCE_DIR})
+include_directories(${CMAKE_SOURCE_DIR}/include)
 add_link_options(-fsycl -fsycl-targets=mlisa-cambricon-bang)
 add_compile_options(-fsycl -fsycl-targets=mlisa-cambricon-bang -fsycl-libspirv-path=${CMAKE_SOURCE_DIR}/../libclc/build/lib/clc/builtins.opt.libspirv-mlisa--.bc)
 
@@ -16,11 +16,14 @@ function(add_executable_and_test target)
   add_test(NAME ${target} COMMAND ${target})
 endfunction()
 
-file(GLOB SOURCE_FILES 
+add_executable(hello-sycl hello-sycl.cpp)
+add_executable_and_test(usm usm.cpp)
+
+file(GLOB TEST_SOURCES 
   "libdevice/*.cpp"
 )
 
-foreach(source_file ${SOURCE_FILES})
+foreach(source_file ${TEST_SOURCES})
   get_filename_component(file_name ${source_file} NAME)
   string(REPLACE ".cpp" "" target_name ${file_name})
   add_executable_and_test(${target_name} ${source_file})

@@ -107,11 +107,11 @@ pi_result forLatestEvents(const pi_event *event_wait_list,
   return PI_SUCCESS;
 }
 
-/// Converts CUDA error into PI error codes, and outputs error information
+/// Converts CNRT error into PI error codes, and outputs error information
 /// to stderr.
-/// If PI_CUDA_ABORT env variable is defined, it aborts directly instead of
+/// If PI_CNRT_ABORT env variable is defined, it aborts directly instead of
 /// throwing the error. This is intended for debugging purposes.
-/// \return PI_SUCCESS if \param result was CUDA_SUCCESS.
+/// \return PI_SUCCESS if \param result was CN_SUCCESS.
 /// \throw pi_error exception (integer) if input was not success.
 ///
 pi_result check_error(CNresult result, const char *function, int line,
@@ -597,9 +597,9 @@ public:
 //-- PI API implementation
 extern "C" {
 
-/// Obtains the CUDA platform.
-/// There is only one CUDA platform, and contains all devices on the system.
-/// Triggers the CUDA Driver initialization (cuInit) the first time, so this
+/// Obtains the CNRT platform.
+/// There is only one CNRT platform, and contains all devices on the system.
+/// Triggers the CNRT Driver initialization (cnInit) the first time, so this
 /// must be the first PI API called.
 ///
 pi_result cnrt_piPlatformsGet(pi_uint32 num_entries, pi_platform *platforms,
@@ -835,8 +835,7 @@ pi_result cnrt_piDeviceGetInfo(pi_device device, pi_device_info param_name,
                    PI_DEVICE_TYPE_GPU);
   }
   case PI_DEVICE_INFO_VENDOR_ID: {
-    // TODO: Cambricon ID
-    return getInfo(param_value_size, param_value, param_value_size_ret, 4318u);
+    return getInfo(param_value_size, param_value, param_value_size_ret, 51900u);
   }
 
   case PI_DEVICE_INFO_MAX_COMPUTE_UNITS: {
@@ -879,7 +878,6 @@ pi_result cnrt_piDeviceGetInfo(pi_device device, pi_device_info param_name,
                         param_value_size_ret, return_size);
   }
 
-  // TODO: work group int mlu?
   case PI_DEVICE_INFO_MAX_WORK_GROUP_SIZE: {
     int max_work_group_size = 0;
     cl::sycl::detail::pi::assertion(
@@ -935,32 +933,18 @@ pi_result cnrt_piDeviceGetInfo(pi_device device, pi_device_info param_name,
     return getInfo(param_value_size, param_value, param_value_size_ret, 0u);
   }
 
-  // TODO[MLU]: how to find max num subgroup of mlu
   case PI_DEVICE_INFO_MAX_NUM_SUB_GROUPS: {
+    size_t max_num_sub_groups = 1;
+    return getInfo(param_value_size, param_value, param_value_size_ret,
+                   max_num_sub_groups);
   }
 
   case PI_DEVICE_INFO_SUB_GROUP_INDEPENDENT_FORWARD_PROGRESS: {
-    // Volta provides independent thread scheduling
-    // TODO: Revisit for previous generation GPUs
-    int major = 0;
-    cl::sycl::detail::pi::assertion(
-        cnDeviceGetAttribute(&major,
-                             CN_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR,
-                             device->get()) == CN_SUCCESS);
-    // TODO[MLU]: is mlu subgroup indenpendent foward progress
-    // bool ifp = (major >= 7);
     bool ifp = false;
     return getInfo(param_value_size, param_value, param_value_size_ret, ifp);
   }
   case PI_DEVICE_INFO_SUB_GROUP_SIZES_INTEL: {
-    // NVIDIA devices only support one sub-group size (the warp size)
-    int warpSize = 0;
-    // cl::sycl::detail::pi::assertion(
-    //     cnDeviceGetAttribute(&warpSize, CU_DEVICE_ATTRIBUTE_WARP_SIZE,
-    //                          device->get()) == CUDA_SUCCESS);
-    // TODO[MLU]: MLU warp size?
-    warpSize = 1;
-    size_t sizes[1] = {static_cast<size_t>(warpSize)};
+    size_t sizes[1] = {1};
     return getInfoArray<size_t>(1, param_value_size, param_value,
                                 param_value_size_ret, sizes);
   }
@@ -1014,15 +998,57 @@ pi_result cnrt_piDeviceGetInfo(pi_device device, pi_device_info param_name,
     // but some searching found as of SM 2.x 128 are supported.
     return getInfo(param_value_size, param_value, param_value_size_ret, 128u);
   }
-  case PI_DEVICE_INFO_HOST_UNIFIED_MEMORY: {
-    // TODO[MLU]: Is MLU device integrated with host memory?
-    int is_integrated = 0;
-    // cl::sycl::detail::pi::assertion(
-    //     cuDeviceGetAttribute(&is_integrated, CU_DEVICE_ATTRIBUTE_INTEGRATED,
-    //                          device->get()) == CUDA_SUCCESS);
+  case PI_DEVICE_INFO_SINGLE_FP_CONFIG: {
+    int config = 0;
+    return getInfo(param_value_size, param_value, param_value_size_ret, config);
+  }
+  case PI_DEVICE_INFO_HALF_FP_CONFIG: {
+    int config = 0;
+    return getInfo(param_value_size, param_value, param_value_size_ret, config);
+  }
+  case PI_DEVICE_INFO_DOUBLE_FP_CONFIG: {
+    int config = 0;
+    return getInfo(param_value_size, param_value, param_value_size_ret, config);
+  }
+  case PI_DEVICE_INFO_GLOBAL_MEM_CACHE_TYPE: {
+    return getInfo(param_value_size, param_value, param_value_size_ret,
+                   CL_READ_WRITE_CACHE);
+  }
+  case PI_DEVICE_INFO_GLOBAL_MEM_CACHE_SIZE: {
+    int cache_size = 0;
+    cl::sycl::detail::pi::assertion(
+        cnDeviceGetAttribute(&cache_size, CN_DEVICE_ATTRIBUTE_MAX_L2_CACHE_SIZE,
+                             device->get()) == CN_SUCCESS);
+    cl::sycl::detail::pi::assertion(cache_size >= 0);
+    // The L2 cache is global to the MLU.
+    return getInfo(param_value_size, param_value, param_value_size_ret,
+                   pi_uint64(cache_size));
+  }
+  case PI_DEVICE_INFO_GLOBAL_MEM_SIZE: {
+    size_t bytes = 0;
+    // Runtime API has easy access to this value, driver API info is scarse.
+    cl::sycl::detail::pi::assertion(cnDeviceTotalMem(&bytes, device->get()) ==
+                                    CN_SUCCESS);
+    return getInfo(param_value_size, param_value, param_value_size_ret,
+                   pi_uint64{bytes});
+  }
+  case PI_DEVICE_INFO_MAX_CONSTANT_BUFFER_SIZE: {
+    int constant_memory = 0;
+    cl::sycl::detail::pi::assertion(
+        cnDeviceGetAttribute(&constant_memory,
+                             CN_DEVICE_ATTRIBUTE_TOTAL_CONST_MEMORY_SIZE,
+                             device->get()) == CN_SUCCESS);
+    cl::sycl::detail::pi::assertion(constant_memory >= 0);
 
-    cl::sycl::detail::pi::assertion((is_integrated == 0) |
-                                    (is_integrated == 1));
+    return getInfo(param_value_size, param_value, param_value_size_ret,
+                   pi_uint64(constant_memory));
+  }
+  case PI_DEVICE_INFO_LOCAL_MEM_TYPE: {
+    return getInfo(param_value_size, param_value, param_value_size_ret,
+                   PI_DEVICE_LOCAL_MEM_TYPE_LOCAL);
+  }
+  case PI_DEVICE_INFO_HOST_UNIFIED_MEMORY: {
+    int is_integrated = 0;
     auto result = static_cast<bool>(is_integrated);
     return getInfo(param_value_size, param_value, param_value_size_ret, result);
   }
@@ -1092,7 +1118,7 @@ pi_result cnrt_piDeviceGetInfo(pi_device device, pi_device_info param_name,
                    version.c_str());
   }
   case PI_DEVICE_INFO_PROFILE: {
-    return getInfo(param_value_size, param_value, param_value_size_ret, "CUDA");
+    return getInfo(param_value_size, param_value, param_value_size_ret, "FULL_PROFILE");
   }
   case PI_DEVICE_INFO_REFERENCE_COUNT: {
     return getInfo(param_value_size, param_value, param_value_size_ret,
@@ -1119,6 +1145,44 @@ pi_result cnrt_piDeviceGetInfo(pi_device device, pi_device_info param_name,
   case PI_DEVICE_INFO_PARENT_DEVICE: {
     return getInfo(param_value_size, param_value, param_value_size_ret,
                    nullptr);
+  }
+  case PI_DEVICE_INFO_PARTITION_MAX_SUB_DEVICES: {
+    return getInfo(param_value_size, param_value, param_value_size_ret, 0u);
+  }
+  case PI_DEVICE_INFO_PARTITION_PROPERTIES: {
+    return getInfo(param_value_size, param_value, param_value_size_ret,
+                   static_cast<cl_device_partition_property>(0u));
+  }
+  case PI_DEVICE_INFO_PARTITION_AFFINITY_DOMAIN: {
+    return getInfo(param_value_size, param_value, param_value_size_ret, 0u);
+  }
+  case PI_DEVICE_INFO_PARTITION_TYPE: {
+    // TODO: uncouple from OpenCL
+    return getInfo(param_value_size, param_value, param_value_size_ret,
+                   static_cast<cl_device_partition_property>(0u));
+  }
+
+  // Intel USM extensions
+
+  case PI_DEVICE_INFO_USM_HOST_SUPPORT: {
+    // from cl_intel_unified_shared_memory: "The host memory access capabilities
+    // apply to any host allocation."
+    //
+    // query if/how the device can access page-locked host memory, possibly
+    // through PCIe, using the same pointer as the host
+    pi_bitfield value = {};
+    return getInfo(param_value_size, param_value, param_value_size_ret, value);
+  }
+  case PI_DEVICE_INFO_USM_DEVICE_SUPPORT: {
+    // from cl_intel_unified_shared_memory:
+    // "The device memory access capabilities apply to any device allocation
+    // associated with this device."
+    //
+    // query how the device can access memory allocated on the device itself (?)
+    pi_bitfield value = PI_USM_ACCESS | PI_USM_ATOMIC_ACCESS |
+                        PI_USM_CONCURRENT_ACCESS |
+                        PI_USM_CONCURRENT_ATOMIC_ACCESS;
+    return getInfo(param_value_size, param_value, param_value_size_ret, value);
   }
   default:
     __SYCL_PI_HANDLE_UNKNOWN_PARAM_NAME(param_name);
@@ -1314,27 +1378,23 @@ pi_result cnrt_piextContextCreateWithNativeHandle(pi_native_handle, pi_uint32,
 /// Can trigger a manual copy depending on the mode.
 /// \TODO Implement USE_HOST_PTR using cuHostRegister
 ///
-
-
 pi_result cnrt_piMemBufferCreate(pi_context context, pi_mem_flags flags,
                                  size_t size, void *host_ptr, pi_mem *ret_mem,
                                  const pi_mem_properties *properties) {
   // Need input memory object
   assert(ret_mem != nullptr);
-  assert(properties == nullptr && "no mem properties goes to cuda RT yet");
-  // Currently, USE_HOST_PTR is not implemented using host register
-  // since this triggers a weird segfault after program ends.
-  // Setting this constant to true enables testing that behavior.
-  // const bool enableUseHostPtr = false;
-  // const bool performInitialCopy =
-  //    (flags & PI_MEM_FLAGS_HOST_PTR_COPY) ||
-  //    ((flags & PI_MEM_FLAGS_HOST_PTR_USE) && !enableUseHostPtr);
+  assert(properties == nullptr && "no mem properties goes to cnrt yet");
+  const bool performInitialCopy = (flags & PI_MEM_FLAGS_HOST_PTR_COPY) || (flags & PI_MEM_FLAGS_HOST_PTR_USE);
   pi_result retErr = PI_SUCCESS;
   pi_mem retMemObj = nullptr;
+
   try {
+    ScopedContext active(context);
     CNaddr ptr;
     _pi_mem::mem_::buffer_mem_::alloc_mode allocMode =
         _pi_mem::mem_::buffer_mem_::alloc_mode::classic;
+    // std::cerr << "cnrt_piMemBufferCreate size: " << size << std::endl;
+    // std::cerr << "cnrt_piMemBufferCreate flags: " << flags << std::endl;
     retErr = PI_CHECK_ERROR(cnMalloc(&ptr, size));
     if (flags & PI_MEM_FLAGS_HOST_PTR_COPY) {
       allocMode = _pi_mem::mem_::buffer_mem_::alloc_mode::copy_in;
@@ -1342,11 +1402,15 @@ pi_result cnrt_piMemBufferCreate(pi_context context, pi_mem_flags flags,
 
     if (retErr == PI_SUCCESS) {
       pi_mem parentBuffer = nullptr;
-      //std::cout<<"buffer create ptr: "<<ptr<<" size: "<<size<<std::endl;
+
       auto piMemObj = std::unique_ptr<_pi_mem>(
           new _pi_mem{context, parentBuffer, allocMode, ptr, host_ptr, size});
       if (piMemObj != nullptr) {
         retMemObj = piMemObj.release();
+        if (performInitialCopy) {
+          // Operates on the default queue of the current CNRT context.
+          retErr = PI_CHECK_ERROR(cnMemcpyHtoD(ptr, host_ptr, size));
+        }
       } else {
         retErr = PI_OUT_OF_HOST_MEMORY;
       }
@@ -3095,8 +3159,25 @@ pi_result cnrt_piextUSMSharedAlloc(void **result_ptr, pi_context context,
 /// USM: Frees the given USM pointer associated with the context.
 ///
 pi_result cnrt_piextUSMFree(pi_context context, void *ptr) {
-  cl::sycl::detail::pi::die("cnrt_piextUSMFree not implemented");
-  return {};
+  assert(context != nullptr);
+  assert(ptr != nullptr);
+  pi_result result = PI_SUCCESS;
+  try {
+    ScopedContext active(context);
+    int type;
+    result = PI_CHECK_ERROR(cnGetMemAttribute(
+        &type, CN_MEM_ATTRIBUTE_TYPE, (CNaddr)ptr));
+    assert(type == CN_MEMORYTYPE_DEVICE or type == CN_MEMORYTYPE_HOST);
+    if (type == CN_MEMORYTYPE_DEVICE) {
+      result = PI_CHECK_ERROR(cnFree((CNaddr)ptr));
+    }
+    if (type == CN_MEMORYTYPE_HOST) {
+      result = PI_CHECK_ERROR(cnFreeHost(ptr));
+    }
+  } catch (pi_result error) {
+    result = error;
+  }
+  return result;
 }
 
 pi_result cnrt_piextUSMEnqueueMemset(pi_queue queue, void *ptr, pi_int32 value,
@@ -3211,9 +3292,69 @@ pi_result cnrt_piextUSMGetMemAllocInfo(pi_context context, const void *ptr,
                                        size_t param_value_size,
                                        void *param_value,
                                        size_t *param_value_size_ret) {
+  assert(context != nullptr);
+  assert(ptr != nullptr);
+  pi_result result = PI_SUCCESS;
 
-  cl::sycl::detail::pi::die("cnrt_piextUSMGetMemAllocInfo not implemented");
-  return {};
+  try {
+    ScopedContext active(context);
+    switch (param_name) {
+    case PI_MEM_ALLOC_TYPE: {
+      int value;
+      // do not throw if cnGetMemAttribute returns CN_ERROR_INVALID_VALUE
+      CNresult ret = cnGetMemAttribute(
+          &value, CN_MEM_ATTRIBUTE_TYPE, (CNaddr)ptr);
+      if (ret == CN_ERROR_INVALID_VALUE) {
+        // pointer not known to the CNRT subsystem
+        return getInfo(param_value_size, param_value, param_value_size_ret,
+                       PI_MEM_TYPE_UNKNOWN);
+      }
+      result = check_error(ret, __func__, __LINE__ - 5, __FILE__);
+      assert(value == CN_MEMORYTYPE_DEVICE or value == CN_MEMORYTYPE_HOST);
+      if (value == CN_MEMORYTYPE_DEVICE) {
+        // pointer to device memory
+        return getInfo(param_value_size, param_value, param_value_size_ret,
+                       PI_MEM_TYPE_DEVICE);
+      }
+      if (value == CN_MEMORYTYPE_HOST) {
+        // pointer to host memory
+        return getInfo(param_value_size, param_value, param_value_size_ret,
+                       PI_MEM_TYPE_HOST);
+      }
+      // should never get here
+      __builtin_unreachable();
+      return getInfo(param_value_size, param_value, param_value_size_ret,
+                     PI_MEM_TYPE_UNKNOWN);
+    }
+    case PI_MEM_ALLOC_BASE_PTR: {
+      unsigned int value;
+      result = PI_CHECK_ERROR(cnGetMemAttribute(
+          &value, CN_MEM_ATTRIBUTE_RANGE_START_ADDR, (CNaddr)ptr));
+      return getInfo(param_value_size, param_value, param_value_size_ret,
+                     value);
+    }
+    case PI_MEM_ALLOC_SIZE: {
+      unsigned int value;
+      result = PI_CHECK_ERROR(cnGetMemAttribute(
+          &value, CN_MEM_ATTRIBUTE_RANGE_SIZE, (CNaddr)ptr));
+      return getInfo(param_value_size, param_value, param_value_size_ret,
+                     value);
+    }
+    case PI_MEM_ALLOC_DEVICE: {
+      int value;
+      result = PI_CHECK_ERROR(cnGetMemAttribute(
+          &value, CN_MEM_ATTRIBUTE_DEVICE_ORDINAL, (CNaddr)ptr));
+      pi_platform platform;
+      result = cnrt_piPlatformsGet(1, &platform, nullptr);
+      pi_device device = platform->devices_[value].get();
+      return getInfo(param_value_size, param_value, param_value_size_ret,
+                     device);
+    }
+    }
+  } catch (pi_result error) {
+    result = error;
+  }
+  return result;
 }
 
 // This API is called by Sycl RT to notify the end of the plugin lifetime.

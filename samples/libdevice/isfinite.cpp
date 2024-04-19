@@ -14,7 +14,7 @@ int main() {
     sycl::queue q(selector);
     std::cout << "Running on device: "<< q.get_device().get_info<sycl::info::device::name>() << std::endl;
 
-    std::vector<float> a(N), d(N);
+    std::vector<float> a(N);
     std::vector<int> b(N), b_host(N);
 
     initArray(a);
@@ -29,7 +29,7 @@ int main() {
     }
     auto startTime = getTime();
 
-    UnaryOp(q, a, b, d);
+    UnaryOp(q, a, b);
     auto endTime = getTime();
     std::cout << "Time: " << endTime - startTime << "us" << std::endl;
 

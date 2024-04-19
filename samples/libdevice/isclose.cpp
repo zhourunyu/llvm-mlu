@@ -17,14 +17,14 @@ int main() {
     sycl::queue q(selector);
     std::cout << "Running on device: "<< q.get_device().get_info<sycl::info::device::name>() << std::endl;
 
-    std::vector<float> a(N), b(N), d(N);
+    std::vector<float> a(N), b(N);
     std::vector<int> c(N), c_host(N);
 
     initArray(a);
     initArray(b);
     auto startTime = getTime();
 
-    BinaryOp(q, a, b, c, d);
+    BinaryOp(q, a, b, c);
     auto endTime = getTime();
     std::cout << "Time: " << endTime - startTime << "us" << std::endl;
 
