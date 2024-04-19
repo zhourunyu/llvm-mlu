@@ -6,16 +6,13 @@
 #include <vector>
 
 template <typename Ta, typename Tb>
-void UnaryOp(sycl::queue &q, const std::vector<Ta> &a, std::vector<Tb> &b, std::vector<Ta> &d) {
+void UnaryOp(sycl::queue &q, const std::vector<Ta> &a, std::vector<Tb> &b) {
     sycl::range<1> n_items{a.size()};
 
-    // bufferD在计算中没有用到，但是是必须存在的用于有效的寻址
-    sycl::buffer d_buffer(d);
     sycl::buffer a_buffer(a);
     sycl::buffer b_buffer(b);
 
     q.submit([&](sycl::handler &h) {
-        sycl::accessor d_accessor(d_buffer, h, sycl::read_only);
         sycl::accessor a_accessor(a_buffer, h, sycl::read_only);
         sycl::accessor b_accessor(b_buffer, h, sycl::write_only, sycl::no_init);
 

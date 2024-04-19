@@ -7,6 +7,7 @@ This project is based on llvm-13 for supporting cambricon mlu
 - Ubuntu 20.04，内核版本5.4.0-174-generic
 - MLU370-x8，驱动版本5.10.22
 - CNToolkit 3.6.1
+- GCC 9.4.0
 
 ### 编译流程
 
@@ -59,5 +60,6 @@ cd samples
 mkdir build && cd build
 cmake ..
 make -j$(nproc)
+./hello-sycl
 make test
 ```
