@@ -682,33 +682,6 @@ struct _pi_kernel {
     return args_.get_indices();
   }
 
-  void create_kernel_params() {
-    kernel_params_ = (CNaddr *)malloc(get_num_args() * sizeof(CNaddr));
-    auto argIndices = get_arg_indices();
-    const pi_uint32 MemStep = 4;
-    for (pi_uint32 i = 0; i < get_num_args(); i++) {
-      if (i % MemStep == 0) {
-        kernel_params_[i] = *(CNaddr *)(argIndices[i]);
-      } else {
-        kernel_params_[i] = *(int *)(argIndices[i]);
-      }
-      //std::cout<<"arg: "<<kernel_params_[i]<<std::endl;
-    }
-  }
-
-  CNaddr *get_kernel_params() {
-    if (kernel_params_ == nullptr) {
-      create_kernel_params();
-    }
-    return kernel_params_;
-  }
-
-  void free_kernel_params() {
-    assert(kernel_params_ != nullptr);
-    free(kernel_params_);
-    kernel_params_ = nullptr;
-  }
-
   pi_uint32 get_local_size() const noexcept { return args_.get_local_size(); }
 
   void clear_local_size() { args_.clear_local_size(); }
