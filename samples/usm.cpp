@@ -7,30 +7,42 @@ constexpr auto N = 1024;
 int main() {
     sycl::gpu_selector selector;
     sycl::queue q(selector);
+    std::cout << "Running on device: "<< q.get_device().get_info<sycl::info::device::name>() << std::endl;
 
-    std::vector<float> x_host(N), y(N), y_host(N);
-    initArray(x_host);
+    std::vector<float> a_host(N), b_host(N), c_dev(N), c_host(N);
+    initArray(a_host);
+    initArray(b_host);
 
-    auto x = sycl::malloc_device<float>(N, q);
+    auto a = sycl::malloc_device<float>(N, q);
+    auto b = sycl::malloc_device<float>(N, q);
+    auto c = sycl::malloc_device<float>(N, q);
+    std::cout << std::hex;
+    std::cout << "a: " << a << std::endl;
+    std::cout << "b: " << b << std::endl;
+    std::cout << "c: " << c << std::endl;
+    std::cout << std::dec;
     auto startTime = getTime();
 
-    q.memcpy(x, x_host.data(), N * sizeof(float));
+    q.memcpy(a, a_host.data(), N * sizeof(float));
+    q.memcpy(b, b_host.data(), N * sizeof(float));
     q.parallel_for<class mm>(N, [=](sycl::id<1> i) {
-        x[i] *= 2;
+        c[i] = a[i] + b[i];
     });
-    q.memcpy(y_host.data(), x, N * sizeof(float));
+    q.memcpy(c_dev.data(), c, N * sizeof(float));
     q.wait();
     auto endTime = getTime();
     std::cout << "Time: " << endTime - startTime << "us" << std::endl;
 
     for (int i = 0; i < N; i++) {
-        y[i] = x_host[i] * 2;
+        c_host[i] = a_host[i] + b_host[i];
     }
-    int ret = compareResult(y_host, y);
-    sycl::free(x, q);
+    int ret = compareResult(c_host, c_dev);
+    sycl::free(a, q);
+    sycl::free(b, q);
+    sycl::free(c, q);
 
     if (ret) {
-        std::cout << "Memory test failed!" << std::endl;
+        std::cout << "USM test failed!" << std::endl;
         return ret;
     }
     std::cout << "Test passed." << std::endl;

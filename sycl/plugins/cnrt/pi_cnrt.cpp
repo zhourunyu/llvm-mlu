@@ -124,7 +124,7 @@ pi_result check_error(CNresult result, const char *function, int line,
 
   const char *errorString = nullptr;
   const char *errorName = nullptr;
-  cnGetErrorName(result, &errorString);
+  cnGetErrorName(result, &errorName);
   cnGetErrorString(result, &errorString);
   std::cerr << "\nPI CNRT ERROR:"
             << "\n\tValue:           " << result
@@ -2042,7 +2042,7 @@ pi_result cnrt_piEnqueueKernelLaunch(
   try {
     ScopedContext active(command_queue->get_context());
     CNqueue cnQueue = command_queue->get();
-    CNkernel cuFunc = kernel->get();
+    CNkernel cnFunc = kernel->get();
 
     retError = cnrt_piEnqueueEventsWait(command_queue, num_events_in_wait_list,
                                         event_wait_list, nullptr);
@@ -2055,7 +2055,7 @@ pi_result cnrt_piEnqueueKernelLaunch(
           cuda_implicit_offset[i] =
               static_cast<std::uint32_t>(global_work_offset[i]);
           if (global_work_offset[i] != 0) {
-            cuFunc = kernel->get_with_offset_parameter();
+            cnFunc = kernel->get_with_offset_parameter();
           }
         }
       }
@@ -2063,7 +2063,7 @@ pi_result cnrt_piEnqueueKernelLaunch(
                                       cuda_implicit_offset);
     }
 
-    // auto argIndices = kernel->get_arg_indices();
+    auto argIndices = kernel->get_arg_indices();
 
     if (event) {
       retImplEv = std::unique_ptr<_pi_event>(_pi_event::make_native(
@@ -2071,38 +2071,13 @@ pi_result cnrt_piEnqueueKernelLaunch(
       retImplEv->start();
     }
 
-    CNaddr *params = kernel->get_kernel_params();
-    void *extra[] = {CN_INVOKE_PARAM_BUFFER_POINTER, (void *)(params),
-                     CN_INVOKE_PARAM_BUFFER_SIZE,
-                     (void *)(kernel->get_num_args() * sizeof(CNaddr)),
-                     CN_INVOKE_PARAM_END};
-    auto chooseKernelClass = [](int n) -> KernelClass {
-      assert(n > 0);
-      // 4 clusters are available
-      if (n % 16 == 0)
-        return CN_KERNEL_CLASS_UNION4;
-      if (n % 8 == 0)
-        return CN_KERNEL_CLASS_UNION2;
-      if (n % 4 == 0)
-        return CN_KERNEL_CLASS_UNION;
-      return CN_KERNEL_CLASS_BLOCK;
-    };
-    KernelClass kc = chooseKernelClass(threadsPerBlock[0]);
-    kc = CN_KERNEL_CLASS_BLOCK;
+    auto kc = CN_KERNEL_CLASS_BLOCK;
     retError = PI_CHECK_ERROR(
-        cnInvokeKernel(cuFunc, threadsPerBlock[0], threadsPerBlock[1],
-                       threadsPerBlock[2], kc, 0, cnQueue, nullptr, extra));
-
-
-    retError = PI_CHECK_ERROR(cnQueueSync(cnQueue));
-
-    kernel->free_kernel_params();
-    kernel->clear_local_size();
+        cnInvokeKernel(cnFunc, threadsPerBlock[0], threadsPerBlock[1], threadsPerBlock[2], 
+        kc, 0, cnQueue, argIndices.data(), nullptr));
     if (event) {
       retError = retImplEv->record();
     }
-
-    
 
     if (event) {
       *event = retImplEv.release();
@@ -2454,8 +2429,40 @@ pi_result cnrt_piKernelGetGroupInfo(pi_kernel kernel, pi_device device,
                                     size_t param_value_size, void *param_value,
                                     size_t *param_value_size_ret) {
 
-  cl::sycl::detail::pi::die("cnrt_piKernelGetGroupInfo not implemented");
-  return {};
+  if (kernel != nullptr) {
+
+    switch (param_name) {
+    case PI_KERNEL_GROUP_INFO_WORK_GROUP_SIZE: {
+      int max_threads = 4;
+      return getInfo(param_value_size, param_value, param_value_size_ret,
+                     size_t(max_threads));
+    }
+    case PI_KERNEL_GROUP_INFO_COMPILE_WORK_GROUP_SIZE: {
+      size_t group_size[3] = {0, 0, 0};
+      return getInfoArray(3, param_value_size, param_value,
+                          param_value_size_ret, group_size);
+    }
+    case PI_KERNEL_GROUP_INFO_LOCAL_MEM_SIZE: {
+      int bytes = 0;
+      return getInfo(param_value_size, param_value, param_value_size_ret,
+                     pi_uint64(bytes));
+    }
+    case PI_KERNEL_GROUP_INFO_PREFERRED_WORK_GROUP_SIZE_MULTIPLE: {
+      int warpSize = 1;
+      return getInfo(param_value_size, param_value, param_value_size_ret,
+                     static_cast<size_t>(warpSize));
+    }
+    case PI_KERNEL_GROUP_INFO_PRIVATE_MEM_SIZE: {
+      int bytes = 0;
+      return getInfo(param_value_size, param_value, param_value_size_ret,
+                     pi_uint64(bytes));
+    }
+    default:
+      __SYCL_PI_HANDLE_UNKNOWN_PARAM_NAME(param_name);
+    }
+  }
+
+  return PI_INVALID_KERNEL;
 }
 
 pi_result cnrt_piKernelGetSubGroupInfo(
