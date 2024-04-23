@@ -22,6 +22,8 @@ int main()
             std::cout << "  Device name: " << device.get_info<sycl::info::device::name>() << std::endl;
             std::cout << "  Max compute units : " << device.get_info<info::device::max_compute_units>() << std::endl;
             std::cout << "  Max work group size: " << device.get_info<info::device::max_work_group_size>() << std::endl;
+            auto max_work_item_sizes = device.get_info<info::device::max_work_item_sizes>();
+            std::cout << "  Max work item size: (" << max_work_item_sizes[0] << ", " << max_work_item_sizes[1] << ", " << max_work_item_sizes[2] << ")" << std::endl;
             std::cout << "  Global mem size: " << (device.get_info<info::device::global_mem_size>() / (1024 * 1024 * 1024)) << " GB " << std::endl;
             std::cout << std::endl;
         }

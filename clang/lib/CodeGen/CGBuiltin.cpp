@@ -15845,11 +15845,18 @@ Value *CodeGenFunction::EmitMLISABuiltinExpr(unsigned BuiltinID,
   
   // mlisa workitem
   case MLISA::BI__mlvm_read_mlu_sreg_taskidx:
-    return emitRangedBuiltin(*this, Intrinsic::mlvm_read_mlu_sreg_taskidx, 0, 1024);
+    return emitRangedBuiltin(*this, Intrinsic::mlvm_read_mlu_sreg_taskidx, 0, 65535);
   case MLISA::BI__mlvm_read_mlu_sreg_taskidy:
-    return emitRangedBuiltin(*this, Intrinsic::mlvm_read_mlu_sreg_taskidy, 0, 1024);
+    return emitRangedBuiltin(*this, Intrinsic::mlvm_read_mlu_sreg_taskidy, 0, 65535);
   case MLISA::BI__mlvm_read_mlu_sreg_taskidz:
-    return emitRangedBuiltin(*this, Intrinsic::mlvm_read_mlu_sreg_taskidz, 0, 1024);
+    return emitRangedBuiltin(*this, Intrinsic::mlvm_read_mlu_sreg_taskidz, 0, 65535);
+
+  case MLISA::BI__mlvm_read_mlu_sreg_taskdimx:
+    return emitRangedBuiltin(*this, Intrinsic::mlvm_read_mlu_sreg_taskdimx, 0, 65535);
+  case MLISA::BI__mlvm_read_mlu_sreg_taskdimy:
+    return emitRangedBuiltin(*this, Intrinsic::mlvm_read_mlu_sreg_taskdimy, 0, 65535);
+  case MLISA::BI__mlvm_read_mlu_sreg_taskdimz:
+    return emitRangedBuiltin(*this, Intrinsic::mlvm_read_mlu_sreg_taskdimz, 0, 65535);
 
   /*
 

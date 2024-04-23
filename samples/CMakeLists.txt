@@ -18,6 +18,7 @@ endfunction()
 
 add_executable(hello-sycl hello-sycl.cpp)
 add_executable_and_test(usm usm.cpp)
+add_executable_and_test(workitem workitem.cpp)
 
 file(GLOB TEST_SOURCES 
   "libdevice/*.cpp"
