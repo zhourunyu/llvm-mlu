@@ -241,19 +241,19 @@ pi_result getInfo<const char *>(size_t param_value_size, void *param_value,
 
 /// \endcond
 
-// TODO: guessLocalWorkSize
-// Determine local work sizes that result in uniform work groups.
-// The default threadsPerBlock only require handling the first work_dim
-// dimension.
-void guessLocalWorkSize(int *threadsPerBlock, const size_t *global_work_size,
-                        const size_t maxThreadsPerBlock[3], pi_kernel kernel) {
-  assert(threadsPerBlock != nullptr);
-  assert(global_work_size != nullptr);
-  assert(kernel != nullptr);
+// // TODO: guessLocalWorkSize
+// // Determine local work sizes that result in uniform work groups.
+// // The default threadsPerBlock only require handling the first work_dim
+// // dimension.
+// void guessLocalWorkSize(int *threadsPerBlock, const size_t *global_work_size,
+//                         const size_t maxThreadsPerBlock[3], pi_kernel kernel) {
+//   assert(threadsPerBlock != nullptr);
+//   assert(global_work_size != nullptr);
+//   assert(kernel != nullptr);
 
-  threadsPerBlock[0] = global_work_size[0];
-  return;
-}
+//   threadsPerBlock[0] = global_work_size[0];
+//   return;
+// }
 
 } // anonymous namespace
 
@@ -1882,10 +1882,9 @@ pi_result cnrt_piKernelCreate(pi_program program, const char *kernel_name,
     ScopedContext active(program->get_context());
 
     CNkernel cnFunc;
-    retErr =
-        PI_CHECK_ERROR(cnModuleGetKernel(program->get(), kernel_name, &cnFunc));
+    retErr = PI_CHECK_ERROR(
+        cnModuleGetKernel(program->get(), kernel_name, &cnFunc));
     
-    /*
     std::string kernel_name_woffset = std::string(kernel_name) + "_with_offset";
     CNkernel cnFuncWithOffsetParam;
     CNresult offsetRes = cnModuleGetKernel(
@@ -1896,7 +1895,7 @@ pi_result cnrt_piKernelCreate(pi_program program, const char *kernel_name,
       cnFuncWithOffsetParam = nullptr;
     } else {
       retErr = PI_CHECK_ERROR(offsetRes);
-    }*/
+    }
 
     retKernel = std::unique_ptr<_pi_kernel>(
         new _pi_kernel{cnFunc, nullptr, kernel_name, program,
@@ -1991,37 +1990,22 @@ pi_result cnrt_piEnqueueKernelLaunch(
 
   // Set the number of threads per block to the number of threads per warp
   // by default unless user has provided a better number
-  // TODO[MLU]: threadsPerBlock in mlu?
-  // int threadsPerBlock[3] = {32, 1, 1};
-  int threadsPerBlock[3] = {1, 1, 1};
-  size_t maxWorkGroupSize = 0u;
-  size_t maxThreadsPerBlock[3] = {};
+  int taskDim[3] = {1, 1, 1};
+  size_t maxTaskDims[3] = {};
   bool providedLocalWorkGroupSize = (local_work_size != nullptr);
 
   {
     pi_result retError = cnrt_piDeviceGetInfo(
         command_queue->device_, PI_DEVICE_INFO_MAX_WORK_ITEM_SIZES,
-        sizeof(maxThreadsPerBlock), maxThreadsPerBlock, nullptr);
+        sizeof(maxTaskDims), maxTaskDims, nullptr);
     assert(retError == PI_SUCCESS);
     (void)retError;
 
-    retError = cnrt_piDeviceGetInfo(
-        command_queue->device_, PI_DEVICE_INFO_MAX_WORK_GROUP_SIZE,
-        sizeof(maxWorkGroupSize), &maxWorkGroupSize, nullptr);
-    assert(retError == PI_SUCCESS);
-
     if (providedLocalWorkGroupSize) {
       auto isValid = [&](int dim) {
-        if (local_work_size[dim] > maxThreadsPerBlock[dim])
+        // local workgroup size not supported for now
+        if (local_work_size[dim] != 1)
           return PI_INVALID_WORK_ITEM_SIZE;
-        // Checks that local work sizes are a divisor of the global work sizes
-        // which includes that the local work sizes are neither larger than the
-        // global work sizes and not 0.
-        if (0u == local_work_size[dim])
-          return PI_INVALID_WORK_GROUP_SIZE;
-        if (0u != (global_work_size[dim] % local_work_size[dim]))
-          return PI_INVALID_WORK_GROUP_SIZE;
-        threadsPerBlock[dim] = static_cast<int>(local_work_size[dim]);
         return PI_SUCCESS;
       };
 
@@ -2030,10 +2014,15 @@ pi_result cnrt_piEnqueueKernelLaunch(
         if (err != PI_SUCCESS)
           return err;
       }
-    } else {
-      guessLocalWorkSize(threadsPerBlock, global_work_size, maxThreadsPerBlock,
-                         kernel);
     }
+    for (size_t dim = 0; dim < work_dim; dim++) {
+      taskDim[dim] = static_cast<int>(global_work_size[dim]);
+    }
+  }
+
+  if (maxTaskDims[0] < (size_t)taskDim[0] || maxTaskDims[1] < (size_t)taskDim[1] ||
+      maxTaskDims[2] < (size_t)taskDim[2]) {
+    return PI_INVALID_WORK_GROUP_SIZE;
   }
 
   pi_result retError = PI_SUCCESS;
@@ -2049,18 +2038,18 @@ pi_result cnrt_piEnqueueKernelLaunch(
 
     // Set the implicit global offset parameter if kernel has offset variant
     if (kernel->get_with_offset_parameter()) {
-      std::uint32_t cuda_implicit_offset[3] = {0, 0, 0};
+      std::uint32_t cnrt_implicit_offset[3] = {0, 0, 0};
       if (global_work_offset) {
         for (size_t i = 0; i < work_dim; i++) {
-          cuda_implicit_offset[i] =
+          cnrt_implicit_offset[i] =
               static_cast<std::uint32_t>(global_work_offset[i]);
           if (global_work_offset[i] != 0) {
             cnFunc = kernel->get_with_offset_parameter();
           }
         }
       }
-      kernel->set_implicit_offset_arg(sizeof(cuda_implicit_offset),
-                                      cuda_implicit_offset);
+      kernel->set_implicit_offset_arg(sizeof(cnrt_implicit_offset),
+                                      cnrt_implicit_offset);
     }
 
     auto argIndices = kernel->get_arg_indices();
@@ -2073,7 +2062,7 @@ pi_result cnrt_piEnqueueKernelLaunch(
 
     auto kc = CN_KERNEL_CLASS_BLOCK;
     retError = PI_CHECK_ERROR(
-        cnInvokeKernel(cnFunc, threadsPerBlock[0], threadsPerBlock[1], threadsPerBlock[2], 
+        cnInvokeKernel(cnFunc, taskDim[0], taskDim[1], taskDim[2], 
         kc, 0, cnQueue, argIndices.data(), nullptr));
     if (event) {
       retError = retImplEv->record();
