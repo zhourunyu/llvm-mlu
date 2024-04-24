@@ -9,7 +9,7 @@
 #include <spirv/spirv.h>
 
 _CLC_DEF _CLC_OVERLOAD size_t __spirv_WorkgroupSize_x() {
-  return 1;
+  return __mlvm_read_mlu_sreg_clusterdim() * __mlvm_read_mlu_sreg_coredim();
 }
 
 _CLC_DEF _CLC_OVERLOAD size_t __spirv_WorkgroupSize_y() {

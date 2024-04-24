@@ -3,7 +3,6 @@
 #include <vector>
 
 constexpr auto N = 256;
-constexpr auto M = N / 4 / 4;
 
 int main() {
     sycl::gpu_selector selector;
@@ -17,23 +16,22 @@ int main() {
     auto startTime = getTime();
 
     q.memcpy(a, a_host.data(), N * sizeof(int));
-    q.parallel_for<class mm>(sycl::nd_range<3>({2, 2, 1}, {1, 1, 1}), [=](sycl::nd_item<3> item) {
-        int i = item.get_global_id(0), j = item.get_global_id(1), k = item.get_global_id(2);
-        int start = (i + j * 4 + k * 16) * M;
-        for (int l = 0; l < M; l++)
-            a[start + l] += i + j + k;
+    q.parallel_for<class mm>(sycl::nd_range<3>({N / 4 / 4, 4, 4}, {1, 1, 4}), [=](sycl::nd_item<3> item) {
+        int i = item.get_global_id(2), j = item.get_global_id(1), k = item.get_global_id(0);
+        size_t dimX = item.get_global_range(2), dimY = item.get_global_range(1), dimZ = item.get_global_range(0);
+        int id = i + j * dimX + k * dimX * dimY;
+        a[id] += i + j + k;
     });
     q.memcpy(a_dev.data(), a, N * sizeof(float));
     q.wait();
     auto endTime = getTime();
     std::cout << "Time: " << endTime - startTime << "us" << std::endl;
 
-    for (int i = 0; i < 2; i++) {
-        for (int j = 0; j < 2; j++) {
-            for (int k = 0; k < 1; k++) {
-                int start = (i + j * 4 + k * 16) * M;
-                for (int l = 0; l < M; l++)
-                    a_host[start + l] += i + j + k;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            for (int k = 0; k < N / 4 / 4; k++) {
+                int id = i + j * 4 + k * 16;
+                a_host[id] += i + j + k;
             }
         }
     }
