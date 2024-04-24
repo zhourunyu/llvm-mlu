@@ -879,16 +879,21 @@ pi_result cnrt_piDeviceGetInfo(pi_device device, pi_device_info param_name,
   }
 
   case PI_DEVICE_INFO_MAX_WORK_GROUP_SIZE: {
-    int max_work_group_size = 0;
+    int max_cluster_count = 0, max_core_count_per_cluster = 0;
     cl::sycl::detail::pi::assertion(
-        cnDeviceGetAttribute(&max_work_group_size,
+        cnDeviceGetAttribute(&max_cluster_count,
+                             CN_DEVICE_ATTRIBUTE_MAX_CLUSTER_COUNT,
+                             device->get()) == CN_SUCCESS);
+    cl::sycl::detail::pi::assertion(max_cluster_count >= 0);
+    cl::sycl::detail::pi::assertion(
+        cnDeviceGetAttribute(&max_core_count_per_cluster,
                              CN_DEVICE_ATTRIBUTE_MAX_CORE_COUNT_PER_CLUSTER,
                              device->get()) == CN_SUCCESS);
-
-    cl::sycl::detail::pi::assertion(max_work_group_size >= 0);
+    cl::sycl::detail::pi::assertion(max_core_count_per_cluster >= 0);
+    size_t max_work_group_size = max_cluster_count * max_core_count_per_cluster;
 
     return getInfo(param_value_size, param_value, param_value_size_ret,
-                   size_t(max_work_group_size));
+                   max_work_group_size);
   }
   case PI_DEVICE_INFO_PREFERRED_VECTOR_WIDTH_CHAR: {
     return getInfo(param_value_size, param_value, param_value_size_ret, 1u);
@@ -1990,33 +1995,67 @@ pi_result cnrt_piEnqueueKernelLaunch(
 
   // Set the number of threads per block to the number of threads per warp
   // by default unless user has provided a better number
-  int taskDim[3] = {1, 1, 1};
+  int taskDim[3] = {1, 1, 1}, unionSize = 0;
   size_t maxTaskDims[3] = {};
+  int max_cluster_count, max_core_count_per_cluster;
   bool providedLocalWorkGroupSize = (local_work_size != nullptr);
 
   {
+    cl::sycl::detail::pi::assertion(
+        cnDeviceGetAttribute(&max_cluster_count,
+                             CN_DEVICE_ATTRIBUTE_MAX_CLUSTER_COUNT,
+                             command_queue->device_->get()) == CN_SUCCESS);
+    cl::sycl::detail::pi::assertion(
+        cnDeviceGetAttribute(&max_core_count_per_cluster,
+                             CN_DEVICE_ATTRIBUTE_MAX_CORE_COUNT_PER_CLUSTER,
+                             command_queue->device_->get()) == CN_SUCCESS);
+
     pi_result retError = cnrt_piDeviceGetInfo(
         command_queue->device_, PI_DEVICE_INFO_MAX_WORK_ITEM_SIZES,
         sizeof(maxTaskDims), maxTaskDims, nullptr);
     assert(retError == PI_SUCCESS);
     (void)retError;
 
+    for (size_t dim = 0; dim < work_dim; dim++) {
+      taskDim[dim] = static_cast<int>(global_work_size[dim]);
+    }
+
     if (providedLocalWorkGroupSize) {
-      auto isValid = [&](int dim) {
-        // local workgroup size not supported for now
-        if (local_work_size[dim] != 1)
-          return PI_INVALID_WORK_ITEM_SIZE;
-        return PI_SUCCESS;
+      auto isValid = [&](pi_uint32 dim) {
+        if (dim == 0) {
+          if (local_work_size[dim] == 0)
+            return PI_INVALID_WORK_ITEM_SIZE;
+          if (local_work_size[dim] % max_core_count_per_cluster != 0 && local_work_size[dim] != 1)
+            return PI_INVALID_WORK_ITEM_SIZE;
+          int cluster_count = local_work_size[dim] / max_core_count_per_cluster;
+          if (cluster_count > max_cluster_count)
+            return PI_INVALID_WORK_ITEM_SIZE;
+          // check if cluster_count is power of 2
+          if ((cluster_count & (cluster_count - 1)) != 0)
+            return PI_INVALID_WORK_ITEM_SIZE;
+          unionSize = cluster_count;
+          return PI_SUCCESS;
+        } else {
+          if (local_work_size[dim] != 1)
+            return PI_INVALID_WORK_ITEM_SIZE;
+          return PI_SUCCESS;
+        }
       };
 
       for (size_t dim = 0; dim < work_dim; dim++) {
         auto err = isValid(dim);
-        if (err != PI_SUCCESS)
+        if (err != PI_SUCCESS) {
+          std::cerr << "Invalid work item size at dim " << dim << std::endl;
           return err;
+        }
       }
-    }
-    for (size_t dim = 0; dim < work_dim; dim++) {
-      taskDim[dim] = static_cast<int>(global_work_size[dim]);
+    } else {
+      for (int i = max_cluster_count; i > 0; i >>= 1) {
+        if (taskDim[0] % (i * max_core_count_per_cluster) == 0) {
+          unionSize = i;
+          break;
+        }
+      }
     }
   }
 
@@ -2061,6 +2100,25 @@ pi_result cnrt_piEnqueueKernelLaunch(
     }
 
     auto kc = CN_KERNEL_CLASS_BLOCK;
+    switch (unionSize) {
+      case 1:
+        kc = CN_KERNEL_CLASS_UNION;
+        break;
+      case 2:
+        kc = CN_KERNEL_CLASS_UNION2;
+        break;
+      case 4:
+        kc = CN_KERNEL_CLASS_UNION4;
+        break;
+      case 8:
+        kc = CN_KERNEL_CLASS_UNION8;
+        break;
+      case 16:
+        kc = CN_KERNEL_CLASS_UNION16;
+        break;
+      default:
+        break;
+    }
     retError = PI_CHECK_ERROR(
         cnInvokeKernel(cnFunc, taskDim[0], taskDim[1], taskDim[2], 
         kc, 0, cnQueue, argIndices.data(), nullptr));

@@ -9,7 +9,7 @@
 #include <spirv/spirv.h>
 
 _CLC_DEF _CLC_OVERLOAD size_t __spirv_LocalInvocationId_x() {
-  return 0;
+  return __mlvm_read_mlu_sreg_clusterid() * __mlvm_read_mlu_sreg_coredim() + __mlvm_read_mlu_sreg_coreid();
 }
 
 _CLC_DEF _CLC_OVERLOAD size_t __spirv_LocalInvocationId_y() {

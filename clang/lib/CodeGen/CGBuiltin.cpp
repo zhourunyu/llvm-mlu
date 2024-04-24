@@ -15858,6 +15858,15 @@ Value *CodeGenFunction::EmitMLISABuiltinExpr(unsigned BuiltinID,
   case MLISA::BI__mlvm_read_mlu_sreg_taskdimz:
     return emitRangedBuiltin(*this, Intrinsic::mlvm_read_mlu_sreg_taskdimz, 0, 65535);
 
+  case MLISA::BI__mlvm_read_mlu_sreg_clusterdim:
+    return emitRangedBuiltin(*this, Intrinsic::mlvm_read_mlu_sreg_clusterdim, 0, 65535);
+  case MLISA::BI__mlvm_read_mlu_sreg_clusterid:
+    return emitRangedBuiltin(*this, Intrinsic::mlvm_read_mlu_sreg_clusterid, 0, 65535);
+  case MLISA::BI__mlvm_read_mlu_sreg_coredim:
+    return emitRangedBuiltin(*this, Intrinsic::mlvm_read_mlu_sreg_coredim, 0, 65535);
+  case MLISA::BI__mlvm_read_mlu_sreg_coreid:
+    return emitRangedBuiltin(*this, Intrinsic::mlvm_read_mlu_sreg_coreid, 0, 65535);
+
   /*
 
   // amdgcn workgroup size
