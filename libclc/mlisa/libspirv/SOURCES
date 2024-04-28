@@ -29,11 +29,11 @@ math/fabs.cl
 math/floor.cl
 math/fmax.cl
 math/fmin.cl
+math/fmod.cl
 math/log.cl
 math/log1p.cl
 math/log2.cl
 math/log10.cl
-math/mod.cl
 math/mul.cl
 math/pow.cl
 math/round.cl
@@ -50,3 +50,5 @@ math/trunc.cl
 relational/isfinite.cl
 relational/isinf.cl
 relational/isnan.cl
+
+synchronization/barrier.cl

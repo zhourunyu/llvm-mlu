@@ -385,8 +385,7 @@ pi_uint64 _pi_event::get_start_time() const {
   float miliSeconds = 0.0f;
   assert(is_started());
 
-  PI_CHECK_ERROR(
-      cnNotifierElapsedTime(&miliSeconds, context_->evBase_, evStart_));
+  PI_CHECK_ERROR(cnNotifierElapsedTime(&miliSeconds, context_->evBase_, evStart_));
   return static_cast<pi_uint64>(miliSeconds * 1.0e6);
 }
 
@@ -394,8 +393,7 @@ pi_uint64 _pi_event::get_end_time() const {
   float miliSeconds = 0.0f;
   assert(is_started() && is_recorded());
 
-  PI_CHECK_ERROR(
-      cnNotifierElapsedTime(&miliSeconds, context_->evBase_, evEnd_));
+  PI_CHECK_ERROR(cnNotifierElapsedTime(&miliSeconds, context_->evBase_, evEnd_));
   return static_cast<pi_uint64>(miliSeconds * 1.0e6);
 }
 
@@ -420,7 +418,6 @@ pi_result _pi_event::record() {
           "Unrecoverable program state reached in event identifier overflow");
     }
     result = PI_CHECK_ERROR(cnPlaceNotifier(evEnd_, cnQueue));
-    result = PI_SUCCESS;
   } catch (pi_result error) {
     result = error;
   }
@@ -879,21 +876,15 @@ pi_result cnrt_piDeviceGetInfo(pi_device device, pi_device_info param_name,
   }
 
   case PI_DEVICE_INFO_MAX_WORK_GROUP_SIZE: {
-    int max_cluster_count = 0, max_core_count_per_cluster = 0;
-    cl::sycl::detail::pi::assertion(
-        cnDeviceGetAttribute(&max_cluster_count,
-                             CN_DEVICE_ATTRIBUTE_MAX_CLUSTER_COUNT,
-                             device->get()) == CN_SUCCESS);
-    cl::sycl::detail::pi::assertion(max_cluster_count >= 0);
+    int max_core_count_per_cluster = 0;
     cl::sycl::detail::pi::assertion(
         cnDeviceGetAttribute(&max_core_count_per_cluster,
                              CN_DEVICE_ATTRIBUTE_MAX_CORE_COUNT_PER_CLUSTER,
                              device->get()) == CN_SUCCESS);
     cl::sycl::detail::pi::assertion(max_core_count_per_cluster >= 0);
-    size_t max_work_group_size = max_cluster_count * max_core_count_per_cluster;
 
     return getInfo(param_value_size, param_value, param_value_size_ret,
-                   max_work_group_size);
+                   size_t(max_core_count_per_cluster));
   }
   case PI_DEVICE_INFO_PREFERRED_VECTOR_WIDTH_CHAR: {
     return getInfo(param_value_size, param_value, param_value_size_ret, 1u);
@@ -1921,26 +1912,11 @@ pi_result cnrt_piKernelSetArg(pi_kernel kernel, pi_uint32 arg_index,
   assert(kernel != nullptr);
   pi_result retErr = PI_SUCCESS;
   try {
-    
-    
-    int* flag = const_cast<int*>(reinterpret_cast<const int *> (arg_value));
-    if (*flag == 101) {
-      kernel->set_kernel_local_arg(arg_index, arg_size);
-    } else if (*flag == 102) {
-      kernel->set_kernel_wram_arg(arg_index, arg_size);
-    } else if(arg_value) {
-      kernel->set_kernel_arg(arg_index, arg_size, arg_value);
-    }
-    
-    /*
     if (arg_value) {
       kernel->set_kernel_arg(arg_index, arg_size, arg_value);
     } else {
       kernel->set_kernel_local_arg(arg_index, arg_size);
     }
-    */
-    
-
   } catch (pi_result err) {
     retErr = err;
   }
@@ -1996,25 +1972,24 @@ pi_result cnrt_piEnqueueKernelLaunch(
   // Set the number of threads per block to the number of threads per warp
   // by default unless user has provided a better number
   int taskDim[3] = {1, 1, 1}, unionSize = 0;
+  size_t maxWorkGroupSize = 0u;
   size_t maxTaskDims[3] = {};
   int max_cluster_count, max_core_count_per_cluster;
   bool providedLocalWorkGroupSize = (local_work_size != nullptr);
 
   {
-    cl::sycl::detail::pi::assertion(
-        cnDeviceGetAttribute(&max_cluster_count,
-                             CN_DEVICE_ATTRIBUTE_MAX_CLUSTER_COUNT,
-                             command_queue->device_->get()) == CN_SUCCESS);
-    cl::sycl::detail::pi::assertion(
-        cnDeviceGetAttribute(&max_core_count_per_cluster,
-                             CN_DEVICE_ATTRIBUTE_MAX_CORE_COUNT_PER_CLUSTER,
-                             command_queue->device_->get()) == CN_SUCCESS);
-
     pi_result retError = cnrt_piDeviceGetInfo(
         command_queue->device_, PI_DEVICE_INFO_MAX_WORK_ITEM_SIZES,
         sizeof(maxTaskDims), maxTaskDims, nullptr);
     assert(retError == PI_SUCCESS);
     (void)retError;
+
+    retError = cnrt_piDeviceGetInfo(
+        command_queue->device_, PI_DEVICE_INFO_MAX_WORK_GROUP_SIZE,
+        sizeof(maxWorkGroupSize), &maxWorkGroupSize, nullptr);
+    assert(retError == PI_SUCCESS);
+    max_cluster_count = 1;
+    max_core_count_per_cluster = (int)maxWorkGroupSize;
 
     for (size_t dim = 0; dim < work_dim; dim++) {
       taskDim[dim] = static_cast<int>(global_work_size[dim]);

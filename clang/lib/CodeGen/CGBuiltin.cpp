@@ -15867,6 +15867,9 @@ Value *CodeGenFunction::EmitMLISABuiltinExpr(unsigned BuiltinID,
   case MLISA::BI__mlvm_read_mlu_sreg_coreid:
     return emitRangedBuiltin(*this, Intrinsic::mlvm_read_mlu_sreg_coreid, 0, 65535);
 
+  case MLISA::BI__mlvm_sync:
+    return Builder.CreateCall(CGM.getIntrinsic(Intrinsic::mlvm_sync));
+
   /*
 
   // amdgcn workgroup size

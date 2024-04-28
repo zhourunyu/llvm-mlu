@@ -9,13 +9,13 @@
 #include <spirv/spirv.h>
 
 _CLC_DEF _CLC_OVERLOAD size_t __spirv_WorkgroupId_x() {
-  return __mlvm_read_mlu_sreg_taskidx() / __spirv_NumWorkgroups_x();
+  return __mlvm_read_mlu_sreg_taskidx() / __spirv_WorkgroupSize_x();
 }
 
 _CLC_DEF _CLC_OVERLOAD size_t __spirv_WorkgroupId_y() {
-  return __mlvm_read_mlu_sreg_taskidy() / __spirv_NumWorkgroups_y();
+  return __mlvm_read_mlu_sreg_taskidy() / __spirv_WorkgroupSize_y();
 }
 
 _CLC_DEF _CLC_OVERLOAD size_t __spirv_WorkgroupId_z() {
-  return __mlvm_read_mlu_sreg_taskidz() / __spirv_NumWorkgroups_z();
+  return __mlvm_read_mlu_sreg_taskidz() / __spirv_WorkgroupSize_z();
 }

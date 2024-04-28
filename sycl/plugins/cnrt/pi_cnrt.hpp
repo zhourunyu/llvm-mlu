@@ -548,7 +548,6 @@ struct _pi_kernel {
     args_size_t paramSizes_;
     args_index_t indices_;
     args_size_t offsetPerIndex_;
-    args_size_t wramOffsetPerIndex_;
 
     std::uint32_t implicitOffsetArgs_[3] = {0, 0, 0};
 
@@ -564,14 +563,13 @@ struct _pi_kernel {
     /// Implicit offset argument is kept at the back of the indices
     /// collection.
     void add_arg(size_t index, size_t size, const void *arg,
-                 size_t localSize = 0, size_t wramSize=0) {
+                 size_t localSize = 0) {
       if (index + 2 > indices_.size()) {
         // Move implicit offset argument index with the end
         indices_.resize(index + 2, indices_.back());
         // Ensure enough space for the new argument
         paramSizes_.resize(index + 1);
         offsetPerIndex_.resize(index + 1);
-        wramOffsetPerIndex_.resize(index + 1);
       }
       paramSizes_[index] = size;
       // calculate the insertion point on the array
@@ -581,17 +579,11 @@ struct _pi_kernel {
       std::memcpy(&storage_[insertPos], arg, size);
       indices_[index] = &storage_[insertPos];
       offsetPerIndex_[index] = localSize;
-      wramOffsetPerIndex_[index] = wramSize;
     }
 
     void add_local_arg(size_t index, size_t size) {
       size_t localOffset = this->get_local_size();
-      add_arg(index, sizeof(size_t), (const void *)&(localOffset), size, 0);
-    }
-
-    void add_wram_arg(size_t index, size_t size) {
-      size_t wramOffset = this->get_wram_size();
-      add_arg(index, sizeof(size_t), (const void *)&(wramOffset), 0, size);
+      add_arg(index, sizeof(size_t), (const void *)&(localOffset), size);
     }
 
     void set_implicit_offset(size_t size, std::uint32_t *implicitOffset) {
@@ -608,11 +600,6 @@ struct _pi_kernel {
     pi_uint32 get_local_size() const {
       return std::accumulate(std::begin(offsetPerIndex_),
                              std::end(offsetPerIndex_), 0);
-    }
-
-    pi_uint32 get_wram_size() const {
-      return std::accumulate(std::begin(wramOffsetPerIndex_),
-                             std::end(wramOffsetPerIndex_), 0);
     }
   } args_;
 
@@ -668,10 +655,6 @@ struct _pi_kernel {
 
   void set_kernel_local_arg(int index, size_t size) {
     args_.add_local_arg(index, size);
-  }
-
-  void set_kernel_wram_arg(int index, size_t size) {
-    args_.add_wram_arg(index, size);
   }
 
   void set_implicit_offset_arg(size_t size, std::uint32_t *implicitOffset) {

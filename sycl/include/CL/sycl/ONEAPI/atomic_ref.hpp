@@ -44,7 +44,6 @@ template <cl::sycl::access::address_space AS>
 using IsValidAtomicAddressSpace =
     bool_constant<AS == access::address_space::global_space ||
                   AS == access::address_space::local_space ||
-                  AS == access::address_space::wram_space ||
                   AS == access::address_space::global_device_space>;
 
 // DefaultOrder parameter is limited to read-modify-write orders

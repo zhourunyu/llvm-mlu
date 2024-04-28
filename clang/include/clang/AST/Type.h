@@ -495,7 +495,7 @@ public:
            (A == LangAS::Default &&
             (B == LangAS::sycl_private || B == LangAS::sycl_local ||
              B == LangAS::sycl_global || B == LangAS::sycl_global_device ||
-             B == LangAS::sycl_global_host || B == LangAS::sycl_wram));
+             B == LangAS::sycl_global_host));
   }
 
   /// Returns true if the address space in these qualifiers is equal to or

@@ -39,7 +39,6 @@ static const unsigned X86AddrSpaceMap[] = {
     0,   // sycl_global_device
     0,   // sycl_global_host
     0,   // sycl_local
-    0,   // sycl_wram
     0,   // sycl_private
     270, // ptr32_sptr
     271, // ptr32_uptr

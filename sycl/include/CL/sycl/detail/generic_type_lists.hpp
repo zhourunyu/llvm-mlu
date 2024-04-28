@@ -365,12 +365,10 @@ using all_address_space_list = address_space_list<
     access::address_space::local_space, access::address_space::global_space,
     access::address_space::private_space, access::address_space::constant_space,
     access::address_space::global_device_space,
-    access::address_space::global_host_space,
-     access::address_space::wram_space>;
+    access::address_space::global_host_space>;
 
 using nonconst_address_space_list =
     address_space_list<access::address_space::local_space,
-                       access::address_space::wram_space,
                        access::address_space::global_space,
                        access::address_space::private_space,
                        access::address_space::global_device_space,

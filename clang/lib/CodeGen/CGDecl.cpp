@@ -268,7 +268,6 @@ llvm::Constant *CodeGenModule::getOrCreateStaticVarDecl(
   llvm::Constant *Init = nullptr;
   if (Ty.getAddressSpace() == LangAS::opencl_local ||
       Ty.getAddressSpace() == LangAS::sycl_local ||
-      Ty.getAddressSpace() == LangAS::sycl_wram ||
       D.hasAttr<CUDASharedAttr>() || D.hasAttr<LoaderUninitializedAttr>())
     Init = llvm::UndefValue::get(LTy);
   else

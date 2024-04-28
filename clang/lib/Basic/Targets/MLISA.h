@@ -38,8 +38,7 @@ static const unsigned MLISAAddrSpaceMap[] = {
     1, // sycl_global
     1, // sycl_global_device
     1, // sycl_global_host
-    101, // sycl_local
-    102, //sycl_wram
+    3, // sycl_local
     0, // sycl_private
     0, // ptr32_sptr
     0, // ptr32_uptr
@@ -90,7 +89,7 @@ public:
   }
 
   bool validateAsmConstraint(const char *&Name,
-                             TargetInfo::ConstraintInfo &Info) const {
+                             TargetInfo::ConstraintInfo &Info) const override {
     switch (*Name) {
     default:
       return false;
@@ -110,7 +109,7 @@ public:
     return "";
   }
   
-  BuiltinVaListKind getBuiltinVaListKind() const {
+  BuiltinVaListKind getBuiltinVaListKind() const override {
     // FIXME: implement
     return TargetInfo::CharPtrBuiltinVaList;
   }
@@ -136,6 +135,20 @@ public:
     Opts["cl_khr_global_int32_extended_atomics"] = true;
     Opts["cl_khr_local_int32_base_atomics"] = true;
     Opts["cl_khr_local_int32_extended_atomics"] = true;
+  }
+
+  /// \returns If a target requires an address within a target specific address
+  /// space \p AddressSpace to be converted in order to be used, then return the
+  /// corresponding target specific DWARF address space.
+  ///
+  /// \returns Otherwise return None and no conversion will be emitted in the
+  /// DWARF.
+  Optional<unsigned>
+  getDWARFAddressSpace(unsigned AddressSpace) const override {
+    if (AddressSpace >= llvm::array_lengthof(MLISADWARFAddrSpaceMap) ||
+        MLISADWARFAddrSpaceMap[AddressSpace] < 0)
+      return llvm::None;
+    return MLISADWARFAddrSpaceMap[AddressSpace];
   }
 
   CallingConvCheckResult checkCallingConvention(CallingConv CC) const override {
