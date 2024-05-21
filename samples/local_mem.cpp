@@ -1,6 +1,6 @@
 #include "common.h"
 #include <CL/sycl.hpp>
-#include <vector>
+#include <array>
 
 constexpr auto N = 256;
 
@@ -9,7 +9,8 @@ int main() {
     sycl::queue q(selector);
     std::cout << "Running on device: "<< q.get_device().get_info<sycl::info::device::name>() << std::endl;
 
-    std::vector<float> a_host(N), b_dev(1), b_host(1);
+    std::array<float, N> a_host;
+    std::array<float, 1> b_dev, b_host;
     initArray(a_host);
     b_dev[0] = 0.0f;
     b_host[0] = 0.0f;

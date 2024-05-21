@@ -40,6 +40,8 @@ def GlobalAS     : AddressSpace<"clang::LangAS::sycl_global">;
 def ConstantAS   : AddressSpace<"clang::LangAS::opencl_constant">;
 def LocalAS      : AddressSpace<"clang::LangAS::sycl_local">;
 def GenericAS    : AddressSpace<"clang::LangAS::opencl_generic">;
+def NramAS       : AddressSpace<"clang::LangAS::sycl_nram">;
+def WramAS       : AddressSpace<"clang::LangAS::sycl_wram">;
 
 // TODO: Manage capabilities. Unused for now.
 class AbstractExtension<string _Ext> {
@@ -442,6 +444,23 @@ foreach name  = ["acos", "acosh", "acospi",
                  "tan", "tanh", "tanpi",
                  "tgamma", "trunc"] in {
   def : ConstOCLSPVBuiltin<name, [FGenTypeN, FGenTypeN]>;
+}
+
+foreach name = ["vector_abs", "vector_acos", "vector_acosh", "vector_asin", "vector_asinh", "vector_atan", 
+                "vector_atanh", "vector_ceil", "vector_cos", "vector_cosh", "vector_erf", "vector_exp", 
+                "vector_floor", "vector_log", "vector_neg", "vector_round", "vector_rsqrt", "vector_sign", 
+                "vector_sin", "vector_sinh", "vector_sqrt", "vector_tan", "vector_tanh", "vector_trunc"] in {
+  def : OCLSPVBuiltin<name, [Void, Size, PointerType<FGenTypeN>, ConstType<PointerType<FGenTypeN>>]>;
+}
+
+foreach name = ["vector_add", "vector_div", "vector_fmax", "vector_fmin", "vector_fmod", "vector_mul", "vector_pow",
+                "vector_sub"] in {
+  def : OCLSPVBuiltin<name, [Void, Size, PointerType<FGenTypeN>, ConstType<PointerType<FGenTypeN>>, ConstType<PointerType<FGenTypeN>>]>;
+}
+
+foreach name = ["vector_select"] in {
+  def : OCLSPVBuiltin<name, [Void, Size, PointerType<FGenTypeN>, PointerType<FGenTypeN>, 
+                             ConstType<PointerType<FGenTypeN>>, ConstType<PointerType<FGenTypeN>>]>;
 }
 
 foreach name  = ["fmax", "fmin", "fmod",

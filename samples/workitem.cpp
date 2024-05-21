@@ -1,6 +1,6 @@
 #include "common.h"
 #include <CL/sycl.hpp>
-#include <vector>
+#include <array>
 
 constexpr auto N = 256;
 
@@ -9,7 +9,7 @@ int main() {
     sycl::queue q(selector);
     std::cout << "Running on device: "<< q.get_device().get_info<sycl::info::device::name>() << std::endl;
 
-    std::vector<int> a_host(N), a_dev(N);
+    std::array<int, N> a_host, a_dev;
     std::fill(a_host.begin(), a_host.end(), 0);
 
     auto a = sycl::malloc_device<int>(N, q);

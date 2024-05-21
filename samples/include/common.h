@@ -17,10 +17,14 @@ long long getTime() {
 }
 
 // initialize float array with random values
-template <typename T>
-typename std::enable_if<std::is_floating_point<T>::value, void>::type
-initArray(std::vector<T> &array, T min = -1, T max = 1) {
-    srand(time(nullptr));
+template <typename T, size_t n>
+typename std::enable_if_t<std::is_floating_point<T>::value, void>
+initArray(std::array<T, n> &array, T min = -1, T max = 1) {
+    static int init = 0;
+    if (!init) {
+        srand(time(nullptr));
+        init = 1;
+    }
     for (auto &i : array) {
         i = rand() / (float)RAND_MAX;
         i = min + i * (max - min);
@@ -28,10 +32,14 @@ initArray(std::vector<T> &array, T min = -1, T max = 1) {
 }
 
 // initialize int array with random values
-template <typename T>
-typename std::enable_if<std::is_integral<T>::value, void>::type
-initArray(std::vector<T> &array, T min = -3, T max = 3) {
-    srand(time(nullptr));
+template <typename T, size_t n>
+typename std::enable_if_t<std::is_integral<T>::value, void>
+initArray(std::array<T, n> &array, T min = -3, T max = 3) {
+    static int init = 0;
+    if (!init) {
+        srand(time(nullptr));
+        init = 1;
+    }
     for (auto &i : array) {
         i = rand() % (max - min + 1) + min;
     }
@@ -42,11 +50,10 @@ bool isClose(double a, double b, double rel_tol = 1e-6, double abs_tol = 1e-6) {
 }
 
 // compare two float arrays
-template <typename T>
-typename std::enable_if<std::is_floating_point<T>::value, int>::type
-compareResult(const std::vector<T> &array1, const std::vector<T> &array2, double rel_tol = 1e-6, double abs_tol = 1e-6) {
-    size_t size = array1.size();
-    for (size_t i = 0; i < size; i++) {
+template <typename T, size_t n>
+typename std::enable_if_t<std::is_floating_point<T>::value, int>
+compareResult(const std::array<T, n> &array1, const std::array<T, n> &array2, double rel_tol = 1e-6, double abs_tol = 1e-6) {
+    for (size_t i = 0; i < n; i++) {
         if (!isClose(array1[i], array2[i], rel_tol, abs_tol)) {
             std::cout << "Mismatch at index " << i << ": " << array1[i] << " != " << array2[i] << std::endl;
             return 1;
@@ -56,9 +63,9 @@ compareResult(const std::vector<T> &array1, const std::vector<T> &array2, double
 }
 
 // compare two int arrays
-template <typename T>
-typename std::enable_if<std::is_integral<T>::value, int>::type
-compareResult(const std::vector<T> &array1, const std::vector<T> &array2) {
+template <typename T, size_t n>
+typename std::enable_if_t<std::is_integral<T>::value, int>
+compareResult(const std::array<T, n> &array1, const std::array<T, n> &array2) {
     size_t size = array1.size();
     for (size_t i = 0; i < size; i++) {
         if (array1[i] != array2[i]) {
