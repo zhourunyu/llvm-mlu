@@ -24,6 +24,9 @@
 #define __SYCL_EXTERN_IT2(Ret, prefix, call, Arg1, Arg2)
 #define __SYCL_EXTERN_IT2_SAME(Ret, prefix, call, Arg)
 #define __SYCL_EXTERN_IT3(Ret, prefix, call, Arg1, Arg2, Arg3)
+#define __SYCL_EXTERN_IT4(Ret, prefix, call, Arg1, Arg2, Arg3, Arg4)
+#define __SYCL_EXTERN_IT5(Ret, prefix, call, Arg1, Arg2, Arg3, Arg4, Arg5)
+#define __SYCL_EXTERN_IT6(Ret, prefix, call, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6)
 #else
 #define __FUNC_PREFIX_OCL
 #define __FUNC_PREFIX_CORE
@@ -35,6 +38,12 @@
   extern Ret __SYCL_PPCAT(prefix, call)(Arg1, Arg2)
 #define __SYCL_EXTERN_IT3(Ret, prefix, call, Arg1, Arg2, Arg3)                 \
   extern Ret __SYCL_PPCAT(prefix, call)(Arg1, Arg2, Arg3)
+#define __SYCL_EXTERN_IT4(Ret, prefix, call, Arg1, Arg2, Arg3, Arg4)           \
+  extern Ret __SYCL_PPCAT(prefix, call)(Arg1, Arg2, Arg3, Arg4)
+#define __SYCL_EXTERN_IT5(Ret, prefix, call, Arg1, Arg2, Arg3, Arg4, Arg5)     \
+  extern Ret __SYCL_PPCAT(prefix, call)(Arg1, Arg2, Arg3, Arg4, Arg5)
+#define __SYCL_EXTERN_IT6(Ret, prefix, call, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6) \
+  extern Ret __SYCL_PPCAT(prefix, call)(Arg1, Arg2, Arg3, Arg4, Arg5, Arg6)
 #endif
 
 #define __SYCL_PPCAT_NX(A, B) A##B
@@ -100,6 +109,20 @@
     Arg3 arg3 = cl::sycl::detail::convertDataToType<T3, Arg3>(t3);             \
     Ret ret = __SYCL_PPCAT(prefix, call)(arg1, arg2, arg3);                    \
     return cl::sycl::detail::convertDataToType<Ret, R>(ret);                   \
+  }
+
+#define __SYCL_MAKE_CALL_VEC_ARG1(call, prefix)                                              \
+  template <typename T1, typename T2>                                                        \
+  inline __SYCL_ALWAYS_INLINE void __invoke_##call(size_t n, T1 *t1, const T2 *t2) __NOEXC { \
+    __SYCL_EXTERN_IT3(void, prefix, call, size_t, T1*, const T2*);                           \
+    __SYCL_PPCAT(prefix, call)(n, t1, t2);                                                   \
+  }
+
+#define __SYCL_MAKE_CALL_VEC_ARG2(call, prefix)                                                            \
+  template <typename T1, typename T2, typename T3>                                                         \
+  inline __SYCL_ALWAYS_INLINE void __invoke_##call(size_t n, T1 *t1, const T2 *t2, const T3 *t3) __NOEXC { \
+    __SYCL_EXTERN_IT4(void, prefix, call, size_t, T1*, const T2*, const T3*);                              \
+    __SYCL_PPCAT(prefix, call)(n, t1, t2, t3);                                                             \
   }
 
 #ifndef __SYCL_DEVICE_ONLY__
@@ -277,6 +300,48 @@ __SYCL_MAKE_CALL_ARG1(Any, __FUNC_PREFIX_CORE)                // any
 __SYCL_MAKE_CALL_ARG1(All, __FUNC_PREFIX_CORE)                // all
 __SYCL_MAKE_CALL_ARG3(bitselect, __FUNC_PREFIX_OCL)
 __SYCL_MAKE_CALL_ARG3(select, __FUNC_PREFIX_OCL) // select
+/* vector functions*/
+__SYCL_MAKE_CALL_VEC_ARG1(vector_abs, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG1(vector_acos, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG1(vector_acosh, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG2(vector_add, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG1(vector_asin, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG1(vector_asinh, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG1(vector_atan, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG1(vector_atanh, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG1(vector_ceil, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG1(vector_cos, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG1(vector_cosh, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG2(vector_div, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG1(vector_erf, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG1(vector_exp, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG1(vector_floor, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG1(vector_isinf, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG1(vector_isnan, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG1(vector_log, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG2(vector_fmax, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG2(vector_fmin, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG2(vector_fmod, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG2(vector_mul, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG1(vector_neg, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG2(vector_pow, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG1(vector_round, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG1(vector_rsqrt, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG1(vector_sign, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG1(vector_sin, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG1(vector_sinh, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG1(vector_sqrt, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG2(vector_sub, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG1(vector_tan, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG1(vector_tanh, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG1(vector_trunc, __FUNC_PREFIX_OCL)
+
+template <typename T>
+inline __SYCL_ALWAYS_INLINE void __invoke_vector_select(size_t n, T *t1, T *t2, const T *t3, const T *t4) __NOEXC {
+  __SYCL_EXTERN_IT5(void, __FUNC_PREFIX_OCL, vector_select, size_t, T*, T*, const T*, const T*);
+  __SYCL_PPCAT(__FUNC_PREFIX_OCL, vector_select)(n, t1, t2, t3, t4);
+}
+
 #ifndef __SYCL_DEVICE_ONLY__
 } // namespace __host_std
 } // __SYCL_INLINE_NAMESPACE(cl)

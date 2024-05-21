@@ -24,7 +24,8 @@ add_executable_and_test(nram nram.cpp)
 add_executable_and_test(wram wram.cpp)
 
 file(GLOB TEST_SOURCES 
-  "libdevice/*.cpp"
+  "scalar/*.cpp"
+  "vector/*.cpp"
 )
 
 foreach(source_file ${TEST_SOURCES})

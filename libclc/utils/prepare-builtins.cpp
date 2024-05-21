@@ -92,6 +92,19 @@ int main(int argc, char **argv) {
     return 1;
   }
 
+  if (OutputFilename.find("libspirv-mlisa--.bc") != std::string::npos) {
+    for (Module::iterator i = M->begin(), e = M->end(); i != e; ++i) {
+      if (i->isDeclaration())
+        continue;
+      auto name = i->getName();
+      if (name.endswith("S0_PKfS2_")) {
+        i->setName(name.drop_back(9) + "S_PKfS1_");
+      } else if (name.endswith("S2_")) {
+        i->setName(name.drop_back(3) + "S1_");
+      }
+    }
+  }
+
   std::error_code EC;
 #if HAVE_LLVM >= 0x0600
   std::unique_ptr<ToolOutputFile> Out(

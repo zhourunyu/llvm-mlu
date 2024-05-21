@@ -1364,6 +1364,235 @@ select(T a, T b, T2 c) __NOEXC {
   return __sycl_std::__invoke_select<T>(a, b, c);
 }
 
+namespace ext {
+namespace mlu {
+
+template <typename T>
+void memcpy_gdram2nram(T* dest, const T* src, size_t n) __NOEXC {
+#ifdef __SYCL_DEVICE_ONLY__
+  __mlvm_memcpy_gdram_to_nram(dest, (void*)src, n * sizeof(T));
+#else
+  (void)dest;
+  (void)src;
+  (void)n;
+#endif
+}
+
+template <typename T>
+void memcpy_nram2gdram(T* dest, const T* src, size_t n) __NOEXC {
+#ifdef __SYCL_DEVICE_ONLY__
+  __mlvm_memcpy_nram_to_gdram(dest, (void*)src, n * sizeof(T));
+#else
+  (void)dest;
+  (void)src;
+  (void)n;
+#endif
+}
+
+template <typename T>
+detail::enable_if_t<(sizeof(T) == 1), void>
+memset_nram(void* dest, T value, size_t n) __NOEXC {
+#ifdef __SYCL_DEVICE_ONLY__
+  __mlvm_memset_nram_s8((char *)dest, n, *(char *)&value);
+#else
+  (void)dest;
+  (void)value;
+  (void)n;
+#endif
+}
+
+template <typename T>
+detail::enable_if_t<(sizeof(T) == 2), void>
+memset_nram(void* dest, T value, size_t n) __NOEXC {
+#ifdef __SYCL_DEVICE_ONLY__
+  __mlvm_memset_nram_s16((short *)dest, n, *(short *)&value);
+#else
+  (void)dest;
+  (void)value;
+  (void)n;
+#endif
+}
+
+template <typename T>
+detail::enable_if_t<(sizeof(T) == 4), void>
+memset_nram(void* dest, T value, size_t n) __NOEXC {
+#ifdef __SYCL_DEVICE_ONLY__
+  __mlvm_memset_nram_s32((int *)dest, n, *(int *)&value);
+#else
+  (void)dest;
+  (void)value;
+  (void)n;
+#endif
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_abs(T* out, const T* in, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_abs<T>(n, out, in);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_acos(T* out, const T* in, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_acos<T>(n, out, in);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_acosh(T* out, const T* in, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_acosh<T>(n, out, in);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_add(T* out, const T* in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_add<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_asin(T* out, const T* in, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_asin<T>(n, out, in);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_asinh(T* out, const T* in, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_asinh<T>(n, out, in);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_atan(T* out, const T* in, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_atan<T>(n, out, in);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_atanh(T* out, const T* in, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_atanh<T>(n, out, in);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_ceil(T* out, const T* in, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_ceil<T>(n, out, in);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_cos(T* out, const T* in, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_cos<T>(n, out, in);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_cosh(T* out, const T* in, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_cosh<T>(n, out, in);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_div(T* out, const T* in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_div<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_erf(T* out, const T* in, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_erf<T>(n, out, in);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_exp(T* out, const T* in, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_exp<T>(n, out, in);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_floor(T* out, const T* in, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_floor<T>(n, out, in);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_log(T* out, const T* in, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_log<T>(n, out, in);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_max(T* out, const T* in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_fmax<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_min(T* out, const T* in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_fmin<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_mod(T* out, const T* in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_fmod<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_mul(T* out, const T* in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_mul<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_neg(T* out, const T* in, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_neg<T>(n, out, in);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_pow(T* out, const T* in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_pow<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_round(T* out, const T* in, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_round<T>(n, out, in);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_rsqrt(T* out, const T* in, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_rsqrt<T>(n, out, in);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_select(T* out, T* in1, const T* in2, const T* in3, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_select<T>(n, out, in1, in2, in3);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_sign(T* out, const T* in, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_sign<T>(n, out, in);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_sin(T* out, const T* in, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_sin<T>(n, out, in);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_sinh(T* out, const T* in, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_sinh<T>(n, out, in);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_sqrt(T* out, const T* in, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_sqrt<T>(n, out, in);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_sub(T* out, const T* in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_sub<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_tan(T* out, const T* in, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_tan<T>(n, out, in);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_tanh(T* out, const T* in, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_tanh<T>(n, out, in);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_trunc(T* out, const T* in, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_trunc<T>(n, out, in);
+}
+
+} // namespace mlu
+} // namespace ext
+
 namespace native {
 /* ----------------- 4.13.3 Math functions. ---------------------------------*/
 // genfloatf cos (genfloatf x)

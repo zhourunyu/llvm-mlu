@@ -3,11 +3,11 @@
 #endif
 
 #include <CL/sycl.hpp>
-#include <vector>
+#include <array>
 
-template <typename Ta, typename Tb, typename Tc>
-void BinaryOp(sycl::queue &q, const std::vector<Ta> &a, const std::vector<Tb> &b, std::vector<Tc> &c) {
-    sycl::range<1> n_items{a.size()};
+template <typename Ta, typename Tb, typename Tc, size_t n>
+void BinaryOp(sycl::queue &q, const std::array<Ta, n> &a, const std::array<Tb, n> &b, std::array<Tc, n> &c) {
+    sycl::range<1> n_items{n};
 
     sycl::buffer a_buffer(a);
     sycl::buffer b_buffer(b);

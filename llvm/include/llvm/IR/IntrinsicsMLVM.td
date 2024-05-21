@@ -3735,6 +3735,36 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_float_ty, llvm_i32_ty],
               []>;
 
+  def int_mlvm_stream_maxeq_scalar_s8 :
+    GCCBuiltin<"__mlvm_stream_maxeq_scalar_s8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_maxeq_scalar_s16 :
+    GCCBuiltin<"__mlvm_stream_maxeq_scalar_s16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_maxeq_scalar_s32 :
+    GCCBuiltin<"__mlvm_stream_maxeq_scalar_s32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_maxeq_scalar_u8 :
+    GCCBuiltin<"__mlvm_stream_maxeq_scalar_u8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_maxeq_scalar_u16 :
+    GCCBuiltin<"__mlvm_stream_maxeq_scalar_u16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_maxeq_scalar_u32 :
+    GCCBuiltin<"__mlvm_stream_maxeq_scalar_u32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
+              []>;
+
   def int_mlvm_stream_mineq_scalar_f16 :
     GCCBuiltin<"__mlvm_stream_mineq_scalar_f16">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_half_ty, llvm_i32_ty],
@@ -3743,6 +3773,36 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
   def int_mlvm_stream_mineq_scalar_f32 :
     GCCBuiltin<"__mlvm_stream_mineq_scalar_f32">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_float_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_mineq_scalar_s8 :
+    GCCBuiltin<"__mlvm_stream_mineq_scalar_s8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_mineq_scalar_s16 :
+    GCCBuiltin<"__mlvm_stream_mineq_scalar_s16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_mineq_scalar_s32 :
+    GCCBuiltin<"__mlvm_stream_mineq_scalar_s32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_mineq_scalar_u8 :
+    GCCBuiltin<"__mlvm_stream_mineq_scalar_u8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_mineq_scalar_u16 :
+    GCCBuiltin<"__mlvm_stream_mineq_scalar_u16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_mineq_scalar_u32 :
+    GCCBuiltin<"__mlvm_stream_mineq_scalar_u32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
               []>;
 
   def int_mlvm_stream_eq_scalar_f16 :
@@ -3755,6 +3815,36 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_float_ty, llvm_i32_ty],
               []>;
 
+  def int_mlvm_stream_eq_scalar_s8 :
+    GCCBuiltin<"__mlvm_stream_eq_scalar_s8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_eq_scalar_s16 :
+    GCCBuiltin<"__mlvm_stream_eq_scalar_s16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_eq_scalar_s32 :
+    GCCBuiltin<"__mlvm_stream_eq_scalar_s32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_eq_scalar_u8 :
+    GCCBuiltin<"__mlvm_stream_eq_scalar_u8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_eq_scalar_u16 :
+    GCCBuiltin<"__mlvm_stream_eq_scalar_u16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_eq_scalar_u32 :
+    GCCBuiltin<"__mlvm_stream_eq_scalar_u32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
+              []>;
+
   def int_mlvm_stream_ne_scalar_f16 :
     GCCBuiltin<"__mlvm_stream_ne_scalar_f16">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_half_ty, llvm_i32_ty],
@@ -3763,6 +3853,36 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
   def int_mlvm_stream_ne_scalar_f32 :
     GCCBuiltin<"__mlvm_stream_ne_scalar_f32">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_float_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_ne_scalar_s8 :
+    GCCBuiltin<"__mlvm_stream_ne_scalar_s8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_ne_scalar_s16 :
+    GCCBuiltin<"__mlvm_stream_ne_scalar_s16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_ne_scalar_s32 :
+    GCCBuiltin<"__mlvm_stream_ne_scalar_s32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_ne_scalar_u8 :
+    GCCBuiltin<"__mlvm_stream_ne_scalar_u8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_ne_scalar_u16 :
+    GCCBuiltin<"__mlvm_stream_ne_scalar_u16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_ne_scalar_u32 :
+    GCCBuiltin<"__mlvm_stream_ne_scalar_u32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
               []>;
 
   def int_mlvm_stream_lt_scalar_f16 :
@@ -3775,6 +3895,36 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_float_ty, llvm_i32_ty],
               []>;
 
+  def int_mlvm_stream_lt_scalar_s8 :
+    GCCBuiltin<"__mlvm_stream_lt_scalar_s8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_lt_scalar_s16 :
+    GCCBuiltin<"__mlvm_stream_lt_scalar_s16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_lt_scalar_s32 :
+    GCCBuiltin<"__mlvm_stream_lt_scalar_s32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_lt_scalar_u8 :
+    GCCBuiltin<"__mlvm_stream_lt_scalar_u8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_lt_scalar_u16 :
+    GCCBuiltin<"__mlvm_stream_lt_scalar_u16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_lt_scalar_u32 :
+    GCCBuiltin<"__mlvm_stream_lt_scalar_u32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
+              []>;
+
   def int_mlvm_stream_le_scalar_f16 :
     GCCBuiltin<"__mlvm_stream_le_scalar_f16">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_half_ty, llvm_i32_ty],
@@ -3783,6 +3933,36 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
   def int_mlvm_stream_le_scalar_f32 :
     GCCBuiltin<"__mlvm_stream_le_scalar_f32">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_float_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_le_scalar_s8 :
+    GCCBuiltin<"__mlvm_stream_le_scalar_s8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_le_scalar_s16 :
+    GCCBuiltin<"__mlvm_stream_le_scalar_s16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_le_scalar_s32 :
+    GCCBuiltin<"__mlvm_stream_le_scalar_s32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_le_scalar_u8 :
+    GCCBuiltin<"__mlvm_stream_le_scalar_u8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_le_scalar_u16 :
+    GCCBuiltin<"__mlvm_stream_le_scalar_u16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_le_scalar_u32 :
+    GCCBuiltin<"__mlvm_stream_le_scalar_u32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
               []>;
 
   def int_mlvm_stream_gt_scalar_f16 :
@@ -3795,6 +3975,76 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_float_ty, llvm_i32_ty],
               []>;
 
+  def int_mlvm_stream_gt_scalar_s8 :
+    GCCBuiltin<"__mlvm_stream_gt_scalar_s8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_gt_scalar_s16 :
+    GCCBuiltin<"__mlvm_stream_gt_scalar_s16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_gt_scalar_s32 :
+    GCCBuiltin<"__mlvm_stream_gt_scalar_s32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_gt_scalar_u8 :
+    GCCBuiltin<"__mlvm_stream_gt_scalar_u8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_gt_scalar_u16 :
+    GCCBuiltin<"__mlvm_stream_gt_scalar_u16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_gt_scalar_u32 :
+    GCCBuiltin<"__mlvm_stream_gt_scalar_u32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_ge_scalar_f16 :
+    GCCBuiltin<"__mlvm_stream_ge_scalar_f16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_half_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_ge_scalar_f32 :
+    GCCBuiltin<"__mlvm_stream_ge_scalar_f32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_float_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_ge_scalar_s8 :
+    GCCBuiltin<"__mlvm_stream_ge_scalar_s8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_ge_scalar_s16 :
+    GCCBuiltin<"__mlvm_stream_ge_scalar_s16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_ge_scalar_s32 :
+    GCCBuiltin<"__mlvm_stream_ge_scalar_s32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_ge_scalar_u8 :
+    GCCBuiltin<"__mlvm_stream_ge_scalar_u8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_ge_scalar_u16 :
+    GCCBuiltin<"__mlvm_stream_ge_scalar_u16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_ge_scalar_u32 :
+    GCCBuiltin<"__mlvm_stream_ge_scalar_u32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
+              []>;
+
   def int_mlvm_stream_and_scalar_f16 :
     GCCBuiltin<"__mlvm_stream_and_scalar_f16">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_half_ty, llvm_i32_ty],
@@ -3803,6 +4053,36 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
   def int_mlvm_stream_and_scalar_f32 :
     GCCBuiltin<"__mlvm_stream_and_scalar_f32">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_float_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_and_scalar_s8 :
+    GCCBuiltin<"__mlvm_stream_and_scalar_s8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_and_scalar_s16 :
+    GCCBuiltin<"__mlvm_stream_and_scalar_s16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_and_scalar_s32 :
+    GCCBuiltin<"__mlvm_stream_and_scalar_s32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_and_scalar_u8 :
+    GCCBuiltin<"__mlvm_stream_and_scalar_u8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_and_scalar_u16 :
+    GCCBuiltin<"__mlvm_stream_and_scalar_u16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_and_scalar_u32 :
+    GCCBuiltin<"__mlvm_stream_and_scalar_u32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
               []>;
 
   def int_mlvm_stream_or_scalar_f16 :
@@ -3815,6 +4095,36 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_float_ty, llvm_i32_ty],
               []>;
 
+  def int_mlvm_stream_or_scalar_s8 :
+    GCCBuiltin<"__mlvm_stream_or_scalar_s8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_or_scalar_s16 :
+    GCCBuiltin<"__mlvm_stream_or_scalar_s16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_or_scalar_s32 :
+    GCCBuiltin<"__mlvm_stream_or_scalar_s32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_or_scalar_u8 :
+    GCCBuiltin<"__mlvm_stream_or_scalar_u8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_or_scalar_u16 :
+    GCCBuiltin<"__mlvm_stream_or_scalar_u16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_or_scalar_u32 :
+    GCCBuiltin<"__mlvm_stream_or_scalar_u32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
+              []>;
+
   def int_mlvm_stream_xor_scalar_f16 :
     GCCBuiltin<"__mlvm_stream_xor_scalar_f16">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_half_ty, llvm_i32_ty],
@@ -3823,6 +4133,36 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
   def int_mlvm_stream_xor_scalar_f32 :
     GCCBuiltin<"__mlvm_stream_xor_scalar_f32">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_float_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_xor_scalar_s8 :
+    GCCBuiltin<"__mlvm_stream_xor_scalar_s8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_xor_scalar_s16 :
+    GCCBuiltin<"__mlvm_stream_xor_scalar_s16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_xor_scalar_s32 :
+    GCCBuiltin<"__mlvm_stream_xor_scalar_s32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_xor_scalar_u8 :
+    GCCBuiltin<"__mlvm_stream_xor_scalar_u8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_xor_scalar_u16 :
+    GCCBuiltin<"__mlvm_stream_xor_scalar_u16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_xor_scalar_u32 :
+    GCCBuiltin<"__mlvm_stream_xor_scalar_u32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
               []>;
 
   def int_mlvm_stream_band_scalar_f16 :
@@ -3835,6 +4175,36 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_float_ty, llvm_i32_ty],
               []>;
 
+  def int_mlvm_stream_band_scalar_s8 :
+    GCCBuiltin<"__mlvm_stream_band_scalar_s8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_band_scalar_s16 :
+    GCCBuiltin<"__mlvm_stream_band_scalar_s16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_band_scalar_s32 :
+    GCCBuiltin<"__mlvm_stream_band_scalar_s32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_band_scalar_u8 :
+    GCCBuiltin<"__mlvm_stream_band_scalar_u8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_band_scalar_u16 :
+    GCCBuiltin<"__mlvm_stream_band_scalar_u16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_band_scalar_u32 :
+    GCCBuiltin<"__mlvm_stream_band_scalar_u32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
+              []>;
+
   def int_mlvm_stream_bor_scalar_f16 :
     GCCBuiltin<"__mlvm_stream_bor_scalar_f16">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_half_ty, llvm_i32_ty],
@@ -3845,6 +4215,36 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_float_ty, llvm_i32_ty],
               []>;
 
+  def int_mlvm_stream_bor_scalar_s8 :
+    GCCBuiltin<"__mlvm_stream_bor_scalar_s8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_bor_scalar_s16 :
+    GCCBuiltin<"__mlvm_stream_bor_scalar_s16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_bor_scalar_s32 :
+    GCCBuiltin<"__mlvm_stream_bor_scalar_s32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_bor_scalar_u8 :
+    GCCBuiltin<"__mlvm_stream_bor_scalar_u8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_bor_scalar_u16 :
+    GCCBuiltin<"__mlvm_stream_bor_scalar_u16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_bor_scalar_u32 :
+    GCCBuiltin<"__mlvm_stream_bor_scalar_u32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
+              []>;
+
   def int_mlvm_stream_bxor_scalar_f16 :
     GCCBuiltin<"__mlvm_stream_bxor_scalar_f16">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_half_ty, llvm_i32_ty],
@@ -3853,6 +4253,36 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
   def int_mlvm_stream_bxor_scalar_f32 :
     GCCBuiltin<"__mlvm_stream_bxor_scalar_f32">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_float_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_bxor_scalar_s8 :
+    GCCBuiltin<"__mlvm_stream_bxor_scalar_s8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_bxor_scalar_s16 :
+    GCCBuiltin<"__mlvm_stream_bxor_scalar_s16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_bxor_scalar_s32 :
+    GCCBuiltin<"__mlvm_stream_bxor_scalar_s32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_bxor_scalar_u8 :
+    GCCBuiltin<"__mlvm_stream_bxor_scalar_u8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i8_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_bxor_scalar_u16 :
+    GCCBuiltin<"__mlvm_stream_bxor_scalar_u16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i16_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_bxor_scalar_u32 :
+    GCCBuiltin<"__mlvm_stream_bxor_scalar_u32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
               []>;
 
   def int_mlvm_stream_fma_vec_vec_vec_f32 :
