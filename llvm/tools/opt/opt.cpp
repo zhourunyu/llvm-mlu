@@ -607,6 +607,8 @@ int main(int argc, char **argv) {
   initializeESIMDLowerLoadStorePass(Registry);
   initializeESIMDLowerVecArgLegacyPassPass(Registry);
   initializeSYCLLowerWGLocalMemoryLegacyPass(Registry);
+  initializeSYCLLowerWGNramMemoryLegacyPass(Registry);
+  initializeSYCLLowerWGWramMemoryLegacyPass(Registry);
 
 #ifdef BUILD_EXAMPLES
   initializeExampleIRTransforms(Registry);

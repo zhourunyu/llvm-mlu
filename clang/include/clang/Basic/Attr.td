@@ -1548,6 +1548,16 @@ def OpenCLGenericAddressSpace : TypeAttr {
   let Documentation = [OpenCLAddressSpaceGenericDocs];
 }
 
+def SYCLNramAddressSpace : TypeAttr {
+  let Spellings = [Keyword<"__nram">, Keyword<"nram">, Clang<"sycl_nram">];
+  let Documentation = [SYCLAddressSpaceNramDocs];
+}
+
+def SYCLWramAddressSpace : TypeAttr {
+  let Spellings = [Keyword<"__wram">, Keyword<"wram">, Clang<"sycl_wram">];
+  let Documentation = [SYCLAddressSpaceWramDocs];
+}
+
 def OpenCLNoSVM : Attr {
   let Spellings = [GNU<"nosvm">];
   let Subjects = SubjectList<[Var]>;

@@ -9,7 +9,7 @@ int main() {
     std::cout << "Running on device: "<< q.get_device().get_info<sycl::info::device::name>() << std::endl;
 
     q.parallel_for<class mm>(1, [=](sycl::id<1> idx) {
-        auto wram_buffer = *sycl::ext::mlu::sycl_wram_memory<float[N]>();
+        auto nram_buffer = *sycl::ext::mlu::sycl_nram_memory<float[N]>();
     });
     q.wait();
     

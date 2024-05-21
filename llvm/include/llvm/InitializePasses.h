@@ -435,6 +435,8 @@ void initializeSPIRITTAnnotationsLegacyPassPass(PassRegistry &);
 void initializeESIMDLowerLoadStorePass(PassRegistry &);
 void initializeESIMDLowerVecArgLegacyPassPass(PassRegistry &);
 void initializeSYCLLowerWGLocalMemoryLegacyPass(PassRegistry &);
+void initializeSYCLLowerWGNramMemoryLegacyPass(PassRegistry &);
+void initializeSYCLLowerWGWramMemoryLegacyPass(PassRegistry &);
 void initializeTailCallElimPass(PassRegistry&);
 void initializeTailDuplicatePass(PassRegistry&);
 void initializeTargetLibraryInfoWrapperPassPass(PassRegistry&);

@@ -8103,6 +8103,8 @@ static bool isAddressSpaceKind(const ParsedAttr &attr) {
          attrKind == ParsedAttr::AT_OpenCLGlobalHostAddressSpace ||
          attrKind == ParsedAttr::AT_OpenCLLocalAddressSpace ||
          attrKind == ParsedAttr::AT_OpenCLConstantAddressSpace ||
+         attrKind == ParsedAttr::AT_SYCLNramAddressSpace ||
+         attrKind == ParsedAttr::AT_SYCLWramAddressSpace ||
          attrKind == ParsedAttr::AT_OpenCLGenericAddressSpace;
 }
 
@@ -8187,6 +8189,8 @@ static void processTypeAttrs(TypeProcessingState &state, QualType &type,
     case ParsedAttr::AT_OpenCLGlobalHostAddressSpace:
     case ParsedAttr::AT_OpenCLLocalAddressSpace:
     case ParsedAttr::AT_OpenCLConstantAddressSpace:
+    case ParsedAttr::AT_SYCLNramAddressSpace:
+    case ParsedAttr::AT_SYCLWramAddressSpace:
     case ParsedAttr::AT_OpenCLGenericAddressSpace:
     case ParsedAttr::AT_AddressSpace:
       HandleAddressSpaceTypeAttribute(type, attr, state);

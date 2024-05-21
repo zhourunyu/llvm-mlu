@@ -4689,8 +4689,8 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
   //===--------------------------------------------------------------------===//
   // memcpy
   //===--------------------------------------------------------------------===//
-  def int_mlvm_nram_to_nram:
-	  GCCBuiltin<"__mlvm_nram_to_nram">,
+  def int_mlvm_memcpy_1D_nram_to_nram:
+	  GCCBuiltin<"__mlvm_memcpy_1D_nram_to_nram">,
 		Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
 		          []>;
 
@@ -4699,8 +4699,8 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
 		Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
 		          []>;
 
-  def int_mlvm_nram_to_wram:
-	  GCCBuiltin<"__mlvm_nram_to_wram">,
+  def int_mlvm_memcpy_1D_nram_to_wram:
+	  GCCBuiltin<"__mlvm_memcpy_1D_nram_to_wram">,
 		Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
 		          []>;
 
@@ -4709,8 +4709,8 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
 		Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
 		          []>;
 
-  def int_mlvm_nram_to_sram:
-	  GCCBuiltin<"__mlvm_nram_to_sram">,
+  def int_mlvm_memcpy_1D_nram_to_sram:
+	  GCCBuiltin<"__mlvm_memcpy_1D_nram_to_sram">,
 		Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
 		          []>;
 
@@ -4731,8 +4731,8 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
                    llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
 		          []>;
 
-  def int_mlvm_nram_to_ldram :
-    GCCBuiltin<"__mlvm_nram_to_ldram">,
+  def int_mlvm_memcpy_1D_nram_to_ldram :
+    GCCBuiltin<"__mlvm_memcpy_1D_nram_to_ldram">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
               []>;
 
@@ -4753,23 +4753,23 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
                    llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
               []>;
 
-  def int_mlvm_gdram_to_gdram :
-    GCCBuiltin<"__mlvm_gdram_to_gdram">,
+  def int_mlvm_memcpy_1D_gdram_to_gdram :
+    GCCBuiltin<"__mlvm_memcpy_1D_gdram_to_gdram">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
               []>;
 
-  def int_mlvm_gdram_to_ldram :
-    GCCBuiltin<"__mlvm_gdram_to_ldram">,
+  def int_mlvm_memcpy_1D_gdram_to_ldram :
+    GCCBuiltin<"__mlvm_memcpy_1D_gdram_to_ldram">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
               []>;
 
-  def int_mlvm_ldram_to_gdram :
-    GCCBuiltin<"__mlvm_ldram_to_gdram">,
+  def int_mlvm_memcpy_1D_ldram_to_gdram :
+    GCCBuiltin<"__mlvm_memcpy_1D_ldram_to_gdram">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
               []>;
 
-  def int_mlvm_nram_to_gdram :
-    GCCBuiltin<"__mlvm_nram_to_gdram">,
+  def int_mlvm_memcpy_1D_nram_to_gdram :
+    GCCBuiltin<"__mlvm_memcpy_1D_nram_to_gdram">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
               []>;
 
@@ -4790,8 +4790,8 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
                    llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
               []>;
 
-  def int_mlvm_wram_to_nram:
-	  GCCBuiltin<"__mlvm_wram_to_nram">,
+  def int_mlvm_memcpy_1D_wram_to_nram:
+	  GCCBuiltin<"__mlvm_memcpy_1D_wram_to_nram">,
 		Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
 		          []>;
 
@@ -4800,8 +4800,8 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
 		Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
 		          []>;
 
-  def int_mlvm_wram_to_sram:
-	  GCCBuiltin<"__mlvm_wram_to_sram">,
+  def int_mlvm_memcpy_1D_wram_to_sram:
+	  GCCBuiltin<"__mlvm_memcpy_1D_wram_to_sram">,
 		Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
 		          []>;
 
@@ -4810,8 +4810,8 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
 		Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
 		          []>;
 
-  def int_mlvm_wram_to_ldram :
-    GCCBuiltin<"__mlvm_wram_to_ldram">,
+  def int_mlvm_memcpy_1D_wram_to_ldram :
+    GCCBuiltin<"__mlvm_memcpy_1D_wram_to_ldram">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
               []>;
 
@@ -4827,8 +4827,8 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
                    llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
               []>;
 
-  def int_mlvm_wram_to_gdram :
-    GCCBuiltin<"__mlvm_wram_to_gdram">,
+  def int_mlvm_memcpy_1D_wram_to_gdram :
+    GCCBuiltin<"__mlvm_memcpy_1D_wram_to_gdram">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
               []>;
 
@@ -4844,8 +4844,8 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
                    llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
               []>;
 
-  def int_mlvm_sram_to_nram:
-    GCCBuiltin<"__mlvm_sram_to_nram">,
+  def int_mlvm_memcpy_1D_sram_to_nram:
+    GCCBuiltin<"__mlvm_memcpy_1D_sram_to_nram">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
               []>;
 
@@ -4866,8 +4866,8 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
                    llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
               []>;
 
-  def int_mlvm_sram_to_wram:
-    GCCBuiltin<"__mlvm_sram_to_wram">,
+  def int_mlvm_memcpy_1D_sram_to_wram:
+    GCCBuiltin<"__mlvm_memcpy_1D_sram_to_wram">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
               []>;
 
@@ -4882,8 +4882,8 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
                    llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
               []>;
 
-  def int_mlvm_sram_to_sram:
-    GCCBuiltin<"__mlvm_sram_to_sram">,
+  def int_mlvm_memcpy_1D_sram_to_sram:
+    GCCBuiltin<"__mlvm_memcpy_1D_sram_to_sram">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
               []>;
 
@@ -4893,8 +4893,8 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
                    llvm_i32_ty, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
 	      []>;
 
-  def int_mlvm_sram_to_ldram:
-    GCCBuiltin<"__mlvm_sram_to_ldram">,
+  def int_mlvm_memcpy_1D_sram_to_ldram:
+    GCCBuiltin<"__mlvm_memcpy_1D_sram_to_ldram">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
               []>;
 
@@ -4904,8 +4904,8 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
                    llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
               []>;
 
-  def int_mlvm_sram_to_gdram:
-    GCCBuiltin<"__mlvm_sram_to_gdram">,
+  def int_mlvm_memcpy_1D_sram_to_gdram:
+    GCCBuiltin<"__mlvm_memcpy_1D_sram_to_gdram">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
               []>;
 
@@ -4920,8 +4920,8 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
                    llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
               []>;
 
-  def int_mlvm_ldram_to_nram :
-    GCCBuiltin<"__mlvm_ldram_to_nram">,
+  def int_mlvm_memcpy_1D_ldram_to_nram :
+    GCCBuiltin<"__mlvm_memcpy_1D_ldram_to_nram">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
               []>;
 
@@ -4947,8 +4947,8 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
               []>;
 
-  def int_mlvm_ldram_to_wram :
-    GCCBuiltin<"__mlvm_ldram_to_wram">,
+  def int_mlvm_memcpy_1D_ldram_to_wram :
+    GCCBuiltin<"__mlvm_memcpy_1D_ldram_to_wram">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
               []>;
 
@@ -4979,8 +4979,8 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
               []>;
 
-  def int_mlvm_ldram_to_sram :
-    GCCBuiltin<"__mlvm_ldram_to_sram">,
+  def int_mlvm_memcpy_1D_ldram_to_sram :
+    GCCBuiltin<"__mlvm_memcpy_1D_ldram_to_sram">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
               []>;
 
@@ -4995,8 +4995,8 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
                    llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
               []>;
 
-  def int_mlvm_gdram_to_nram :
-    GCCBuiltin<"__mlvm_gdram_to_nram">,
+  def int_mlvm_memcpy_1D_gdram_to_nram :
+    GCCBuiltin<"__mlvm_memcpy_1D_gdram_to_nram">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
               []>;
 
@@ -5063,8 +5063,8 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
               []>;
 
-  def int_mlvm_gdram_to_wram :
-    GCCBuiltin<"__mlvm_gdram_to_wram">,
+  def int_mlvm_memcpy_1D_gdram_to_wram :
+    GCCBuiltin<"__mlvm_memcpy_1D_gdram_to_wram">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
               []>;
 
@@ -5091,8 +5091,8 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
                    llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
               []>;
 
-  def int_mlvm_gdram_to_sram :
-    GCCBuiltin<"__mlvm_gdram_to_sram">,
+  def int_mlvm_memcpy_1D_gdram_to_sram :
+    GCCBuiltin<"__mlvm_memcpy_1D_gdram_to_sram">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
               []>;
 
@@ -5125,8 +5125,8 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
                    llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
               []>;
 
-  def int_mlvm_ldram_to_ldram :
-    GCCBuiltin<"__mlvm_ldram_to_ldram">,
+  def int_mlvm_memcpy_1D_ldram_to_ldram :
+    GCCBuiltin<"__mlvm_memcpy_1D_ldram_to_ldram">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
               []>;
 

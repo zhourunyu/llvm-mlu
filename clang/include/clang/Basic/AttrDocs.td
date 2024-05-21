@@ -4805,6 +4805,32 @@ by Clang.
   }];
 }
 
+def SYCLAddressSpaceNramDocs : Documentation {
+  let Category = DocOpenCLAddressSpaces;
+  let Heading = "__nram, nram, [[clang::sycl_nram]]";
+  let Content = [{
+The nram address space specifies that an object is allocated in the private
+(work item) memory. Other work items cannot access the same memory area and its
+content is destroyed after work item execution ends. Local variables can be
+declared in the private address space. Function arguments are always in the
+private address space. Kernel function arguments of a pointer or an array type
+cannot point to the private address space.
+  }];
+}
+
+def SYCLAddressSpaceWramDocs : Documentation {
+  let Category = DocOpenCLAddressSpaces;
+  let Heading = "__wram, wram, [[clang::sycl_wram]]";
+  let Content = [{
+The wram address space specifies that an object is allocated in the private
+(work item) memory. Other work items cannot access the same memory area and its
+content is destroyed after work item execution ends. Local variables can be
+declared in the private address space. Function arguments are always in the
+private address space. Kernel function arguments of a pointer or an array type
+cannot point to the private address space.
+  }];
+}
+
 def Ptr32Docs : Documentation {
   let Category = DocCatType;
   let Content = [{

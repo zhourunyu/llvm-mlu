@@ -650,6 +650,10 @@ public:
       return LangAS::opencl_private;
     case ParsedAttr::AT_OpenCLGenericAddressSpace:
       return LangAS::opencl_generic;
+    case ParsedAttr::AT_SYCLNramAddressSpace:
+      return LangAS::sycl_nram;
+    case ParsedAttr::AT_SYCLWramAddressSpace:
+      return LangAS::sycl_wram;
     default:
       return LangAS::Default;
     }
@@ -673,6 +677,10 @@ public:
       return LangAS::sycl_local;
     case ParsedAttr::AT_OpenCLPrivateAddressSpace:
       return LangAS::sycl_private;
+    case ParsedAttr::AT_SYCLNramAddressSpace:
+      return LangAS::sycl_nram;
+    case ParsedAttr::AT_SYCLWramAddressSpace:
+      return LangAS::sycl_wram;
     case ParsedAttr::AT_OpenCLGenericAddressSpace:
     default:
       return LangAS::Default;

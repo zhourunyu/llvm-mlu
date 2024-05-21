@@ -50,6 +50,8 @@ enum class LangAS : unsigned {
   sycl_global_host,
   sycl_local,
   sycl_private,
+  sycl_nram,
+  sycl_wram,
 
   // Pointer size and extension address spaces.
   ptr32_sptr,
