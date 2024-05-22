@@ -486,7 +486,6 @@ void BangToolChain::addClangTargetOptions(
     toolchains::SYCLToolChain::AddSYCLIncludeArgs(getDriver(), DriverArgs,
                                                   CC1Args);
   }
-  //AddBangIncludeArgs(DriverArgs, CC1Args);
 
   auto NoLibSpirv = DriverArgs.hasArg(options::OPT_fno_sycl_libspirv,
                                       options::OPT_fsycl_device_only);
@@ -495,31 +494,32 @@ void BangToolChain::addClangTargetOptions(
 
     if (DriverArgs.hasArg(clang::driver::options::OPT_fsycl_libspirv_path_EQ)) {
       auto ProvidedPath =
-          DriverArgs
-              .getLastArgValue(
-                  clang::driver::options::OPT_fsycl_libspirv_path_EQ)
-              .str();
+        DriverArgs.getLastArgValue(clang::driver::options::OPT_fsycl_libspirv_path_EQ).str();
       if (llvm::sys::fs::exists(ProvidedPath))
         LibSpirvFile = ProvidedPath;
-    } 
-    // else {
-    //   SmallVector<StringRef, 8> LibraryPaths;
+    } else {
+      SmallVector<StringRef, 8> LibraryPaths;
 
-    //   // Expected path w/out install.
-    //   SmallString<256> LIBCLCPath("/home/wzy/repos/llvm-mlu/libclc/build/lib/clc");
-    //   LibraryPaths.emplace_back(LIBCLCPath.c_str());
+      // Expected path w/out install.
+      SmallString<256> WithoutInstallPath(getDriver().ResourceDir);
+      llvm::sys::path::append(WithoutInstallPath, Twine("../../clc"));
+      LibraryPaths.emplace_back(WithoutInstallPath.c_str());
 
-    //   std::string LibSpirvTargetName = "libspirv-mlisa--.bc";
-    //   for (StringRef LibraryPath : LibraryPaths) {
-    //     SmallString<128> LibSpirvTargetFile(LibraryPath);
-    //     llvm::sys::path::append(LibSpirvTargetFile, LibSpirvTargetName);
-	  //     std::cout<<"MLISA LIBCLC PATH: "<<std::string(LibSpirvTargetFile.str())<<std::endl;
-    //     if (llvm::sys::fs::exists(LibSpirvTargetFile)) {
-    //       LibSpirvFile = std::string(LibSpirvTargetFile.str());
-    //       break;
-    //     }
-    //   }
-    // }
+      // Expected path w/ install.
+      SmallString<256> WithInstallPath(getDriver().ResourceDir);
+      llvm::sys::path::append(WithInstallPath, Twine("../../../share/clc"));
+      LibraryPaths.emplace_back(WithInstallPath.c_str());
+
+      std::string LibSpirvTargetName = "libspirv-mlisa--.bc";
+      for (StringRef LibraryPath : LibraryPaths) {
+        SmallString<128> LibSpirvTargetFile(LibraryPath);
+        llvm::sys::path::append(LibSpirvTargetFile, LibSpirvTargetName);
+        if (llvm::sys::fs::exists(LibSpirvTargetFile)) {
+          LibSpirvFile = std::string(LibSpirvTargetFile.str());
+          break;
+        }
+      }
+    }
 
     if (LibSpirvFile.empty()) {
       getDriver().Diag(diag::err_drv_no_sycl_libspirv)<<"libspirv-mlisa--.bc";
@@ -531,7 +531,6 @@ void BangToolChain::addClangTargetOptions(
 
     CC1Args.push_back("-mlink-builtin-bitcode");
     CC1Args.push_back("/usr/local/neuware/mlvm/libdevice/libdevice.compute_30.bc");
-
   }
 
 

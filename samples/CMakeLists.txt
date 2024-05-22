@@ -6,7 +6,7 @@ project(samples)
 set(CMAKE_CXX_STANDARD 17)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 add_link_options(-fsycl -fsycl-targets=mlisa-cambricon-bang)
-add_compile_options(-fsycl -fsycl-targets=mlisa-cambricon-bang -fsycl-libspirv-path=${CMAKE_SOURCE_DIR}/../libclc/build/lib/clc/builtins.opt.libspirv-mlisa--.bc -O1)
+add_compile_options(-fsycl -fsycl-targets=mlisa-cambricon-bang -O1)
 
 include(CTest)
 enable_testing()
