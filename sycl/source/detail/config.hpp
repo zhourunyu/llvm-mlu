@@ -136,7 +136,7 @@ public:
          {"PI_LEVEL_ZERO", backend::level_zero},
          {"PI_LEVEL0", backend::level_zero}, // for backward compatibility
          {"PI_CUDA", backend::cuda},
-         {"PI_ROCM", backend::rocm},
+         {"PI_HIP", backend::hip},
          {"PI_CNRT", backend::cnrt}}};
     if (ValStr) {
       auto It = std::find_if(

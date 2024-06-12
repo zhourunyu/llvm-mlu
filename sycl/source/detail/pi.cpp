@@ -237,7 +237,7 @@ bool findPlugins(vector_class<std::pair<std::string, backend>> &PluginNames) {
     PluginNames.emplace_back(__SYCL_LEVEL_ZERO_PLUGIN_NAME,
                              backend::level_zero);
     PluginNames.emplace_back(__SYCL_CUDA_PLUGIN_NAME, backend::cuda);
-    PluginNames.emplace_back(__SYCL_ROCM_PLUGIN_NAME, backend::rocm);
+    PluginNames.emplace_back(__SYCL_ROCM_PLUGIN_NAME, backend::hip);
     PluginNames.emplace_back(__SYCL_CNRT_PLUGIN_NAME, backend::cnrt);
   } else {
     std::vector<device_filter> Filters = FilterList->get();
@@ -263,8 +263,8 @@ bool findPlugins(vector_class<std::pair<std::string, backend>> &PluginNames) {
         PluginNames.emplace_back(__SYCL_CUDA_PLUGIN_NAME, backend::cuda);
         CudaFound = true;
       }
-      if (!RocmFound && (Backend == backend::rocm || Backend == backend::all)) {
-        PluginNames.emplace_back(__SYCL_ROCM_PLUGIN_NAME, backend::rocm);
+      if (!RocmFound && (Backend == backend::hip || Backend == backend::all)) {
+        PluginNames.emplace_back(__SYCL_ROCM_PLUGIN_NAME, backend::hip);
         RocmFound = true;
       }
       if (!CnrtFound && (Backend == backend::cnrt || Backend == backend::all)) {
@@ -375,11 +375,11 @@ static void initializePlugins(vector_class<plugin> *Plugins) {
       // Use the CUDA plugin as the GlobalPlugin
       GlobalPlugin =
           std::make_shared<plugin>(PluginInformation, backend::cuda, Library);
-    } else if (InteropBE == backend::rocm &&
-               PluginNames[I].first.find("rocm") != std::string::npos) {
+    } else if (InteropBE == backend::hip &&
+               PluginNames[I].first.find("hip") != std::string::npos) {
       // Use the ROCM plugin as the GlobalPlugin
       GlobalPlugin =
-          std::make_shared<plugin>(PluginInformation, backend::rocm, Library);
+          std::make_shared<plugin>(PluginInformation, backend::hip, Library);
     } else if (InteropBE == backend::cnrt &&
                PluginNames[I].first.find("cnrt") != std::string::npos) {
       // Use the CNRT plugin as the GlobalPlugin
