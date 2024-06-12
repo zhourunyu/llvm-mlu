@@ -123,6 +123,16 @@
   inline __SYCL_ALWAYS_INLINE void __invoke_##call(size_t n, T1 *t1, const T2 *t2, const T3 *t3) __NOEXC { \
     __SYCL_EXTERN_IT4(void, prefix, call, size_t, T1*, const T2*, const T3*);                              \
     __SYCL_PPCAT(prefix, call)(n, t1, t2, t3);                                                             \
+  }                                                                                                        \
+  template <typename T1, typename T2, typename T3>                                                         \
+  inline __SYCL_ALWAYS_INLINE void __invoke_##call(size_t n, T1 *t1, const T2 *t2, T3 t3) __NOEXC {        \
+    __SYCL_EXTERN_IT4(void, prefix, call, size_t, T1*, const T2*, T3);                                     \
+    __SYCL_PPCAT(prefix, call)(n, t1, t2, t3);                                                             \
+  }                                                                                                        \
+  template <typename T1, typename T2, typename T3>                                                         \
+  inline __SYCL_ALWAYS_INLINE void __invoke_##call(size_t n, T1 *t1, T2 t2, const T3 *t3) __NOEXC {        \
+    __SYCL_EXTERN_IT4(void, prefix, call, size_t, T1*, T2, const T3*);                                     \
+    __SYCL_PPCAT(prefix, call)(n, t1, t2, t3);                                                             \
   }
 
 #ifndef __SYCL_DEVICE_ONLY__
@@ -319,9 +329,9 @@ __SYCL_MAKE_CALL_VEC_ARG1(vector_floor, __FUNC_PREFIX_OCL)
 __SYCL_MAKE_CALL_VEC_ARG1(vector_isinf, __FUNC_PREFIX_OCL)
 __SYCL_MAKE_CALL_VEC_ARG1(vector_isnan, __FUNC_PREFIX_OCL)
 __SYCL_MAKE_CALL_VEC_ARG1(vector_log, __FUNC_PREFIX_OCL)
-__SYCL_MAKE_CALL_VEC_ARG2(vector_fmax, __FUNC_PREFIX_OCL)
-__SYCL_MAKE_CALL_VEC_ARG2(vector_fmin, __FUNC_PREFIX_OCL)
-__SYCL_MAKE_CALL_VEC_ARG2(vector_fmod, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG2(vector_max, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG2(vector_min, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG2(vector_mod, __FUNC_PREFIX_OCL)
 __SYCL_MAKE_CALL_VEC_ARG2(vector_mul, __FUNC_PREFIX_OCL)
 __SYCL_MAKE_CALL_VEC_ARG1(vector_neg, __FUNC_PREFIX_OCL)
 __SYCL_MAKE_CALL_VEC_ARG2(vector_pow, __FUNC_PREFIX_OCL)
@@ -335,10 +345,26 @@ __SYCL_MAKE_CALL_VEC_ARG2(vector_sub, __FUNC_PREFIX_OCL)
 __SYCL_MAKE_CALL_VEC_ARG1(vector_tan, __FUNC_PREFIX_OCL)
 __SYCL_MAKE_CALL_VEC_ARG1(vector_tanh, __FUNC_PREFIX_OCL)
 __SYCL_MAKE_CALL_VEC_ARG1(vector_trunc, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG2(vector_eq, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG2(vector_ge, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG2(vector_gt, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG2(vector_le, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG2(vector_lt, __FUNC_PREFIX_OCL)
+__SYCL_MAKE_CALL_VEC_ARG2(vector_ne, __FUNC_PREFIX_OCL)
 
 template <typename T>
 inline __SYCL_ALWAYS_INLINE void __invoke_vector_select(size_t n, T *t1, T *t2, const T *t3, const T *t4) __NOEXC {
   __SYCL_EXTERN_IT5(void, __FUNC_PREFIX_OCL, vector_select, size_t, T*, T*, const T*, const T*);
+  __SYCL_PPCAT(__FUNC_PREFIX_OCL, vector_select)(n, t1, t2, t3, t4);
+}
+template <typename T>
+inline __SYCL_ALWAYS_INLINE void __invoke_vector_select(size_t n, T *t1, T *t2, const T *t3, T t4) __NOEXC {
+  __SYCL_EXTERN_IT5(void, __FUNC_PREFIX_OCL, vector_select, size_t, T*, T*, const T*, T);
+  __SYCL_PPCAT(__FUNC_PREFIX_OCL, vector_select)(n, t1, t2, t3, t4);
+}
+template <typename T>
+inline __SYCL_ALWAYS_INLINE void __invoke_vector_select(size_t n, T *t1, T *t2, T t3, const T *t4) __NOEXC {
+  __SYCL_EXTERN_IT5(void, __FUNC_PREFIX_OCL, vector_select, size_t, T*, T*, T, const T*);
   __SYCL_PPCAT(__FUNC_PREFIX_OCL, vector_select)(n, t1, t2, t3, t4);
 }
 

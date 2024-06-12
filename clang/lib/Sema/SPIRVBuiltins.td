@@ -453,14 +453,32 @@ foreach name = ["vector_abs", "vector_acos", "vector_acosh", "vector_asin", "vec
   def : OCLSPVBuiltin<name, [Void, Size, PointerType<FGenTypeN>, ConstType<PointerType<FGenTypeN>>]>;
 }
 
-foreach name = ["vector_add", "vector_div", "vector_fmax", "vector_fmin", "vector_fmod", "vector_mul", "vector_pow",
+foreach name = ["vector_add", "vector_div", "vector_max", "vector_min", "vector_mod", "vector_mul", "vector_pow",
                 "vector_sub"] in {
   def : OCLSPVBuiltin<name, [Void, Size, PointerType<FGenTypeN>, ConstType<PointerType<FGenTypeN>>, ConstType<PointerType<FGenTypeN>>]>;
+  def : OCLSPVBuiltin<name, [Void, Size, PointerType<AIGenTypeN>, ConstType<PointerType<AIGenTypeN>>, ConstType<PointerType<AIGenTypeN>>]>;
+  def : OCLSPVBuiltin<name, [Void, Size, PointerType<FGenTypeN>, ConstType<PointerType<FGenTypeN>>, FGenTypeN]>;
+  def : OCLSPVBuiltin<name, [Void, Size, PointerType<AIGenTypeN>, ConstType<PointerType<AIGenTypeN>>, AIGenTypeN]>;
+  def : OCLSPVBuiltin<name, [Void, Size, PointerType<FGenTypeN>, FGenTypeN, ConstType<PointerType<FGenTypeN>>]>;
+  def : OCLSPVBuiltin<name, [Void, Size, PointerType<AIGenTypeN>, AIGenTypeN, ConstType<PointerType<AIGenTypeN>>]>;
+}
+
+foreach name = ["vector_eq", "vector_ge", "vector_gt", "vector_le", "vector_lt", "vector_ne"] in {
+  def : OCLSPVBuiltin<name, [Void, Size, PointerType<Bool>, ConstType<PointerType<FGenTypeN>>, ConstType<PointerType<FGenTypeN>>]>;
+  def : OCLSPVBuiltin<name, [Void, Size, PointerType<Bool>, ConstType<PointerType<AIGenTypeN>>, ConstType<PointerType<AIGenTypeN>>]>;
+  def : OCLSPVBuiltin<name, [Void, Size, PointerType<Bool>, ConstType<PointerType<FGenTypeN>>, FGenTypeN]>;
+  def : OCLSPVBuiltin<name, [Void, Size, PointerType<Bool>, ConstType<PointerType<AIGenTypeN>>, AIGenTypeN]>;
+  def : OCLSPVBuiltin<name, [Void, Size, PointerType<Bool>, FGenTypeN, ConstType<PointerType<FGenTypeN>>]>;
+  def : OCLSPVBuiltin<name, [Void, Size, PointerType<Bool>, AIGenTypeN, ConstType<PointerType<AIGenTypeN>>]>;
 }
 
 foreach name = ["vector_select"] in {
   def : OCLSPVBuiltin<name, [Void, Size, PointerType<FGenTypeN>, PointerType<FGenTypeN>, 
                              ConstType<PointerType<FGenTypeN>>, ConstType<PointerType<FGenTypeN>>]>;
+  def : OCLSPVBuiltin<name, [Void, Size, PointerType<FGenTypeN>, PointerType<FGenTypeN>, 
+                             FGenTypeN, ConstType<PointerType<FGenTypeN>>]>;
+  def : OCLSPVBuiltin<name, [Void, Size, PointerType<FGenTypeN>, PointerType<FGenTypeN>, 
+                             ConstType<PointerType<FGenTypeN>>, FGenTypeN]>;
 }
 
 foreach name  = ["fmax", "fmin", "fmod",

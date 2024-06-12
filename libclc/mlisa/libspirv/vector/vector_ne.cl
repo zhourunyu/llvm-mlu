@@ -11,6 +11,12 @@
 #include "../../include/libdevice.h"
 #include <clcmacro.h>
 
-#define __CLC_FUNCTION __spirv_ocl_vector_fmax
-#define __CLC_BUILTIN  __cn_vector_max_f32
-#include <../../include/vector_binary_builtin.inc>
+#define __CLC_FUNCTION __spirv_ocl_vector_ne
+#define __CLC_BUILTIN  __cn_vector_ne_f32
+#define __CLC_BUILTIN_SCALAR __cn_vector_ne_scalar_f32
+
+#define __CLC_BUILTIN_INT __cn_vector_ne_s32
+#define __CLC_BUILTIN_INT_SCALAR __cn_vector_ne_scalar_s32
+#define __CLC_BUILTIN_UINT __cn_vector_ne_u32
+#define __CLC_BUILTIN_UINT_SCALAR __cn_vector_ne_scalar_u32
+#include <../../include/vector_relational_builtin.inc>
