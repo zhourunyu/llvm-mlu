@@ -11,6 +11,12 @@
 #include "../../include/libdevice.h"
 #include <clcmacro.h>
 
-#define __CLC_FUNCTION __spirv_ocl_vector_fmod
-#define __CLC_BUILTIN  __cn_vector_mod_f32
+#define __CLC_FUNCTION __spirv_ocl_vector_min
+#define __CLC_BUILTIN  __cn_vector_min_f32
+#define __CLC_BUILTIN_SCALAR __cn_vector_min_scalar_f32
+
+#define __CLC_BUILTIN_INT __cn_vector_min_s32
+#define __CLC_BUILTIN_INT_SCALAR __cn_vector_min_scalar_s32
+#define __CLC_BUILTIN_UINT __cn_vector_min_u32
+#define __CLC_BUILTIN_UINT_SCALAR __cn_vector_min_scalar_u32
 #include <../../include/vector_binary_builtin.inc>

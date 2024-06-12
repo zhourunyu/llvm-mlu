@@ -1426,6 +1426,42 @@ memset_nram(void* dest, T value, size_t n) __NOEXC {
 }
 
 template <typename T>
+detail::enable_if_t<(sizeof(T) == 1), void>
+memset_global(void* dest, T value, size_t n) __NOEXC {
+#ifdef __SYCL_DEVICE_ONLY__
+  __mlvm_memset_gdram_s8((char *)dest, n, *(char *)&value);
+#else
+  (void)dest;
+  (void)value;
+  (void)n;
+#endif
+}
+
+template <typename T>
+detail::enable_if_t<(sizeof(T) == 2), void>
+memset_global(void* dest, T value, size_t n) __NOEXC {
+#ifdef __SYCL_DEVICE_ONLY__
+  __mlvm_memset_gdram_s16((short *)dest, n, *(short *)&value);
+#else
+  (void)dest;
+  (void)value;
+  (void)n;
+#endif
+}
+
+template <typename T>
+detail::enable_if_t<(sizeof(T) == 4), void>
+memset_global(void* dest, T value, size_t n) __NOEXC {
+#ifdef __SYCL_DEVICE_ONLY__
+  __mlvm_memset_gdram_s32((int *)dest, n, *(int *)&value);
+#else
+  (void)dest;
+  (void)value;
+  (void)n;
+#endif
+}
+
+template <typename T>
 detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_abs(T* out, const T* in, size_t n) __NOEXC {
   __sycl_std::__invoke_vector_abs<T>(n, out, in);
 }
@@ -1438,11 +1474,6 @@ detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_acos(T* out, co
 template <typename T>
 detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_acosh(T* out, const T* in, size_t n) __NOEXC {
   __sycl_std::__invoke_vector_acosh<T>(n, out, in);
-}
-
-template <typename T>
-detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_add(T* out, const T* in1, const T* in2, size_t n) __NOEXC {
-  __sycl_std::__invoke_vector_add<T>(n, out, in1, in2);
 }
 
 template <typename T>
@@ -1481,11 +1512,6 @@ detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_cosh(T* out, co
 }
 
 template <typename T>
-detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_div(T* out, const T* in1, const T* in2, size_t n) __NOEXC {
-  __sycl_std::__invoke_vector_div<T>(n, out, in1, in2);
-}
-
-template <typename T>
 detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_erf(T* out, const T* in, size_t n) __NOEXC {
   __sycl_std::__invoke_vector_erf<T>(n, out, in);
 }
@@ -1506,33 +1532,8 @@ detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_log(T* out, con
 }
 
 template <typename T>
-detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_max(T* out, const T* in1, const T* in2, size_t n) __NOEXC {
-  __sycl_std::__invoke_vector_fmax<T>(n, out, in1, in2);
-}
-
-template <typename T>
-detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_min(T* out, const T* in1, const T* in2, size_t n) __NOEXC {
-  __sycl_std::__invoke_vector_fmin<T>(n, out, in1, in2);
-}
-
-template <typename T>
-detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_mod(T* out, const T* in1, const T* in2, size_t n) __NOEXC {
-  __sycl_std::__invoke_vector_fmod<T>(n, out, in1, in2);
-}
-
-template <typename T>
-detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_mul(T* out, const T* in1, const T* in2, size_t n) __NOEXC {
-  __sycl_std::__invoke_vector_mul<T>(n, out, in1, in2);
-}
-
-template <typename T>
 detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_neg(T* out, const T* in, size_t n) __NOEXC {
   __sycl_std::__invoke_vector_neg<T>(n, out, in);
-}
-
-template <typename T>
-detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_pow(T* out, const T* in1, const T* in2, size_t n) __NOEXC {
-  __sycl_std::__invoke_vector_pow<T>(n, out, in1, in2);
 }
 
 template <typename T>
@@ -1543,11 +1544,6 @@ detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_round(T* out, c
 template <typename T>
 detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_rsqrt(T* out, const T* in, size_t n) __NOEXC {
   __sycl_std::__invoke_vector_rsqrt<T>(n, out, in);
-}
-
-template <typename T>
-detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_select(T* out, T* in1, const T* in2, const T* in3, size_t n) __NOEXC {
-  __sycl_std::__invoke_vector_select<T>(n, out, in1, in2, in3);
 }
 
 template <typename T>
@@ -1571,11 +1567,6 @@ detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_sqrt(T* out, co
 }
 
 template <typename T>
-detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_sub(T* out, const T* in1, const T* in2, size_t n) __NOEXC {
-  __sycl_std::__invoke_vector_sub<T>(n, out, in1, in2);
-}
-
-template <typename T>
 detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_tan(T* out, const T* in, size_t n) __NOEXC {
   __sycl_std::__invoke_vector_tan<T>(n, out, in);
 }
@@ -1588,6 +1579,231 @@ detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_tanh(T* out, co
 template <typename T>
 detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_trunc(T* out, const T* in, size_t n) __NOEXC {
   __sycl_std::__invoke_vector_trunc<T>(n, out, in);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_add(T* out, const T* in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_add<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_div(T* out, const T* in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_div<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_max(T* out, const T* in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_max<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_min(T* out, const T* in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_min<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_mod(T* out, const T* in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_mod<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_mul(T* out, const T* in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_mul<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_pow(T* out, const T* in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_pow<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_sub(T* out, const T* in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_sub<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_eq(bool* out, const T* in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_eq(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_ge(bool* out, const T* in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_ge(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_gt(bool* out, const T* in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_gt(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_le(bool* out, const T* in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_le(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_lt(bool* out, const T* in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_lt(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_ne(bool* out, const T* in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_ne(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_add(T* out, const T* in1, T in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_add<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_div(T* out, const T* in1, T in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_div<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_max(T* out, const T* in1, T in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_max<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_min(T* out, const T* in1, T in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_min<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_mod(T* out, const T* in1, T in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_mod<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_mul(T* out, const T* in1, T in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_mul<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_pow(T* out, const T* in1, T in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_pow<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_sub(T* out, const T* in1, T in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_sub<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_eq(bool* out, const T* in1, T in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_eq(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_ge(bool* out, const T* in1, T in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_ge(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_gt(bool* out, const T* in1, T in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_gt(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_le(bool* out, const T* in1, T in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_le(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_lt(bool* out, const T* in1, T in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_lt(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_ne(bool* out, const T* in1, T in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_ne(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_add(T* out, T in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_add<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_div(T* out, T in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_div<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_max(T* out, T in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_max<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_min(T* out, T in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_min<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_mod(T* out, T in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_mod<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_mul(T* out, T in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_mul<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_pow(T* out, T in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_pow<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_sub(T* out, T in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_sub<T>(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_eq(bool* out, T in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_eq(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_ge(bool* out, T in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_ge(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_gt(bool* out, T in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_gt(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_le(bool* out, T in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_le(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_lt(bool* out, T in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_lt(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::value, void> vector_ne(bool* out, T in1, const T* in2, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_ne(n, out, in1, in2);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_select(T* out, T* in1, const T* in2, const T* in3, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_select<T>(n, out, in1, in2, in3);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_select(T* out, T* in1, const T* in2, T in3, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_select<T>(n, out, in1, in2, in3);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_select(T* out, T* in1, T in2, const T* in3, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_select<T>(n, out, in1, in2, in3);
 }
 
 } // namespace mlu

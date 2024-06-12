@@ -18,6 +18,7 @@
 #include "llvm/Support/ToolOutputFile.h"
 #include "llvm/Config/llvm-config.h"
 
+#include <regex>
 #include <system_error>
 
 using namespace llvm;
@@ -96,12 +97,10 @@ int main(int argc, char **argv) {
     for (Module::iterator i = M->begin(), e = M->end(); i != e; ++i) {
       if (i->isDeclaration())
         continue;
-      auto name = i->getName();
-      if (name.endswith("S0_PKfS2_")) {
-        i->setName(name.drop_back(9) + "S_PKfS1_");
-      } else if (name.endswith("S2_")) {
-        i->setName(name.drop_back(3) + "S1_");
-      }
+      auto name = i->getName().operator std::string();
+      name = std::regex_replace(name, std::regex("S0"), std::string("S"));
+      name = std::regex_replace(name, std::regex("S2"), std::string("S1"));
+      i->setName(name);
     }
   }
 

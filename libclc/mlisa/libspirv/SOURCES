@@ -62,10 +62,10 @@ vector/vector_div.cl
 vector/vector_erf.cl
 vector/vector_exp.cl
 vector/vector_floor.cl
-vector/vector_fmax.cl
-vector/vector_fmin.cl
-vector/vector_fmod.cl
 vector/vector_log.cl
+vector/vector_max.cl
+vector/vector_min.cl
+vector/vector_mod.cl
 vector/vector_mul.cl
 vector/vector_neg.cl
 vector/vector_pow.cl
@@ -80,6 +80,12 @@ vector/vector_sub.cl
 vector/vector_tan.cl
 vector/vector_tanh.cl
 vector/vector_trunc.cl
+vector/vector_eq.cl
+vector/vector_ge.cl
+vector/vector_gt.cl
+vector/vector_le.cl
+vector/vector_lt.cl
+vector/vector_ne.cl
 
 relational/isfinite.cl
 relational/isinf.cl

@@ -41,6 +41,66 @@ void SelectOp(sycl::queue &q, std::array<T, n> &a, const std::array<T, n> &b, co
     sycl::free(d_dev, q);
 }
 
+template <typename T, size_t n>
+void SelectOp(sycl::queue &q, std::array<T, n> &a, T b, const std::array<T, n> &c, std::array<T, n> &d) {
+    auto a_dev = sycl::malloc_device<T>(n, q);
+    auto c_dev = sycl::malloc_device<T>(n, q);
+    auto d_dev = sycl::malloc_device<T>(n, q);
+    q.memcpy(a_dev, a.data(), n * sizeof(T));
+    q.memcpy(c_dev, c.data(), n * sizeof(T));
+
+    q.parallel_for<class mm>(sycl::range<3>{1, 1, N_CORES}, [=](sycl::item<3> item) {
+        auto id = item.get_id(2);
+        constexpr size_t nram_length = n / N_CORES;
+        T *a_offset = a_dev + id * nram_length;
+        T *c_offset = c_dev + id * nram_length;
+        T *d_offset = d_dev + id * nram_length;
+        auto nram_buffer_a = *sycl::ext::mlu::sycl_nram_memory<T[nram_length]>();
+        auto nram_buffer_c = *sycl::ext::mlu::sycl_nram_memory<T[nram_length]>();
+        sycl::ext::mlu::memcpy_gdram2nram(nram_buffer_a, a_offset, nram_length);
+        sycl::ext::mlu::memcpy_gdram2nram(nram_buffer_c, c_offset, nram_length);
+        // dst cannot overlap with mask
+        sycl::ext::mlu::vector_select(nram_buffer_c, nram_buffer_a, b, nram_buffer_c, nram_length);
+        sycl::ext::mlu::memcpy_nram2gdram(d_offset, nram_buffer_c, nram_length);
+    });
+
+    q.memcpy(d.data(), d_dev, n * sizeof(T));
+    q.wait();
+    sycl::free(a_dev, q);
+    sycl::free(c_dev, q);
+    sycl::free(d_dev, q);
+}
+
+template <typename T, size_t n>
+void SelectOp(sycl::queue &q, std::array<T, n> &a, const std::array<T, n> &b, T c, std::array<T, n> &d) {
+    auto a_dev = sycl::malloc_device<T>(n, q);
+    auto b_dev = sycl::malloc_device<T>(n, q);
+    auto d_dev = sycl::malloc_device<T>(n, q);
+    q.memcpy(a_dev, a.data(), n * sizeof(T));
+    q.memcpy(b_dev, b.data(), n * sizeof(T));
+
+    q.parallel_for<class mm>(sycl::range<3>{1, 1, N_CORES}, [=](sycl::item<3> item) {
+        auto id = item.get_id(2);
+        constexpr size_t nram_length = n / N_CORES;
+        T *a_offset = a_dev + id * nram_length;
+        T *b_offset = b_dev + id * nram_length;
+        T *d_offset = d_dev + id * nram_length;
+        auto nram_buffer_a = *sycl::ext::mlu::sycl_nram_memory<T[nram_length]>();
+        auto nram_buffer_b = *sycl::ext::mlu::sycl_nram_memory<T[nram_length]>();
+        sycl::ext::mlu::memcpy_gdram2nram(nram_buffer_a, a_offset, nram_length);
+        sycl::ext::mlu::memcpy_gdram2nram(nram_buffer_b, b_offset, nram_length);
+        // dst cannot overlap with mask
+        sycl::ext::mlu::vector_select(nram_buffer_b, nram_buffer_a, nram_buffer_b, c, nram_length);
+        sycl::ext::mlu::memcpy_nram2gdram(d_offset, nram_buffer_b, nram_length);
+    });
+
+    q.memcpy(d.data(), d_dev, n * sizeof(T));
+    q.wait();
+    sycl::free(a_dev, q);
+    sycl::free(b_dev, q);
+    sycl::free(d_dev, q);
+}
+
 constexpr auto N = 1024;
 
 int main() {
