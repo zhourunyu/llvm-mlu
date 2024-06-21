@@ -21,12 +21,12 @@ namespace sycl {
 enum class backend : char {
   host = 0,
   opencl = 1,
-  level_zero = 2,
-  cuda = 3,
+  ext_oneapi_level_zero = 2,
+  ext_oneapi_cuda = 3,
   all = 4,
-  esimd_cpu = 5,
-  hip = 6,
-  cnrt = 7
+  ext_intel_esimd_emulator = 5,
+  ext_oneapi_hip = 6,
+  ext_oneapi_cnrt = 7
 };
 
 template <backend Backend, typename SYCLObjectT> struct interop;
@@ -48,20 +48,20 @@ inline std::ostream &operator<<(std::ostream &Out, backend be) {
   case backend::opencl:
     Out << "opencl";
     break;
-  case backend::level_zero:
-    Out << "level_zero";
+  case backend::ext_oneapi_level_zero:
+    Out << "ext_oneapi_level_zero";
     break;
-  case backend::cuda:
-    Out << "cuda";
+  case backend::ext_oneapi_cuda:
+    Out << "ext_oneapi_cuda";
     break;
-  case backend::esimd_cpu:
-    Out << "esimd_cpu";
+  case backend::ext_intel_esimd_emulator:
+    Out << "ext_intel_esimd_emulator";
     break;
-  case backend::hip:
-    Out << "hip";
+  case backend::ext_oneapi_hip:
+    Out << "ext_oneapi_hip";
     break;
-  case backend::cnrt:
-    Out << "cnrt";
+  case backend::ext_oneapi_cnrt:
+    Out << "ext_oneapi_cnrt";
     break;
   case backend::all:
     Out << "all";
