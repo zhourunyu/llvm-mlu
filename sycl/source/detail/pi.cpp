@@ -66,7 +66,7 @@ void *getPluginOpaqueData(void *OpaqueDataParam) {
 }
 
 template __SYCL_EXPORT void *
-getPluginOpaqueData<cl::sycl::backend::esimd_cpu>(void *);
+getPluginOpaqueData<cl::sycl::backend::ext_intel_esimd_emulator>(void *);
 
 namespace pi {
 
@@ -235,10 +235,10 @@ bool findPlugins(vector_class<std::pair<std::string, backend>> &PluginNames) {
   if (!FilterList) {
     PluginNames.emplace_back(__SYCL_OPENCL_PLUGIN_NAME, backend::opencl);
     PluginNames.emplace_back(__SYCL_LEVEL_ZERO_PLUGIN_NAME,
-                             backend::level_zero);
-    PluginNames.emplace_back(__SYCL_CUDA_PLUGIN_NAME, backend::cuda);
-    PluginNames.emplace_back(__SYCL_ROCM_PLUGIN_NAME, backend::hip);
-    PluginNames.emplace_back(__SYCL_CNRT_PLUGIN_NAME, backend::cnrt);
+                             backend::ext_oneapi_level_zero);
+    PluginNames.emplace_back(__SYCL_CUDA_PLUGIN_NAME, backend::ext_oneapi_cuda);
+    PluginNames.emplace_back(__SYCL_ROCM_PLUGIN_NAME, backend::ext_oneapi_hip);
+    PluginNames.emplace_back(__SYCL_CNRT_PLUGIN_NAME, backend::ext_oneapi_cnrt);
   } else {
     std::vector<device_filter> Filters = FilterList->get();
     bool OpenCLFound = false;
@@ -254,21 +254,21 @@ bool findPlugins(vector_class<std::pair<std::string, backend>> &PluginNames) {
         OpenCLFound = true;
       }
       if (!LevelZeroFound &&
-          (Backend == backend::level_zero || Backend == backend::all)) {
+          (Backend == backend::ext_oneapi_level_zero || Backend == backend::all)) {
         PluginNames.emplace_back(__SYCL_LEVEL_ZERO_PLUGIN_NAME,
-                                 backend::level_zero);
+                                 backend::ext_oneapi_level_zero);
         LevelZeroFound = true;
       }
-      if (!CudaFound && (Backend == backend::cuda || Backend == backend::all)) {
-        PluginNames.emplace_back(__SYCL_CUDA_PLUGIN_NAME, backend::cuda);
+      if (!CudaFound && (Backend == backend::ext_oneapi_cuda || Backend == backend::all)) {
+        PluginNames.emplace_back(__SYCL_CUDA_PLUGIN_NAME, backend::ext_oneapi_cuda);
         CudaFound = true;
       }
-      if (!RocmFound && (Backend == backend::hip || Backend == backend::all)) {
-        PluginNames.emplace_back(__SYCL_ROCM_PLUGIN_NAME, backend::hip);
+      if (!RocmFound && (Backend == backend::ext_oneapi_hip || Backend == backend::all)) {
+        PluginNames.emplace_back(__SYCL_ROCM_PLUGIN_NAME, backend::ext_oneapi_hip);
         RocmFound = true;
       }
-      if (!CnrtFound && (Backend == backend::cnrt || Backend == backend::all)) {
-        PluginNames.emplace_back(__SYCL_CNRT_PLUGIN_NAME, backend::cnrt);
+      if (!CnrtFound && (Backend == backend::ext_oneapi_cnrt || Backend == backend::all)) {
+        PluginNames.emplace_back(__SYCL_CNRT_PLUGIN_NAME, backend::ext_oneapi_cnrt);
         CnrtFound = true;
       }
     }
@@ -370,26 +370,26 @@ static void initializePlugins(vector_class<plugin> *Plugins) {
       // Use the OpenCL plugin as the GlobalPlugin
       GlobalPlugin =
           std::make_shared<plugin>(PluginInformation, backend::opencl, Library);
-    } else if (InteropBE == backend::cuda &&
+    } else if (InteropBE == backend::ext_oneapi_cuda &&
                PluginNames[I].first.find("cuda") != std::string::npos) {
       // Use the CUDA plugin as the GlobalPlugin
       GlobalPlugin =
-          std::make_shared<plugin>(PluginInformation, backend::cuda, Library);
-    } else if (InteropBE == backend::hip &&
+          std::make_shared<plugin>(PluginInformation, backend::ext_oneapi_cuda, Library);
+    } else if (InteropBE == backend::ext_oneapi_hip &&
                PluginNames[I].first.find("hip") != std::string::npos) {
       // Use the ROCM plugin as the GlobalPlugin
       GlobalPlugin =
-          std::make_shared<plugin>(PluginInformation, backend::hip, Library);
-    } else if (InteropBE == backend::cnrt &&
+          std::make_shared<plugin>(PluginInformation, backend::ext_oneapi_hip, Library);
+    } else if (InteropBE == backend::ext_oneapi_cnrt &&
                PluginNames[I].first.find("cnrt") != std::string::npos) {
       // Use the CNRT plugin as the GlobalPlugin
       GlobalPlugin =
-          std::make_shared<plugin>(PluginInformation, backend::cnrt, Library);
-    } else if (InteropBE == backend::level_zero &&
+          std::make_shared<plugin>(PluginInformation, backend::ext_oneapi_cnrt, Library);
+    } else if (InteropBE == backend::ext_oneapi_level_zero &&
                PluginNames[I].first.find("level_zero") != std::string::npos) {
       // Use the LEVEL_ZERO plugin as the GlobalPlugin
       GlobalPlugin = std::make_shared<plugin>(PluginInformation,
-                                              backend::level_zero, Library);
+                                              backend::ext_oneapi_level_zero, Library);
     }
     Plugins->emplace_back(
         plugin(PluginInformation, PluginNames[I].second, Library));
@@ -462,8 +462,8 @@ template <backend BE> const plugin &getPlugin() {
 }
 
 template __SYCL_EXPORT const plugin &getPlugin<backend::opencl>();
-template __SYCL_EXPORT const plugin &getPlugin<backend::level_zero>();
-template __SYCL_EXPORT const plugin &getPlugin<backend::esimd_cpu>();
+template __SYCL_EXPORT const plugin &getPlugin<backend::ext_oneapi_level_zero>();
+template __SYCL_EXPORT const plugin &getPlugin<backend::ext_intel_esimd_emulator>();
 
 // Report error and no return (keeps compiler from printing warnings).
 // TODO: Probably change that to throw a catchable exception,

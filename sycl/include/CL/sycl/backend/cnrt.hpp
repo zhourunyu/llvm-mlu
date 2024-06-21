@@ -31,32 +31,32 @@ typedef unsigned int MLUaddr;
 __SYCL_INLINE_NAMESPACE(cl) {
 namespace sycl {
 
-template <> struct interop<backend::cnrt, device> { using type = CNdev; };
+template <> struct interop<backend::ext_oneapi_cnrt, device> { using type = CNdev; };
 
-template <> struct interop<backend::cnrt, context> { using type = CNcontext; };
+template <> struct interop<backend::ext_oneapi_cnrt, context> { using type = CNcontext; };
 
-template <> struct interop<backend::cnrt, queue> { using type = CNqueue; };
+template <> struct interop<backend::ext_oneapi_cnrt, queue> { using type = CNqueue; };
 
-// template <> struct interop<backend::cnrt, event> { using type = CUevent; };
+// template <> struct interop<backend::ext_oneapi_cnrt, event> { using type = CUevent; };
 
-template <> struct interop<backend::cnrt, program> { using type = CNmodule; };
+template <> struct interop<backend::ext_oneapi_cnrt, program> { using type = CNmodule; };
 
 template <typename DataT, int Dimensions, access::mode AccessMode>
-struct interop<backend::cnrt, accessor<DataT, Dimensions, AccessMode,
+struct interop<backend::ext_oneapi_cnrt, accessor<DataT, Dimensions, AccessMode,
                                        access::target::global_buffer,
                                        access::placeholder::false_t>> {
   using type = MLUaddr;
 };
 
 template <typename DataT, int Dimensions, access::mode AccessMode>
-struct interop<backend::cnrt, accessor<DataT, Dimensions, AccessMode,
+struct interop<backend::ext_oneapi_cnrt, accessor<DataT, Dimensions, AccessMode,
                                        access::target::constant_buffer,
                                        access::placeholder::false_t>> {
   using type = MLUaddr;
 };
 
 template <typename DataT, int Dimensions, typename AllocatorT>
-struct interop<backend::cnrt, buffer<DataT, Dimensions, AllocatorT>> {
+struct interop<backend::ext_oneapi_cnrt, buffer<DataT, Dimensions, AllocatorT>> {
   using type = MLUaddr;
 };
 

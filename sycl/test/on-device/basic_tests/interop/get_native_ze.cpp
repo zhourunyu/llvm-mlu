@@ -7,7 +7,7 @@
 #include <CL/sycl/backend/level_zero.hpp>
 #include <sycl/sycl.hpp>
 
-constexpr auto BE = sycl::backend::level_zero;
+constexpr auto BE = sycl::backend::ext_oneapi_level_zero;
 
 class TestKernel;
 

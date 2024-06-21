@@ -133,11 +133,11 @@ public:
     const char *ValStr = BaseT::getRawValue();
     const std::array<std::pair<std::string, backend>, 6> SyclBeMap = {
         {{"PI_OPENCL", backend::opencl},
-         {"PI_LEVEL_ZERO", backend::level_zero},
-         {"PI_LEVEL0", backend::level_zero}, // for backward compatibility
-         {"PI_CUDA", backend::cuda},
-         {"PI_HIP", backend::hip},
-         {"PI_CNRT", backend::cnrt}}};
+         {"PI_LEVEL_ZERO", backend::ext_oneapi_level_zero},
+         {"PI_LEVEL0", backend::ext_oneapi_level_zero}, // for backward compatibility
+         {"PI_CUDA", backend::ext_oneapi_cuda},
+         {"PI_HIP", backend::ext_oneapi_hip},
+         {"PI_CNRT", backend::ext_oneapi_cnrt}}};
     if (ValStr) {
       auto It = std::find_if(
           std::begin(SyclBeMap), std::end(SyclBeMap),
@@ -189,9 +189,9 @@ static const std::array<std::pair<std::string, info::device_type>, 5>
 static const std::array<std::pair<std::string, backend>, 6> SyclBeMap = {
     {{"host", backend::host},
      {"opencl", backend::opencl},
-     {"level_zero", backend::level_zero},
-     {"cuda", backend::cuda},
-     {"cnrt", backend::cnrt},
+     {"level_zero", backend::ext_oneapi_level_zero},
+     {"cuda", backend::ext_oneapi_cuda},
+     {"cnrt", backend::ext_oneapi_cnrt},
      {"*", backend::all}}};
 
 template <> class SYCLConfig<SYCL_DEVICE_FILTER> {

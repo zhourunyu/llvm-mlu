@@ -76,7 +76,7 @@ bool preparePiMock(platform &Plt) {
     return false;
   }
   // TODO: Skip tests for CUDA temporarily
-  if (detail::getSyclObjImpl(Plt)->getPlugin().getBackend() == backend::cuda) {
+  if (detail::getSyclObjImpl(Plt)->getPlugin().getBackend() == backend::ext_oneapi_cuda) {
     std::cout << "Not run on CUDA - usm is not supported for CUDA backend yet"
               << std::endl;
     return false;

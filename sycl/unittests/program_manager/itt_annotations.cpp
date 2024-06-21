@@ -232,7 +232,7 @@ TEST(ITTNotify, UseKernelBundle) {
     return; // test is not supported on host.
   }
 
-  if (Plt.get_backend() == sycl::backend::cuda) {
+  if (Plt.get_backend() == sycl::backend::ext_oneapi_cuda) {
     std::cerr << "Test is not supported on CUDA platform, skipping\n";
     return;
   }
@@ -268,7 +268,7 @@ TEST(ITTNotify, VarNotSet) {
     return; // test is not supported on host.
   }
 
-  if (Plt.get_backend() == sycl::backend::cuda) {
+  if (Plt.get_backend() == sycl::backend::ext_oneapi_cuda) {
     std::cerr << "Test is not supported on CUDA platform, skipping\n";
     return;
   }
