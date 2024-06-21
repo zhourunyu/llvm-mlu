@@ -33,8 +33,8 @@ static const plugin &getPlugin(backend Backend) {
   switch (Backend) {
   case backend::opencl:
     return pi::getPlugin<backend::opencl>();
-  case backend::level_zero:
-    return pi::getPlugin<backend::level_zero>();
+  case backend::ext_oneapi_level_zero:
+    return pi::getPlugin<backend::ext_oneapi_level_zero>();
   default:
     throw sycl::runtime_error{"Unsupported backend", PI_INVALID_OPERATION};
   }

@@ -15,53 +15,53 @@
 __SYCL_INLINE_NAMESPACE(cl) {
 namespace sycl {
 
-template <> struct interop<backend::level_zero, platform> {
+template <> struct interop<backend::ext_oneapi_level_zero, platform> {
   using type = ze_driver_handle_t;
 };
 
-template <> struct interop<backend::level_zero, device> {
+template <> struct interop<backend::ext_oneapi_level_zero, device> {
   using type = ze_device_handle_t;
 };
 
-template <> struct interop<backend::level_zero, context> {
+template <> struct interop<backend::ext_oneapi_level_zero, context> {
   using type = ze_context_handle_t;
 };
 
-template <> struct interop<backend::level_zero, queue> {
+template <> struct interop<backend::ext_oneapi_level_zero, queue> {
   using type = ze_command_queue_handle_t;
 };
 
-template <> struct interop<backend::level_zero, program> {
+template <> struct interop<backend::ext_oneapi_level_zero, program> {
   using type = ze_module_handle_t;
 };
 
 template <typename DataT, int Dimensions, access::mode AccessMode>
-struct interop<backend::level_zero, accessor<DataT, Dimensions, AccessMode,
+struct interop<backend::ext_oneapi_level_zero, accessor<DataT, Dimensions, AccessMode,
                                              access::target::global_buffer,
                                              access::placeholder::false_t>> {
   using type = char *;
 };
 
 template <typename DataT, int Dimensions, access::mode AccessMode>
-struct interop<backend::level_zero, accessor<DataT, Dimensions, AccessMode,
+struct interop<backend::ext_oneapi_level_zero, accessor<DataT, Dimensions, AccessMode,
                                              access::target::constant_buffer,
                                              access::placeholder::false_t>> {
   using type = char *;
 };
 
 template <typename DataT, int Dimensions, access::mode AccessMode>
-struct interop<backend::level_zero,
+struct interop<backend::ext_oneapi_level_zero,
                accessor<DataT, Dimensions, AccessMode, access::target::image,
                         access::placeholder::false_t>> {
   using type = ze_image_handle_t;
 };
 
 namespace detail {
-template <> struct BackendReturn<backend::level_zero, kernel> {
+template <> struct BackendReturn<backend::ext_oneapi_level_zero, kernel> {
   using type = ze_kernel_handle_t;
 };
 
-template <> struct InteropFeatureSupportMap<backend::level_zero> {
+template <> struct InteropFeatureSupportMap<backend::ext_oneapi_level_zero> {
   static constexpr bool MakePlatform = true;
   static constexpr bool MakeDevice = false;
   static constexpr bool MakeContext = false;
@@ -97,7 +97,7 @@ __SYCL_EXPORT queue make_queue(const context &Context,
 // Construction of SYCL platform.
 template <typename T, typename detail::enable_if_t<
                           std::is_same<T, platform>::value> * = nullptr>
-T make(typename interop<backend::level_zero, T>::type Interop) {
+T make(typename interop<backend::ext_oneapi_level_zero, T>::type Interop) {
   return make_platform(reinterpret_cast<pi_native_handle>(Interop));
 }
 
@@ -105,7 +105,7 @@ T make(typename interop<backend::level_zero, T>::type Interop) {
 template <typename T, typename detail::enable_if_t<
                           std::is_same<T, device>::value> * = nullptr>
 T make(const platform &Platform,
-       typename interop<backend::level_zero, T>::type Interop) {
+       typename interop<backend::ext_oneapi_level_zero, T>::type Interop) {
   return make_device(Platform, reinterpret_cast<pi_native_handle>(Interop));
 }
 
@@ -121,7 +121,7 @@ T make(const platform &Platform,
 template <typename T, typename std::enable_if<
                           std::is_same<T, context>::value>::type * = nullptr>
 T make(const vector_class<device> &DeviceList,
-       typename interop<backend::level_zero, T>::type Interop,
+       typename interop<backend::ext_oneapi_level_zero, T>::type Interop,
        ownership Ownership = ownership::transfer) {
   return make_context(DeviceList, detail::pi::cast<pi_native_handle>(Interop),
                       Ownership == ownership::keep);
@@ -131,7 +131,7 @@ T make(const vector_class<device> &DeviceList,
 template <typename T, typename detail::enable_if_t<
                           std::is_same<T, program>::value> * = nullptr>
 T make(const context &Context,
-       typename interop<backend::level_zero, T>::type Interop) {
+       typename interop<backend::ext_oneapi_level_zero, T>::type Interop) {
   return make_program(Context, reinterpret_cast<pi_native_handle>(Interop));
 }
 
@@ -139,7 +139,7 @@ T make(const context &Context,
 template <typename T, typename detail::enable_if_t<
                           std::is_same<T, queue>::value> * = nullptr>
 T make(const context &Context,
-       typename interop<backend::level_zero, T>::type Interop) {
+       typename interop<backend::ext_oneapi_level_zero, T>::type Interop) {
   return make_queue(Context, reinterpret_cast<pi_native_handle>(Interop));
 }
 

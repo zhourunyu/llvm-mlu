@@ -70,7 +70,7 @@ These SYCL objects encapsulate the corresponding Level-Zero handles:
 
 ### 4.2 Obtaining of native Level-Zero handles from SYCL objects
                 
-The ```get_native<cl::sycl::backend::level_zero>()``` member function is how a raw native Level-Zero handle can be obtained
+The ```get_native<cl::sycl::backend::ext_oneapi_level_zero>()``` member function is how a raw native Level-Zero handle can be obtained
 for a specific SYCL object. It is currently supported for SYCL ```platform```, ```device```, ```context```, ```queue```, ```event```
 and ```program``` classes. There is also a free-function defined in ```cl::sycl``` namespace that can be used instead of the member function:
 ``` C++

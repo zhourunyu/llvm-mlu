@@ -859,7 +859,7 @@ Release notes for the commit range 75b3dc2..5976ff0
   - Fixed `sycl::buffer` constructor which takes a contiguous container to
     enable copy back on destruction.
   - Added support for user-defined sub-group reductions [728429a]
-  - The `sycl::backend::level0` has been renamed to  `sycl::backend::level_zero`
+  - The `sycl::backend::level0` has been renamed to  `sycl::backend::ext_oneapi_level_zero`
     [215f591]
   - Extended `sycl::broadcast` to support `TriviallyCopyable` types [df6d715]
   - Implemented `get_native` and `make_*` functions for Level Zero allowing to
