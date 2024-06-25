@@ -16,6 +16,7 @@
 typedef uint64_t CNdev;
 typedef struct CNcontext_st *CNcontext;
 typedef struct CNqueue_st *CNqueue;
+typedef struct CNnotifier_st  *CNnotifier;
 typedef struct CNmodule_st *CNmodule;
 
 // typedef uint64_t cnrtDev_t;
@@ -23,9 +24,9 @@ typedef struct CNmodule_st *CNmodule;
 // typedef struct CUevent_st *CUevent;  // TODO: find "event" in cndrv, is it notifier?
 
 #if defined(_WIN64) || defined(__LP64__)
-typedef unsigned long long MLUaddr;
+typedef unsigned long CNaddr;
 #else
-typedef unsigned int MLUaddr;
+typedef unsigned int CNaddr;
 #endif
 
 __SYCL_INLINE_NAMESPACE(cl) {
@@ -37,7 +38,7 @@ template <> struct interop<backend::ext_oneapi_cnrt, context> { using type = CNc
 
 template <> struct interop<backend::ext_oneapi_cnrt, queue> { using type = CNqueue; };
 
-// template <> struct interop<backend::ext_oneapi_cnrt, event> { using type = CUevent; };
+template <> struct interop<backend::ext_oneapi_cnrt, event> { using type = CNnotifier; };
 
 template <> struct interop<backend::ext_oneapi_cnrt, program> { using type = CNmodule; };
 
@@ -45,19 +46,19 @@ template <typename DataT, int Dimensions, access::mode AccessMode>
 struct interop<backend::ext_oneapi_cnrt, accessor<DataT, Dimensions, AccessMode,
                                        access::target::global_buffer,
                                        access::placeholder::false_t>> {
-  using type = MLUaddr;
+  using type = CNaddr;
 };
 
 template <typename DataT, int Dimensions, access::mode AccessMode>
 struct interop<backend::ext_oneapi_cnrt, accessor<DataT, Dimensions, AccessMode,
                                        access::target::constant_buffer,
                                        access::placeholder::false_t>> {
-  using type = MLUaddr;
+  using type = CNaddr;
 };
 
 template <typename DataT, int Dimensions, typename AllocatorT>
 struct interop<backend::ext_oneapi_cnrt, buffer<DataT, Dimensions, AllocatorT>> {
-  using type = MLUaddr;
+  using type = CNaddr;
 };
 
 } // namespace sycl
