@@ -8,6 +8,7 @@
 
 #pragma once
 
+
 #include <CL/sycl.hpp>
 // This header should be included by users.
 //#include <level_zero/ze_api.h>

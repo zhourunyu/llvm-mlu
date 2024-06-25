@@ -131,7 +131,7 @@ public:
       return BackendPtr;
 
     const char *ValStr = BaseT::getRawValue();
-    const std::array<std::pair<std::string, backend>, 6> SyclBeMap = {
+    const std::array<std::pair<std::string, backend>, 7> SyclBeMap = {
         {{"PI_OPENCL", backend::opencl},
          {"PI_LEVEL_ZERO", backend::ext_oneapi_level_zero},
          {"PI_LEVEL0", backend::ext_oneapi_level_zero}, // for backward compatibility
@@ -186,11 +186,12 @@ static const std::array<std::pair<std::string, info::device_type>, 5>
                           {"*", info::device_type::all}}};
 
 // Array is used by SYCL_DEVICE_FILTER and SYCL_DEVICE_ALLOWLIST
-static const std::array<std::pair<std::string, backend>, 6> SyclBeMap = {
+static const std::array<std::pair<std::string, backend>, 7> SyclBeMap = {
     {{"host", backend::host},
      {"opencl", backend::opencl},
      {"level_zero", backend::ext_oneapi_level_zero},
      {"cuda", backend::ext_oneapi_cuda},
+     {"hip", backend::ext_oneapi_hip},
      {"cnrt", backend::ext_oneapi_cnrt},
      {"*", backend::all}}};
 

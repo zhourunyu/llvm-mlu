@@ -23,6 +23,7 @@
 #include <CL/sycl/kernel_bundle.hpp>
 #include <CL/sycl/platform.hpp>
 #include <CL/sycl/queue.hpp>
+#include <CL/sycl/backend/cnrt.hpp>
 
 #include <type_traits>
 

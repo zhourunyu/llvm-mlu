@@ -22,6 +22,8 @@ enum class target {
   host_buffer = 2018,
   host_image = 2019,
   image_array = 2020,
+  //2022-06 supply
+  device = global_buffer,
   nram = 2021,
   wram = 2022
 };
