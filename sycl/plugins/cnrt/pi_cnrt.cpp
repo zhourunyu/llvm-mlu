@@ -3180,9 +3180,10 @@ pi_result cnrt_piextUSMSharedAlloc(void **result_ptr, pi_context context,
                                    pi_device device,
                                    pi_usm_mem_properties *properties,
                                    size_t size, pi_uint32 alignment) {
-
-  cl::sycl::detail::pi::die("cnrt_piextUSMSharedAlloc not implemented");
-  return {};
+  // Shared memory is not supported in CNRT
+  // workaround for oneDNN
+  return cnrt_piextUSMDeviceAlloc(result_ptr, context, device, properties, size,
+                                  alignment);
 }
 
 /// USM: Frees the given USM pointer associated with the context.

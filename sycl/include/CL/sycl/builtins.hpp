@@ -1369,7 +1369,7 @@ namespace mlu {
 
 template <typename T>
 void memcpy_gdram2nram(T* dest, const T* src, size_t n) __NOEXC {
-#ifdef __SYCL_DEVICE_ONLY__
+#if defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_MLISA__)
   __mlvm_memcpy_gdram_to_nram(dest, (void*)src, n * sizeof(T));
 #else
   (void)dest;
@@ -1380,7 +1380,7 @@ void memcpy_gdram2nram(T* dest, const T* src, size_t n) __NOEXC {
 
 template <typename T>
 void memcpy_nram2gdram(T* dest, const T* src, size_t n) __NOEXC {
-#ifdef __SYCL_DEVICE_ONLY__
+#if defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_MLISA__)
   __mlvm_memcpy_nram_to_gdram(dest, (void*)src, n * sizeof(T));
 #else
   (void)dest;
@@ -1392,7 +1392,7 @@ void memcpy_nram2gdram(T* dest, const T* src, size_t n) __NOEXC {
 template <typename T>
 detail::enable_if_t<(sizeof(T) == 1), void>
 memset_nram(void* dest, T value, size_t n) __NOEXC {
-#ifdef __SYCL_DEVICE_ONLY__
+#if defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_MLISA__)
   __mlvm_memset_nram_s8((char *)dest, n, *(char *)&value);
 #else
   (void)dest;
@@ -1404,7 +1404,7 @@ memset_nram(void* dest, T value, size_t n) __NOEXC {
 template <typename T>
 detail::enable_if_t<(sizeof(T) == 2), void>
 memset_nram(void* dest, T value, size_t n) __NOEXC {
-#ifdef __SYCL_DEVICE_ONLY__
+#if defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_MLISA__)
   __mlvm_memset_nram_s16((short *)dest, n, *(short *)&value);
 #else
   (void)dest;
@@ -1416,7 +1416,7 @@ memset_nram(void* dest, T value, size_t n) __NOEXC {
 template <typename T>
 detail::enable_if_t<(sizeof(T) == 4), void>
 memset_nram(void* dest, T value, size_t n) __NOEXC {
-#ifdef __SYCL_DEVICE_ONLY__
+#if defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_MLISA__)
   __mlvm_memset_nram_s32((int *)dest, n, *(int *)&value);
 #else
   (void)dest;
@@ -1428,7 +1428,7 @@ memset_nram(void* dest, T value, size_t n) __NOEXC {
 template <typename T>
 detail::enable_if_t<(sizeof(T) == 1), void>
 memset_global(void* dest, T value, size_t n) __NOEXC {
-#ifdef __SYCL_DEVICE_ONLY__
+#if defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_MLISA__)
   __mlvm_memset_gdram_s8((char *)dest, n, *(char *)&value);
 #else
   (void)dest;
@@ -1440,7 +1440,7 @@ memset_global(void* dest, T value, size_t n) __NOEXC {
 template <typename T>
 detail::enable_if_t<(sizeof(T) == 2), void>
 memset_global(void* dest, T value, size_t n) __NOEXC {
-#ifdef __SYCL_DEVICE_ONLY__
+#if defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_MLISA__)
   __mlvm_memset_gdram_s16((short *)dest, n, *(short *)&value);
 #else
   (void)dest;
@@ -1452,7 +1452,7 @@ memset_global(void* dest, T value, size_t n) __NOEXC {
 template <typename T>
 detail::enable_if_t<(sizeof(T) == 4), void>
 memset_global(void* dest, T value, size_t n) __NOEXC {
-#ifdef __SYCL_DEVICE_ONLY__
+#if defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_MLISA__)
   __mlvm_memset_gdram_s32((int *)dest, n, *(int *)&value);
 #else
   (void)dest;
