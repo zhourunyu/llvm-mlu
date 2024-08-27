@@ -8,26 +8,13 @@
 #include <CL/sycl/event.hpp>
 #include <CL/sycl/queue.hpp>
 
-// cuda runtime api
-// cu driver api
-// CN driver api
-// cnrt runtime api
-
 typedef uint64_t CNdev;
 typedef struct CNcontext_st *CNcontext;
 typedef struct CNqueue_st *CNqueue;
 typedef struct CNnotifier_st  *CNnotifier;
 typedef struct CNmodule_st *CNmodule;
 
-// typedef uint64_t cnrtDev_t;
-// typedef struct cnrtRuntimeContext *cnrtRuntimeContext_t;
-// typedef struct CUevent_st *CUevent;  // TODO: find "event" in cndrv, is it notifier?
-
-#if defined(_WIN64) || defined(__LP64__)
-typedef unsigned long CNaddr;
-#else
-typedef unsigned int CNaddr;
-#endif
+typedef uint64_t CNaddr;
 
 __SYCL_INLINE_NAMESPACE(cl) {
 namespace sycl {
