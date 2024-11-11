@@ -473,11 +473,11 @@ foreach name = ["vector_eq", "vector_ge", "vector_gt", "vector_le", "vector_lt",
 }
 
 foreach name = ["vector_select"] in {
-  def : OCLSPVBuiltin<name, [Void, Size, PointerType<FGenTypeN>, PointerType<FGenTypeN>, 
+  def : OCLSPVBuiltin<name, [Void, Size, PointerType<FGenTypeN>, ConstType<PointerType<Bool>>, 
                              ConstType<PointerType<FGenTypeN>>, ConstType<PointerType<FGenTypeN>>]>;
-  def : OCLSPVBuiltin<name, [Void, Size, PointerType<FGenTypeN>, PointerType<FGenTypeN>, 
+  def : OCLSPVBuiltin<name, [Void, Size, PointerType<FGenTypeN>, ConstType<PointerType<Bool>>, 
                              FGenTypeN, ConstType<PointerType<FGenTypeN>>]>;
-  def : OCLSPVBuiltin<name, [Void, Size, PointerType<FGenTypeN>, PointerType<FGenTypeN>, 
+  def : OCLSPVBuiltin<name, [Void, Size, PointerType<FGenTypeN>, ConstType<PointerType<Bool>>, 
                              ConstType<PointerType<FGenTypeN>>, FGenTypeN]>;
 }
 

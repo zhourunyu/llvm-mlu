@@ -157,6 +157,7 @@ void __cn_vector_ne_scalar_s32(int n, bool *z, const int *x, const int y);
 void __cn_vector_ne_scalar_u32(int n, bool *z, const unsigned int *x, const unsigned int y);
 
 void __cn_vector_and_u32(int n, unsigned int *z, const unsigned int *x, const unsigned int *y);
+void __cn_vector_and_s32(int n, int *z, const int *x, const int *y);
 void __cn_vector_and_scalar_u32(int n, unsigned int *z, const unsigned int *x, const unsigned int y);
 void __cn_vector_not_u32(int n, unsigned int *y, const unsigned int *x);
 void __cn_vector_or_u32(int n, unsigned int *z, const unsigned int *x, const unsigned int *y);
@@ -165,5 +166,7 @@ void __cn_vector_shift_right_arithmetic_scalar_s32(int n, int *z, const int *x, 
 void __cn_vector_shift_right_arithmetic_u32(int n, unsigned int *z, const unsigned int *x, const unsigned int *y);
 void __cn_vector_shift_right_logical_u32(int n, unsigned int *z, const unsigned int *x, const unsigned int *y);
 void __cn_vector_xor_u32(int n, unsigned int *z, const unsigned int *x, const unsigned int *y);
+
+void __cn_vector_cast_s8_to_s32(int n, int *y, const char *x);
 
 #endif // MLISA_LIBDEVICE_H
