@@ -97,10 +97,36 @@ int main(int argc, char **argv) {
     for (Module::iterator i = M->begin(), e = M->end(); i != e; ++i) {
       if (i->isDeclaration())
         continue;
+      // replace S0->S, S1->S0, S2->S1, ...
       auto name = i->getName().operator std::string();
-      name = std::regex_replace(name, std::regex("S0"), std::string("S"));
-      name = std::regex_replace(name, std::regex("S2"), std::string("S1"));
-      i->setName(name);
+      if (name.substr(0, 2) != "_Z")
+        continue;
+      size_t pos = 2;
+      while (pos < name.size() && std::isdigit(name[pos]))
+        ++pos;
+      int len = std::stoi(name.substr(2, pos - 2));
+
+      auto suffix = name.substr(pos + len);
+      auto prefix = name.substr(0, pos + len);
+      std::string new_suffix;
+
+      std::regex re("S(\\d+)");
+      std::string::const_iterator start(suffix.cbegin());
+      std::smatch m;
+
+      while (std::regex_search(start, suffix.cend(), m, re)) {
+        new_suffix.append(start, m[0].first);
+        int n = std::stoi(m[1].str());
+        if (n == 0) {
+          new_suffix.append("S");
+        } else {
+          new_suffix.append("S" + std::to_string(n - 1));
+        }
+        start = m[0].second;
+      }
+      new_suffix.append(start, suffix.cend());
+
+      i->setName(prefix + new_suffix);
     }
   }
 

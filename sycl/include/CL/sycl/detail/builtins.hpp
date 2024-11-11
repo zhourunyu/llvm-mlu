@@ -353,18 +353,18 @@ __SYCL_MAKE_CALL_VEC_ARG2(vector_lt, __FUNC_PREFIX_OCL)
 __SYCL_MAKE_CALL_VEC_ARG2(vector_ne, __FUNC_PREFIX_OCL)
 
 template <typename T>
-inline __SYCL_ALWAYS_INLINE void __invoke_vector_select(size_t n, T *t1, T *t2, const T *t3, const T *t4) __NOEXC {
-  __SYCL_EXTERN_IT5(void, __FUNC_PREFIX_OCL, vector_select, size_t, T*, T*, const T*, const T*);
+inline __SYCL_ALWAYS_INLINE void __invoke_vector_select(size_t n, T *t1, const bool *t2, const T *t3, const T *t4) __NOEXC {
+  __SYCL_EXTERN_IT5(void, __FUNC_PREFIX_OCL, vector_select, size_t, T*, const bool*, const T*, const T*);
   __SYCL_PPCAT(__FUNC_PREFIX_OCL, vector_select)(n, t1, t2, t3, t4);
 }
 template <typename T>
-inline __SYCL_ALWAYS_INLINE void __invoke_vector_select(size_t n, T *t1, T *t2, const T *t3, T t4) __NOEXC {
-  __SYCL_EXTERN_IT5(void, __FUNC_PREFIX_OCL, vector_select, size_t, T*, T*, const T*, T);
+inline __SYCL_ALWAYS_INLINE void __invoke_vector_select(size_t n, T *t1, const bool *t2, const T *t3, T t4) __NOEXC {
+  __SYCL_EXTERN_IT5(void, __FUNC_PREFIX_OCL, vector_select, size_t, T*, const bool*, const T*, T);
   __SYCL_PPCAT(__FUNC_PREFIX_OCL, vector_select)(n, t1, t2, t3, t4);
 }
 template <typename T>
-inline __SYCL_ALWAYS_INLINE void __invoke_vector_select(size_t n, T *t1, T *t2, T t3, const T *t4) __NOEXC {
-  __SYCL_EXTERN_IT5(void, __FUNC_PREFIX_OCL, vector_select, size_t, T*, T*, T, const T*);
+inline __SYCL_ALWAYS_INLINE void __invoke_vector_select(size_t n, T *t1, const bool *t2, T t3, const T *t4) __NOEXC {
+  __SYCL_EXTERN_IT5(void, __FUNC_PREFIX_OCL, vector_select, size_t, T*, const bool*, T, const T*);
   __SYCL_PPCAT(__FUNC_PREFIX_OCL, vector_select)(n, t1, t2, t3, t4);
 }
 

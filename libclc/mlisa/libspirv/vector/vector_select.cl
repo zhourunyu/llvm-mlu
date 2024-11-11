@@ -11,50 +11,37 @@
 
 #include "../../include/libdevice.h"
 
-_CLC_DEF _CLC_OVERLOAD void __spirv_ocl_vector_select(size_t n, float *a, float *b, const float *c, const float *d) {
-    unsigned int *dst = (unsigned int *)a, *mask = (unsigned int *)b;
-    const unsigned int *src1 = (const unsigned int *)c, *src2 = (const unsigned int *)d;
-    // mask = mask? 0xFFFFFFFF : 0
-    // dst = (src1 & mask) | (src2 & ~mask)
-    if (dst == src2) {
-        __mlvm_stream_eq_scalar_s32((int *)mask, (int *)mask, 0, n);
-        __cn_vector_negate_s32(n, (int *)mask, (const int *)mask);
-        __cn_vector_and_u32(n, dst, mask, src2);
-        __cn_vector_not_u32(n, mask, mask);
-        __cn_vector_and_u32(n, mask, mask, src1);
-        __cn_vector_or_u32(n, dst, dst, mask);
-    } else {
-        __mlvm_stream_ne_scalar_s32((int *)mask, (int *)mask, 0, n);
-        __cn_vector_negate_s32(n, (int *)mask, (const int *)mask);
-        __cn_vector_and_u32(n, dst, mask, src1);
-        __cn_vector_not_u32(n, mask, mask);
-        __cn_vector_and_u32(n, mask, mask, src2);
-        __cn_vector_or_u32(n, dst, dst, mask);
-    }
+_CLC_DEF _CLC_OVERLOAD void __spirv_ocl_vector_select(size_t n, float *a, const bool *b, const float *c, const float *d) {
+    // a = b ? c : d
+    // a = b * c + (1 - b) * d = d + b * (c - d)
+    int *dst = (int *)a, *src1 = (int *)c, *src2 = (int *)d;
+    const char *mask = (const char *)b;
+    __cn_vector_cast_s8_to_s32(n, dst, mask);
+    __cn_vector_negate_s32(n, dst, dst);
+    __cn_vector_sub_s32(n, src1, src1, src2);
+    __cn_vector_and_s32(n, dst, dst, src1);
+    __cn_vector_add_s32(n, dst, dst, src2);
+    __cn_vector_add_s32(n, src1, src1, src2);
 }
 
-_CLC_DEF _CLC_OVERLOAD void __spirv_ocl_vector_select(size_t n, float *a, float *b, const float *c, float d) {
-    unsigned int *dst = (unsigned int *)a, *mask = (unsigned int *)b;
-    const unsigned int *src1 = (const unsigned int *)c, src2 = *(unsigned int *)&d;
-    // mask = mask? 0xFFFFFFFF : 0
-    __mlvm_stream_ne_scalar_s32((int *)mask, (int *)mask, 0, n);
-    __cn_vector_negate_s32(n, (int *)mask, (const int *)mask);
-    // dst = (src1 & mask) | (src2 & ~mask)
-    __cn_vector_and_u32(n, dst, mask, src1);
-    __cn_vector_not_u32(n, mask, mask);
-    __cn_vector_and_scalar_u32(n, mask, mask, src2);
-    __cn_vector_or_u32(n, dst, dst, mask);
+_CLC_DEF _CLC_OVERLOAD void __spirv_ocl_vector_select(size_t n, float *a, const bool *b, const float *c, float d) {
+    int *dst = (int *)a, *src1 = (int *)c, src2 = *(int *)&d;
+    const char *mask = (const char *)b;
+    __cn_vector_cast_s8_to_s32(n, dst, mask);
+    __cn_vector_negate_s32(n, dst, dst);
+    __cn_vector_sub_scalar_s32(n, src1, src1, src2);
+    __cn_vector_and_s32(n, dst, dst, src1);
+    __cn_vector_add_scalar_s32(n, dst, dst, src2);
+    __cn_vector_add_scalar_s32(n, src1, src1, src2);
 }
 
-_CLC_DEF _CLC_OVERLOAD void __spirv_ocl_vector_select(size_t n, float *a, float *b, float c, const float *d) {
-    unsigned int *dst = (unsigned int *)a, *mask = (unsigned int *)b;
-    const unsigned int src1 = *(unsigned int *)&c, *src2 = (const unsigned int *)d;
-    // mask = mask? 0xFFFFFFFF : 0
-    __mlvm_stream_eq_scalar_s32((int *)mask, (int *)mask, 0, n);
-    __cn_vector_negate_s32(n, (int *)mask, (const int *)mask);
-    // dst = (src1 & mask) | (src2 & ~mask)
-    __cn_vector_and_u32(n, dst, mask, src2);
-    __cn_vector_not_u32(n, mask, mask);
-    __cn_vector_and_scalar_u32(n, mask, mask, src1);
-    __cn_vector_or_u32(n, dst, dst, mask);
+_CLC_DEF _CLC_OVERLOAD void __spirv_ocl_vector_select(size_t n, float *a, const bool *b, float c, const float *d) {
+    int *dst = (int *)a, src1 = *(int *)&c, *src2 = (int *)d;
+    const char *mask = (const char *)b;
+    __cn_vector_cast_s8_to_s32(n, dst, mask);
+    __cn_vector_negate_s32(n, dst, dst);
+    __cn_vector_sub_scalar_s32(n, src2, src2, src1);
+    __cn_vector_and_s32(n, dst, dst, src2);
+    __cn_vector_add_scalar_s32(n, src2, src2, src1);
+    __cn_vector_sub_s32(n, dst, src2, dst);
 }

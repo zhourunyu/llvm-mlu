@@ -1792,17 +1792,17 @@ detail::enable_if_t<detail::is_genfloatf<T>::value || detail::is_geninteger<T>::
 }
 
 template <typename T>
-detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_select(T* out, T* in1, const T* in2, const T* in3, size_t n) __NOEXC {
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_select(T* out, const bool* in1, const T* in2, const T* in3, size_t n) __NOEXC {
   __sycl_std::__invoke_vector_select<T>(n, out, in1, in2, in3);
 }
 
 template <typename T>
-detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_select(T* out, T* in1, const T* in2, T in3, size_t n) __NOEXC {
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_select(T* out, const bool* in1, const T* in2, T in3, size_t n) __NOEXC {
   __sycl_std::__invoke_vector_select<T>(n, out, in1, in2, in3);
 }
 
 template <typename T>
-detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_select(T* out, T* in1, T in2, const T* in3, size_t n) __NOEXC {
+detail::enable_if_t<detail::is_genfloatf<T>::value, void> vector_select(T* out, const bool* in1, T in2, const T* in3, size_t n) __NOEXC {
   __sycl_std::__invoke_vector_select<T>(n, out, in1, in2, in3);
 }
 
