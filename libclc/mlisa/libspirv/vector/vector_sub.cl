@@ -22,4 +22,11 @@
 #define __CLC_BUILTIN_UINT __cn_vector_sub_u32
 #define __CLC_BUILTIN_UINT_SCALAR __cn_vector_sub_scalar_u32
 #define __CLC_BUILTIN_UINT_SCALAR_L __cn_scalar_sub_vector_u32
+
+#define __CLC_BUILTIN_LONG __cn_vector_sub_s64
+#define __CLC_BUILTIN_LONG_SCALAR __cn_vector_sub_scalar_s64
+#define __CLC_BUILTIN_LONG_SCALAR_L __cn_scalar_sub_vector_s64
+#define __CLC_BUILTIN_ULONG __cn_vector_sub_u64
+#define __CLC_BUILTIN_ULONG_SCALAR __cn_vector_sub_scalar_u64
+#define __CLC_BUILTIN_ULONG_SCALAR_L __cn_scalar_sub_vector_u64
 #include <../../include/vector_binary_builtin.inc>
