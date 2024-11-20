@@ -43,3 +43,25 @@ _CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, bool *a, const unsigned int
 _CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, bool *a, unsigned int b, const unsigned int *c) { __CLC_BUILTIN_UINT_SCALAR_L(n, a, b, c); }
 #endif
 #endif
+
+#ifdef __CLC_BUILTIN_LONG
+_CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, bool *a, const long *b, const long *c) { __CLC_BUILTIN_LONG(n, a, b, c); }
+#ifdef __CLC_BUILTIN_LONG_SCALAR
+#ifndef __CLC_BUILTIN_LONG_SCALAR_L
+#define __CLC_BUILTIN_LONG_SCALAR_L(n, a, b, c) __CLC_BUILTIN_LONG_SCALAR(n, a, c, b)
+#endif
+_CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, bool *a, const long *b, long c) { __CLC_BUILTIN_LONG_SCALAR(n, a, b, c); }
+_CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, bool *a, long b, const long *c) { __CLC_BUILTIN_LONG_SCALAR_L(n, a, b, c); }
+#endif
+#endif
+
+#ifdef __CLC_BUILTIN_ULONG
+_CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, bool *a, const unsigned long *b, const unsigned long *c) { __CLC_BUILTIN_ULONG(n, a, b, c); }
+#ifdef __CLC_BUILTIN_ULONG_SCALAR
+#ifndef __CLC_BUILTIN_ULONG_SCALAR_L
+#define __CLC_BUILTIN_ULONG_SCALAR_L(n, a, b, c) __CLC_BUILTIN_ULONG_SCALAR(n, a, c, b)
+#endif
+_CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, bool *a, const unsigned long *b, unsigned long c) { __CLC_BUILTIN_ULONG_SCALAR(n, a, b, c); }
+_CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, bool *a, unsigned long b, const unsigned long *c) { __CLC_BUILTIN_ULONG_SCALAR_L(n, a, b, c); }
+#endif
+#endif

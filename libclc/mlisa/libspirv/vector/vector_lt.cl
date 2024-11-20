@@ -22,4 +22,11 @@
 #define __CLC_BUILTIN_UINT __cn_vector_lt_u32
 #define __CLC_BUILTIN_UINT_SCALAR __cn_vector_lt_scalar_u32
 #define __CLC_BUILTIN_UINT_SCALAR_L(n, a, b, c) __cn_vector_gt_scalar_u32(n, a, c, b)
+
+#define __CLC_BUILTIN_LONG __cn_vector_lt_s64
+#define __CLC_BUILTIN_LONG_SCALAR __cn_vector_lt_scalar_s64
+#define __CLC_BUILTIN_LONG_SCALAR_L(n, a, b, c) __cn_vector_gt_scalar_s64(n, a, c, b)
+#define __CLC_BUILTIN_ULONG __cn_vector_lt_u64
+#define __CLC_BUILTIN_ULONG_SCALAR __cn_vector_lt_scalar_u64
+#define __CLC_BUILTIN_ULONG_SCALAR_L(n, a, b, c) __cn_vector_gt_scalar_u64(n, a, c, b)
 #include <../../include/vector_relational_builtin.inc>

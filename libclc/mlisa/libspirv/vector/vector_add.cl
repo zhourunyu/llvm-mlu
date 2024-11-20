@@ -19,4 +19,9 @@
 #define __CLC_BUILTIN_INT_SCALAR __cn_vector_add_scalar_s32
 #define __CLC_BUILTIN_UINT __cn_vector_add_u32
 #define __CLC_BUILTIN_UINT_SCALAR __cn_vector_add_scalar_u32
+
+#define __CLC_BUILTIN_LONG __cn_vector_add_s64
+#define __CLC_BUILTIN_LONG_SCALAR __cn_vector_add_scalar_s64
+#define __CLC_BUILTIN_ULONG __cn_vector_add_u64
+#define __CLC_BUILTIN_ULONG_SCALAR __cn_vector_add_scalar_u64
 #include <../../include/vector_binary_builtin.inc>

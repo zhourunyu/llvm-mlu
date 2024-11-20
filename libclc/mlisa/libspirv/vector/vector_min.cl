@@ -19,4 +19,9 @@
 #define __CLC_BUILTIN_INT_SCALAR __cn_vector_min_scalar_s32
 #define __CLC_BUILTIN_UINT __cn_vector_min_u32
 #define __CLC_BUILTIN_UINT_SCALAR __cn_vector_min_scalar_u32
+
+#define __CLC_BUILTIN_LONG __cn_vector_min_s64
+#define __CLC_BUILTIN_LONG_SCALAR __cn_vector_min_scalar_s64
+#define __CLC_BUILTIN_ULONG __cn_vector_min_u64
+#define __CLC_BUILTIN_ULONG_SCALAR __cn_vector_min_scalar_u64
 #include <../../include/vector_binary_builtin.inc>

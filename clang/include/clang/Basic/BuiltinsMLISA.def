@@ -1889,6 +1889,15 @@ BUILTIN(__mlvm_memset_nram_stream_f32, "vf*if", "")
 BUILTIN(__mlvm_memset_nram_stream_s32, "vi*ii", "")
 BUILTIN(__mlvm_memset_nram_stream_u32, "vUi*iUi", "")
 
+// memset3d nram
+BUILTIN(__mlvm_memset3d_nram_s8, "vv*iSciiii", "")
+BUILTIN(__mlvm_memset3d_nram_f16, "vh*ihiiii", "")
+BUILTIN(__mlvm_memset3d_nram_s16, "vs*isiiii", "")
+BUILTIN(__mlvm_memset3d_nram_u16, "vUs*iUsiiii", "")
+BUILTIN(__mlvm_memset3d_nram_f32, "vf*ifiiii", "")
+BUILTIN(__mlvm_memset3d_nram_s32, "vi*iiiiii", "")
+BUILTIN(__mlvm_memset3d_nram_u32, "vUi*iUiiiii", "")
+
 // memset3d nram stream
 BUILTIN(__mlvm_memset3d_nram_stream_s8, "vv*iSciiii", "")
 BUILTIN(__mlvm_memset3d_nram_stream_f16, "vh*ihiiii", "")
