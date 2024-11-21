@@ -55,6 +55,7 @@ vector/vector_asin.cl
 vector/vector_asinh.cl
 vector/vector_atan.cl
 vector/vector_atanh.cl
+vector/vector_cast.cl
 vector/vector_ceil.cl
 vector/vector_cos.cl
 vector/vector_cosh.cl
