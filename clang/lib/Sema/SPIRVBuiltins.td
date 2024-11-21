@@ -459,6 +459,14 @@ foreach name = ["vector_neg", "vector_sign"] in {
   def : OCLSPVBuiltin<name, [Void, Size, PointerType<AIGenType1>, ConstType<PointerType<AIGenType1>>]>;
 }
 
+foreach RType = [Float, Double, Half, Char, UChar, Short,
+                 UShort, Int, UInt, Long, ULong] in {
+  foreach IType = [Float, Double, Half, Char, UChar, Short,
+                   UShort, Int, UInt, Long, ULong] in {
+    def : OCLSPVBuiltin<"vector_cast", [Void, Size, PointerType<RType>, ConstType<PointerType<IType>>]>;
+  }
+}
+
 foreach name = ["vector_add", "vector_div", "vector_max", "vector_min", "vector_mod", "vector_mul",
                 "vector_sub"] in {
   def : OCLSPVBuiltin<name, [Void, Size, PointerType<FGenType1>, ConstType<PointerType<FGenType1>>, ConstType<PointerType<FGenType1>>]>;
