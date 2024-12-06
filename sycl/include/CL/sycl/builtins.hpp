@@ -1390,6 +1390,17 @@ void memcpy_nram2gdram(T* dest, const T* src, size_t n) __NOEXC {
 }
 
 template <typename T>
+void memcpy_nram2nram(T* dest, const T* src, size_t n) __NOEXC {
+#if defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_MLISA__)
+  __mlvm_memcpy_nram_to_nram(dest, (void*)src, n * sizeof(T));
+#else
+  (void)dest;
+  (void)src;
+  (void)n;
+#endif
+}
+
+template <typename T>
 detail::enable_if_t<(sizeof(T) == 1), void>
 memset_nram(void* dest, T value, size_t n) __NOEXC {
 #if defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_MLISA__)
