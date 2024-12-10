@@ -1400,11 +1400,24 @@ void memcpy_nram2nram(T* dest, const T* src, size_t n) __NOEXC {
 #endif
 }
 
+template<typename>
+inline constexpr bool always_false_v = false;
+
 template <typename T>
-detail::enable_if_t<(sizeof(T) == 1), void>
-memset_nram(void* dest, T value, size_t n) __NOEXC {
+void memset_nram(void* dest, T value, size_t n) __NOEXC {
 #if defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_MLISA__)
-  __mlvm_memset_nram_s8((char *)dest, n, *(char *)&value);
+  if constexpr (sizeof(T) == 1) {
+    __mlvm_memset_nram_s8((char *)dest, n, *(char *)&value);
+  } else if constexpr (sizeof(T) == 2) {
+    __mlvm_memset_nram_s16((short *)dest, n, *(short *)&value);
+  } else if constexpr (sizeof(T) == 4) {
+    __mlvm_memset_nram_s32((int *)dest, n, *(int *)&value);
+  } else if constexpr (sizeof(T) == 8) {
+    __mlvm_memset3d_nram_s32((int *)dest, 1, *(int *)&value, 8, n - 1, 0, 0);
+    __mlvm_memset3d_nram_s32((int *)dest + 1, 1, *((int *)&value + 1), 8, n - 1, 0, 0);
+  } else {
+    static_assert(always_false_v<T>, "Unsupported type");
+  }
 #else
   (void)dest;
   (void)value;
@@ -1413,71 +1426,20 @@ memset_nram(void* dest, T value, size_t n) __NOEXC {
 }
 
 template <typename T>
-detail::enable_if_t<(sizeof(T) == 2), void>
-memset_nram(void* dest, T value, size_t n) __NOEXC {
+void memset_global(void* dest, T value, size_t n) __NOEXC {
 #if defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_MLISA__)
-  __mlvm_memset_nram_s16((short *)dest, n, *(short *)&value);
-#else
-  (void)dest;
-  (void)value;
-  (void)n;
-#endif
-}
-
-template <typename T>
-detail::enable_if_t<(sizeof(T) == 4), void>
-memset_nram(void* dest, T value, size_t n) __NOEXC {
-#if defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_MLISA__)
-  __mlvm_memset_nram_s32((int *)dest, n, *(int *)&value);
-#else
-  (void)dest;
-  (void)value;
-  (void)n;
-#endif
-}
-
-template <typename T>
-detail::enable_if_t<(sizeof(T) == 8), void>
-memset_nram(void* dest, T value, size_t n) __NOEXC {
-#if defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_MLISA__)
-  __mlvm_memset3d_nram_s32((int *)dest, 1, *(int *)&value, 8, n - 1, 0, 0);
-  __mlvm_memset3d_nram_s32((int *)dest + 1, 1, *((int *)&value + 1), 8, n - 1, 0, 0);
-#else
-  (void)dest;
-  (void)value;
-  (void)n;
-#endif
-}
-
-template <typename T>
-detail::enable_if_t<(sizeof(T) == 1), void>
-memset_global(void* dest, T value, size_t n) __NOEXC {
-#if defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_MLISA__)
-  __mlvm_memset_gdram_s8((char *)dest, n, *(char *)&value);
-#else
-  (void)dest;
-  (void)value;
-  (void)n;
-#endif
-}
-
-template <typename T>
-detail::enable_if_t<(sizeof(T) == 2), void>
-memset_global(void* dest, T value, size_t n) __NOEXC {
-#if defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_MLISA__)
-  __mlvm_memset_gdram_s16((short *)dest, n, *(short *)&value);
-#else
-  (void)dest;
-  (void)value;
-  (void)n;
-#endif
-}
-
-template <typename T>
-detail::enable_if_t<(sizeof(T) == 4), void>
-memset_global(void* dest, T value, size_t n) __NOEXC {
-#if defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_MLISA__)
-  __mlvm_memset_gdram_s32((int *)dest, n, *(int *)&value);
+  if constexpr (sizeof(T) == 1) {
+    __mlvm_memset_gdram_s8((char *)dest, n, *(char *)&value);
+  } else if constexpr (sizeof(T) == 2) {
+    __mlvm_memset_gdram_s16((short *)dest, n, *(short *)&value);
+  } else if constexpr (sizeof(T) == 4) {
+    __mlvm_memset_gdram_s32((int *)dest, n, *(int *)&value);
+  } else if constexpr (sizeof(T) == 8) {
+    __mlvm_memset3d_gdram_s32((int *)dest, 1, *(int *)&value, 8, n - 1, 0, 0);
+    __mlvm_memset3d_gdram_s32((int *)dest + 1, 1, *((int *)&value + 1), 8, n - 1, 0, 0);
+  } else {
+    static_assert(always_false_v<T>, "Unsupported type");
+  }
 #else
   (void)dest;
   (void)value;
@@ -1521,8 +1483,26 @@ detail::enable_if_t<detail::is_sgenfloat<T>::value, void> vector_atanh(T* out, c
 }
 
 template <typename T1, typename T2>
-detail::enable_if_t<detail::is_sgentype<T1>::value && detail::is_sgentype<T2>::value && !std::is_same<T1, T2>::value, void> vector_cast(T1 *out, const T2* in, size_t n) __NOEXC {
-  __sycl_std::__invoke_vector_cast(n, out, in);
+detail::enable_if_t<detail::is_sgentype<T1>::value && detail::is_sgentype<T2>::value, void> vector_cast(T1 *out, const T2* in, size_t n) __NOEXC {
+  if constexpr (std::is_same_v<T1, T2>) {
+    memcpy_nram2nram(out, in, n);
+  } else {
+    __sycl_std::__invoke_vector_cast(n, out, in);
+  }
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_sgentype<T>::value, void> vector_cast(bool* out, const T* in, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_ne(n, out, in, 0);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_sgentype<T>::value, void> vector_cast(T* out, const bool* in, size_t n) __NOEXC {
+  if constexpr (sizeof(T) == 1) {
+    memcpy_nram2nram((char *)out, (const char *)in, n);
+  } else {
+    __sycl_std::__invoke_vector_cast(n, out, (const char *)in);
+  }
 }
 
 template <typename T>

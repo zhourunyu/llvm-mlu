@@ -3204,6 +3204,48 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
     Intrinsic<[], [llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty],
             [IntrWriteMem]>;
 
+  def int_mlvm_memset3d_gdram_s8 :
+    GCCBuiltin<"__mlvm_memset3d_gdram_s8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_i32_ty, llvm_i8_ty, llvm_i32_ty,
+                   llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
+              [IntrWriteMem]>;
+
+  def int_mlvm_memset3d_gdram_f16 :
+    GCCBuiltin<"__mlvm_memset3d_gdram_f16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_i32_ty, llvm_half_ty, llvm_i32_ty,
+                   llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
+              [IntrWriteMem]>;
+
+  def int_mlvm_memset3d_gdram_s16 :
+    GCCBuiltin<"__mlvm_memset3d_gdram_s16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_i32_ty, llvm_i16_ty, llvm_i32_ty,
+                   llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
+              [IntrWriteMem]>;
+
+  def int_mlvm_memset3d_gdram_u16 :
+    GCCBuiltin<"__mlvm_memset3d_gdram_u16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_i32_ty, llvm_i16_ty, llvm_i32_ty,
+                   llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
+              [IntrWriteMem]>;
+
+  def int_mlvm_memset3d_gdram_f32 :
+    GCCBuiltin<"__mlvm_memset3d_gdram_f32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_i32_ty, llvm_float_ty, llvm_i32_ty,
+                   llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
+              [IntrWriteMem]>;
+
+  def int_mlvm_memset3d_gdram_s32 :
+    GCCBuiltin<"__mlvm_memset3d_gdram_s32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty,
+                   llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
+              [IntrWriteMem]>;
+
+  def int_mlvm_memset3d_gdram_u32 :
+    GCCBuiltin<"__mlvm_memset3d_gdram_u32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty,
+                   llvm_i32_ty, llvm_i32_ty, llvm_i32_ty],
+              [IntrWriteMem]>;
+
   def int_mlvm_memset_sram_s8 :
     GCCBuiltin<"__mlvm_memset_sram_s8">,
     Intrinsic<[], [llvm_ptr_ty, llvm_i32_ty, llvm_i8_ty],

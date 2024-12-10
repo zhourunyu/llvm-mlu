@@ -23,7 +23,7 @@ int main() {
     std::cout << "Time: " << endTime - startTime << "us" << std::endl;
 
     for (int i = 0; i < N; i++) {
-        b_host[i] = static_cast<int>(a[i]);
+        b_host[i] = static_cast<decltype(b)::value_type>(a[i]);
     }
     int ret = compareResult(b, b_host);
     if (ret) {
