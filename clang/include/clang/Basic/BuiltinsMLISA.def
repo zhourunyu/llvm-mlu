@@ -1929,6 +1929,15 @@ BUILTIN(__mlvm_memset_gdram_f32, "vf*if", "")
 BUILTIN(__mlvm_memset_gdram_s32, "vi*ii", "")
 BUILTIN(__mlvm_memset_gdram_u32, "vUi*iUi", "")
 
+// memset3d gdram
+BUILTIN(__mlvm_memset3d_gdram_s8, "vv*iSciiii", "")
+BUILTIN(__mlvm_memset3d_gdram_f16, "vh*ihiiii", "")
+BUILTIN(__mlvm_memset3d_gdram_s16, "vs*isiiii", "")
+BUILTIN(__mlvm_memset3d_gdram_u16, "vUs*iUsiiii", "")
+BUILTIN(__mlvm_memset3d_gdram_f32, "vf*ifiiii", "")
+BUILTIN(__mlvm_memset3d_gdram_s32, "vi*iiiiii", "")
+BUILTIN(__mlvm_memset3d_gdram_u32, "vUi*iUiiiii", "")
+
 // memset ldram 8bit
 BUILTIN(__mlvm_memset_ldram_s8, "vv*iSc", "")
 // memset ldram 16bit
