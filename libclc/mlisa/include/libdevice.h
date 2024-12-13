@@ -48,6 +48,8 @@ int __cn_scalar_isinf_f32(float);
 int __cn_scalar_isnan_f32(float);
 
 void __cn_vector_abs_f32(int n, float *y, const float *x);
+void __cn_vector_abs_s32(int n, int *y, const int *x);
+void __cn_vector_abs_s64(int n, long *y, const long *x);
 void __cn_vector_add_f32_rn(int n, float *z, const float *x, const float *y);
 void __cn_vector_add_s32(int n, int *z, const int *x, const int *y);
 void __cn_vector_add_u32(int n, unsigned int *z, const unsigned int *x, const unsigned int *y);

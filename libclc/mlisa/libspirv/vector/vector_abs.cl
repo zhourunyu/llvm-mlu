@@ -13,4 +13,7 @@
 
 #define __CLC_FUNCTION __spirv_ocl_vector_abs
 #define __CLC_BUILTIN  __cn_vector_abs_f32
+
+#define __CLC_BUILTIN_INT __cn_vector_abs_s32
+#define __CLC_BUILTIN_LONG __cn_vector_abs_s64
 #include <../../include/vector_unary_builtin.inc>
