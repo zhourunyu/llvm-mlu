@@ -1448,7 +1448,7 @@ void memset_global(void* dest, T value, size_t n) __NOEXC {
 }
 
 template <typename T>
-detail::enable_if_t<detail::is_sgenfloat<T>::value, void> vector_abs(T* out, const T* in, size_t n) __NOEXC {
+detail::enable_if_t<detail::is_sgentype<T>::value, void> vector_abs(T* out, const T* in, size_t n) __NOEXC {
   __sycl_std::__invoke_vector_abs(n, out, in);
 }
 
@@ -1556,7 +1556,7 @@ detail::enable_if_t<detail::is_sgenfloat<T>::value, void> vector_rsqrt(T* out, c
 }
 
 template <typename T>
-detail::enable_if_t<detail::is_sgenfloat<T>::value, void> vector_sign(T* out, const T* in, size_t n) __NOEXC {
+detail::enable_if_t<detail::is_sgentype<T>::value, void> vector_sign(T* out, const T* in, size_t n) __NOEXC {
   __sycl_std::__invoke_vector_sign(n, out, in);
 }
 
@@ -1691,11 +1691,6 @@ detail::enable_if_t<detail::is_sgentype<T>::value, void> vector_mul(T* out, cons
 }
 
 template <typename T>
-detail::enable_if_t<detail::is_sgenfloat<T>::value, void> vector_pow(T* out, const T* in1, T in2, size_t n) __NOEXC {
-  __sycl_std::__invoke_vector_pow(n, out, in1, in2);
-}
-
-template <typename T>
 detail::enable_if_t<detail::is_sgentype<T>::value, void> vector_sub(T* out, const T* in1, T in2, size_t n) __NOEXC {
   __sycl_std::__invoke_vector_sub(n, out, in1, in2);
 }
@@ -1753,11 +1748,6 @@ detail::enable_if_t<detail::is_sgentype<T>::value, void> vector_min(T* out, T in
 template <typename T>
 detail::enable_if_t<detail::is_sgentype<T>::value, void> vector_mul(T* out, T in1, const T* in2, size_t n) __NOEXC {
   __sycl_std::__invoke_vector_mul(n, out, in1, in2);
-}
-
-template <typename T>
-detail::enable_if_t<detail::is_sgenfloat<T>::value, void> vector_pow(T* out, T in1, const T* in2, size_t n) __NOEXC {
-  __sycl_std::__invoke_vector_pow(n, out, in1, in2);
 }
 
 template <typename T>
