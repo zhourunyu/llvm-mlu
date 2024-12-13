@@ -85,6 +85,8 @@ void __cn_vector_erf_f32(int n, float *y, const float *x);
 void __cn_vector_exp_f32(int n, float *y, const float *x);
 void __cn_vector_floor_f32(int n, float *y, const float *x);
 void __cn_vector_log_f32(int n, float *y, const float *x);
+void __cn_vector_log2_f32(int n, float *y, const float *x);
+void __cn_vector_log10_f32(int n, float *y, const float *x);
 void __cn_vector_max_f32(int n, float *z, const float *x, const float *y);
 void __cn_vector_max_s32(int n, int *z, const int *x, const int *y);
 void __cn_vector_max_u32(int n, unsigned int *z, const unsigned int *x, const unsigned int *y);
