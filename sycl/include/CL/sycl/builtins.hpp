@@ -1541,6 +1541,16 @@ detail::enable_if_t<detail::is_sgenfloat<T>::value, void> vector_log(T* out, con
 }
 
 template <typename T>
+detail::enable_if_t<detail::is_sgenfloat<T>::value, void> vector_log2(T* out, const T* in, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_log2(n, out, in);
+}
+
+template <typename T>
+detail::enable_if_t<detail::is_sgenfloat<T>::value, void> vector_log10(T* out, const T* in, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_log10(n, out, in);
+}
+
+template <typename T>
 detail::enable_if_t<detail::is_sgentype<T>::value, void> vector_neg(T* out, const T* in, size_t n) __NOEXC {
   __sycl_std::__invoke_vector_neg(n, out, in);
 }

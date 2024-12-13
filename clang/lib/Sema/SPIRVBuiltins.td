@@ -971,8 +971,8 @@ def FGenTypeMLU     : GenericType<"FGenTypeMLU", TLMLUFloat, Vec1>;
 
 foreach name = ["vector_acos", "vector_acosh", "vector_asin", "vector_asinh", "vector_atan",
                 "vector_atanh", "vector_ceil", "vector_cos", "vector_cosh", "vector_erf", "vector_exp",
-                "vector_floor", "vector_log", "vector_round", "vector_rsqrt", "vector_sin", "vector_sinh",
-                "vector_sqrt", "vector_tan", "vector_tanh", "vector_trunc"] in {
+                "vector_floor", "vector_log", "vector_log2", "vector_log10", "vector_round", "vector_rsqrt", 
+                "vector_sin", "vector_sinh", "vector_sqrt", "vector_tan", "vector_tanh", "vector_trunc"] in {
   def : OCLSPVBuiltin<name, [Void, Size, PointerType<FGenTypeMLU>, ConstType<PointerType<FGenTypeMLU>>]>;
 }
 

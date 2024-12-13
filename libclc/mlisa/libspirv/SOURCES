@@ -64,6 +64,8 @@ vector/vector_erf.cl
 vector/vector_exp.cl
 vector/vector_floor.cl
 vector/vector_log.cl
+vector/vector_log2.cl
+vector/vector_log10.cl
 vector/vector_max.cl
 vector/vector_min.cl
 vector/vector_mod.cl
