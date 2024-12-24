@@ -1484,7 +1484,9 @@ detail::enable_if_t<detail::is_sgenfloat<T>::value, void> vector_atanh(T* out, c
 
 template <typename T1, typename T2>
 detail::enable_if_t<detail::is_sgentype<T1>::value && detail::is_sgentype<T2>::value, void> vector_cast(T1 *out, const T2* in, size_t n) __NOEXC {
-  if constexpr (std::is_same_v<T1, T2>) {
+  using Arg1 = cl::sycl::detail::ConvertToOpenCLType_t<T1>;
+  using Arg2 = cl::sycl::detail::ConvertToOpenCLType_t<T2>;
+  if constexpr (std::is_same_v<Arg1, Arg2>) {
     memcpy_nram2nram(out, in, n);
   } else {
     __sycl_std::__invoke_vector_cast(n, out, in);
@@ -1501,7 +1503,7 @@ detail::enable_if_t<detail::is_sgentype<T>::value, void> vector_cast(T* out, con
   if constexpr (sizeof(T) == 1) {
     memcpy_nram2nram((char *)out, (const char *)in, n);
   } else {
-    __sycl_std::__invoke_vector_cast(n, out, (const char *)in);
+    __sycl_std::__invoke_vector_cast(n, out, in);
   }
 }
 

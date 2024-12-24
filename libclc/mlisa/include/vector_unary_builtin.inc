@@ -9,24 +9,34 @@
 #include "utils.h"
 #include <clcmacro.h>
 
-#ifndef __CLC_BUILTIN
-#define __CLC_BUILTIN __CLC_XCONCAT(__clc_, __CLC_FUNCTION)
+#define DEFINE_BINARY_VECTORIZED(FUNCTION, BUILTIN, ARG1_TYPE, ARG2_TYPE)      \
+  _CLC_DEF _CLC_OVERLOAD void FUNCTION(size_t n, ARG1_TYPE x, ARG2_TYPE y) {   \
+    BUILTIN(n, x, y);                                                          \
+  }                                                                            \
+
+DEFINE_BINARY_VECTORIZED(__CLC_FUNCTION, __CLC_BUILTIN_F, float*, const float*)
+
+#ifdef __CLC_BUILTIN_I
+DEFINE_BINARY_VECTORIZED(__CLC_FUNCTION, __CLC_BUILTIN_I, int*, const int*)
 #endif
 
-_CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, float *a, const float *b) { __CLC_BUILTIN(n, a, b); }
-
-#ifdef __CLC_BUILTIN_INT
-_CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, int *a, const int *b) { __CLC_BUILTIN_INT(n, a, b); }
+#ifdef __CLC_BUILTIN_U
+DEFINE_BINARY_VECTORIZED(__CLC_FUNCTION, __CLC_BUILTIN_U, unsigned int*, const unsigned int*)
 #endif
 
-#ifdef __CLC_BUILTIN_UINT
-_CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, unsigned int *a, const unsigned int *b) { __CLC_BUILTIN_UINT(n, a, b); }
+#ifdef __CLC_BUILTIN_L
+DEFINE_BINARY_VECTORIZED(__CLC_FUNCTION, __CLC_BUILTIN_L, long*, const long*)
 #endif
 
-#ifdef __CLC_BUILTIN_LONG
-_CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, long *a, const long *b) { __CLC_BUILTIN_LONG(n, a, b); }
+#ifdef __CLC_BUILTIN_UL
+DEFINE_BINARY_VECTORIZED(__CLC_FUNCTION, __CLC_BUILTIN_UL, unsigned long*, const unsigned long*)
 #endif
 
-#ifdef __CLC_BUILTIN_ULONG
-_CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, unsigned long *a, const unsigned long *b) { __CLC_BUILTIN_ULONG(n, a, b); }
+#ifdef cl_khr_fp16
+#pragma OPENCL EXTENSION cl_khr_fp16 : enable
+#ifdef __CLC_BUILTIN_H
+DEFINE_BINARY_VECTORIZED(__CLC_FUNCTION, __CLC_BUILTIN_H, half*, const half*)
 #endif
+#endif
+
+#undef _CLC_DEFINE_BINARY_VECTORIZED

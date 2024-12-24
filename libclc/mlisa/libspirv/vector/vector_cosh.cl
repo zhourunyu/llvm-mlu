@@ -12,5 +12,7 @@
 #include <clcmacro.h>
 
 #define __CLC_FUNCTION __spirv_ocl_vector_cosh
-#define __CLC_BUILTIN  __cn_vector_cosh_f32
+#define __CLC_BUILTIN __cn_vector_cosh
+#define __CLC_BUILTIN_F __CLC_XCONCAT(__CLC_BUILTIN, _f32)
+#define __CLC_BUILTIN_H __CLC_XCONCAT(__CLC_BUILTIN, _f16)
 #include <../../include/vector_unary_builtin.inc>

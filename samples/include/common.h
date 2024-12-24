@@ -6,9 +6,6 @@
 #include <sys/time.h>
 #include <CL/sycl.hpp>
 
-// maximum absolute error
-const double eps = 1e-6;
-
 // get current time in microseconds
 long long getTime() {
     struct timeval tv;
@@ -18,7 +15,7 @@ long long getTime() {
 
 // initialize float array with random values
 template <typename T, size_t n>
-typename std::enable_if_t<std::is_floating_point<T>::value, void>
+typename std::enable_if_t<sycl::detail::is_sgenfloat<T>::value, void>
 initArray(std::array<T, n> &array, T min = -1, T max = 1) {
     static int init = 0;
     if (!init) {
@@ -51,7 +48,7 @@ bool isClose(double a, double b, double rel_tol = 1e-6, double abs_tol = 1e-6) {
 
 // compare two float arrays
 template <typename T, size_t n>
-typename std::enable_if_t<std::is_floating_point<T>::value, int>
+typename std::enable_if_t<sycl::detail::is_sgenfloat<T>::value, int>
 compareResult(const std::array<T, n> &array1, const std::array<T, n> &array2, double rel_tol = 1e-6, double abs_tol = 1e-6) {
     for (size_t i = 0; i < n; i++) {
         if (!isClose(array1[i], array2[i], rel_tol, abs_tol)) {

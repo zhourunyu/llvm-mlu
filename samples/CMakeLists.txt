@@ -22,6 +22,7 @@ add_executable_and_test(workitem workitem.cpp)
 add_executable_and_test(local_mem local_mem.cpp)
 add_executable_and_test(nram nram.cpp)
 add_executable_and_test(wram wram.cpp)
+add_executable_and_test(half half.cpp)
 
 file(GLOB TEST_SOURCES 
   "scalar/*.cpp"
