@@ -30,6 +30,52 @@ static cl::opt<std::string>
 OutputFilename("o", cl::desc("Output filename"),
                cl::value_desc("filename"));
 
+bool RenameMlisaFunc(std::string &name) {
+  if (name.substr(0, 2) != "_Z")
+    return false;
+  bool renamed = false;
+  size_t pos = 2;
+  while (pos < name.size() && std::isdigit(name[pos]))
+    ++pos;
+  int len = std::stoi(name.substr(2, pos - 2));
+
+  auto suffix = name.substr(pos + len);
+  auto prefix = name.substr(0, pos + len);
+
+  // replace S0->S, S1->S0, S2->S1, ...
+  {
+    std::string new_suffix;
+    std::regex re("S(\\d+)");
+    std::string::const_iterator start(suffix.cbegin());
+    std::smatch m;
+    while (std::regex_search(start, suffix.cend(), m, re)) {
+      renamed = true;
+      new_suffix.append(start, m[0].first);
+      int n = std::stoi(m[1].str());
+      if (n == 0) {
+        new_suffix.append("S");
+      } else {
+        new_suffix.append("S" + std::to_string(n - 1));
+      }
+      start = m[0].second;
+    }
+    new_suffix.append(start, suffix.cend());
+    suffix = std::move(new_suffix);
+  }
+
+  // replace Dh -> DF16_
+  {
+    std::regex re("Dh");
+    if (std::regex_search(suffix, re)) {
+      renamed = true;
+      suffix = std::regex_replace(suffix, re, "DF16_");
+    }
+  }
+
+  name = prefix + suffix;
+  return renamed;
+}
+
 int main(int argc, char **argv) {
   LLVMContext Context;
   llvm_shutdown_obj Y;  // Call llvm_shutdown() on exit.
@@ -97,36 +143,12 @@ int main(int argc, char **argv) {
     for (Module::iterator i = M->begin(), e = M->end(); i != e; ++i) {
       if (i->isDeclaration())
         continue;
-      // replace S0->S, S1->S0, S2->S1, ...
+      
       auto name = i->getName().operator std::string();
-      if (name.substr(0, 2) != "_Z")
-        continue;
-      size_t pos = 2;
-      while (pos < name.size() && std::isdigit(name[pos]))
-        ++pos;
-      int len = std::stoi(name.substr(2, pos - 2));
-
-      auto suffix = name.substr(pos + len);
-      auto prefix = name.substr(0, pos + len);
-      std::string new_suffix;
-
-      std::regex re("S(\\d+)");
-      std::string::const_iterator start(suffix.cbegin());
-      std::smatch m;
-
-      while (std::regex_search(start, suffix.cend(), m, re)) {
-        new_suffix.append(start, m[0].first);
-        int n = std::stoi(m[1].str());
-        if (n == 0) {
-          new_suffix.append("S");
-        } else {
-          new_suffix.append("S" + std::to_string(n - 1));
-        }
-        start = m[0].second;
+      if (RenameMlisaFunc(name)) {
+        // errs() << "Renamed " << i->getName() << " to " << name << "\n";
+        i->setName(name);
       }
-      new_suffix.append(start, suffix.cend());
-
-      i->setName(prefix + new_suffix);
     }
   }
 

@@ -14,8 +14,15 @@
 _CLC_INLINE float __cn_scalar_atanh_f32(float x) {
     return __cn_scalar_log_f32((1 + x) / (1 - x)) / 2;
 }
+#ifdef cl_khr_fp16
+#pragma OPENCL EXTENSION cl_khr_fp16 : enable
+_CLC_INLINE half __cn_scalar_atanh_f16(half x) {
+    return __cn_scalar_log_f16((1 + x) / (1 - x)) / 2;
+}
+#endif
 
 #define __CLC_FUNCTION __spirv_ocl_atanh
-#define __CLC_BUILTIN __cn_scalar_atanh_f32
-#define __CLC_BUILTIN_F __cn_scalar_atanh_f32
+#define __CLC_BUILTIN __cn_scalar_atanh
+#define __CLC_BUILTIN_F __CLC_XCONCAT(__CLC_BUILTIN, _f32)
+#define __CLC_BUILTIN_H __CLC_XCONCAT(__CLC_BUILTIN, _f16)
 #include <math/unary_builtin.inc>

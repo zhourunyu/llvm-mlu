@@ -114,25 +114,47 @@
 #define __SYCL_MAKE_CALL_VEC_ARG1(call, prefix)                                              \
   template <typename T1, typename T2>                                                        \
   inline __SYCL_ALWAYS_INLINE void __invoke_##call(size_t n, T1 *t1, const T2 *t2) __NOEXC { \
-    __SYCL_EXTERN_IT3(void, prefix, call, size_t, T1*, const T2*);                           \
-    __SYCL_PPCAT(prefix, call)(n, t1, t2);                                                   \
+    using Arg1 = cl::sycl::detail::ConvertToOpenCLType_t<T1>;                                \
+    using Arg2 = cl::sycl::detail::ConvertToOpenCLType_t<T2>;                                \
+    __SYCL_EXTERN_IT3(void, prefix, call, size_t, Arg1*, const Arg2*);                       \
+    Arg1 *arg1 = reinterpret_cast<Arg1 *>(t1);                                               \
+    const Arg2 *arg2 = reinterpret_cast<const Arg2 *>(t2);                                   \
+    __SYCL_PPCAT(prefix, call)(n, arg1, arg2);                                               \
   }
 
 #define __SYCL_MAKE_CALL_VEC_ARG2(call, prefix)                                                            \
   template <typename T1, typename T2, typename T3>                                                         \
   inline __SYCL_ALWAYS_INLINE void __invoke_##call(size_t n, T1 *t1, const T2 *t2, const T3 *t3) __NOEXC { \
-    __SYCL_EXTERN_IT4(void, prefix, call, size_t, T1*, const T2*, const T3*);                              \
-    __SYCL_PPCAT(prefix, call)(n, t1, t2, t3);                                                             \
+    using Arg1 = cl::sycl::detail::ConvertToOpenCLType_t<T1>;                                              \
+    using Arg2 = cl::sycl::detail::ConvertToOpenCLType_t<T2>;                                              \
+    using Arg3 = cl::sycl::detail::ConvertToOpenCLType_t<T3>;                                              \
+    __SYCL_EXTERN_IT4(void, prefix, call, size_t, Arg1*, const Arg2*, const Arg3*);                        \
+    Arg1 *arg1 = reinterpret_cast<Arg1 *>(t1);                                                             \
+    const Arg2 *arg2 = reinterpret_cast<const Arg2 *>(t2);                                                 \
+    const Arg3 *arg3 = reinterpret_cast<const Arg3 *>(t3);                                                 \
+    __SYCL_PPCAT(prefix, call)(n, arg1, arg2, arg3);                                                       \
   }                                                                                                        \
   template <typename T1, typename T2, typename T3>                                                         \
   inline __SYCL_ALWAYS_INLINE void __invoke_##call(size_t n, T1 *t1, const T2 *t2, T3 t3) __NOEXC {        \
-    __SYCL_EXTERN_IT4(void, prefix, call, size_t, T1*, const T2*, T3);                                     \
-    __SYCL_PPCAT(prefix, call)(n, t1, t2, t3);                                                             \
+    using Arg1 = cl::sycl::detail::ConvertToOpenCLType_t<T1>;                                              \
+    using Arg2 = cl::sycl::detail::ConvertToOpenCLType_t<T2>;                                              \
+    using Arg3 = cl::sycl::detail::ConvertToOpenCLType_t<T3>;                                              \
+    __SYCL_EXTERN_IT4(void, prefix, call, size_t, Arg1*, const Arg2*, Arg3);                               \
+    Arg1 *arg1 = reinterpret_cast<Arg1 *>(t1);                                                             \
+    const Arg2 *arg2 = reinterpret_cast<const Arg2 *>(t2);                                                 \
+    Arg3 arg3 = cl::sycl::detail::convertDataToType<T3, Arg3>(t3);                                         \
+    __SYCL_PPCAT(prefix, call)(n, arg1, arg2, arg3);                                                       \
   }                                                                                                        \
   template <typename T1, typename T2, typename T3>                                                         \
   inline __SYCL_ALWAYS_INLINE void __invoke_##call(size_t n, T1 *t1, T2 t2, const T3 *t3) __NOEXC {        \
-    __SYCL_EXTERN_IT4(void, prefix, call, size_t, T1*, T2, const T3*);                                     \
-    __SYCL_PPCAT(prefix, call)(n, t1, t2, t3);                                                             \
+    using Arg1 = cl::sycl::detail::ConvertToOpenCLType_t<T1>;                                              \
+    using Arg2 = cl::sycl::detail::ConvertToOpenCLType_t<T2>;                                              \
+    using Arg3 = cl::sycl::detail::ConvertToOpenCLType_t<T3>;                                              \
+    __SYCL_EXTERN_IT4(void, prefix, call, size_t, Arg1*, Arg2, const Arg3*);                               \
+    Arg1 *arg1 = reinterpret_cast<Arg1 *>(t1);                                                             \
+    Arg2 arg2 = cl::sycl::detail::convertDataToType<T2, Arg2>(t2);                                         \
+    const Arg3 *arg3 = reinterpret_cast<const Arg3 *>(t3);                                                 \
+    __SYCL_PPCAT(prefix, call)(n, arg1, arg2, arg3);                                                       \
   }
 
 #ifndef __SYCL_DEVICE_ONLY__
@@ -357,18 +379,33 @@ __SYCL_MAKE_CALL_VEC_ARG2(vector_ne, __FUNC_PREFIX_OCL)
 
 template <typename T>
 inline __SYCL_ALWAYS_INLINE void __invoke_vector_select(size_t n, T *t1, const bool *t2, const T *t3, const T *t4) __NOEXC {
-  __SYCL_EXTERN_IT5(void, __FUNC_PREFIX_OCL, vector_select, size_t, T*, const bool*, const T*, const T*);
-  __SYCL_PPCAT(__FUNC_PREFIX_OCL, vector_select)(n, t1, t2, t3, t4);
+  using Arg = cl::sycl::detail::ConvertToOpenCLType_t<T>;
+  __SYCL_EXTERN_IT5(void, __FUNC_PREFIX_OCL, vector_select, size_t, Arg*, const unsigned char*, const Arg*, const Arg*);
+  Arg *arg1 = reinterpret_cast<Arg *>(t1);
+  const unsigned char *arg2 = reinterpret_cast<const unsigned char *>(t2);
+  const Arg *arg3 = reinterpret_cast<const Arg *>(t3);
+  const Arg *arg4 = reinterpret_cast<const Arg *>(t4);
+  __SYCL_PPCAT(__FUNC_PREFIX_OCL, vector_select)(n, arg1, arg2, arg3, arg4);
 }
 template <typename T>
 inline __SYCL_ALWAYS_INLINE void __invoke_vector_select(size_t n, T *t1, const bool *t2, const T *t3, T t4) __NOEXC {
-  __SYCL_EXTERN_IT5(void, __FUNC_PREFIX_OCL, vector_select, size_t, T*, const bool*, const T*, T);
-  __SYCL_PPCAT(__FUNC_PREFIX_OCL, vector_select)(n, t1, t2, t3, t4);
+  using Arg = cl::sycl::detail::ConvertToOpenCLType_t<T>;
+  __SYCL_EXTERN_IT5(void, __FUNC_PREFIX_OCL, vector_select, size_t, Arg*, const unsigned char*, const Arg*, Arg);
+  Arg *arg1 = reinterpret_cast<Arg *>(t1);
+  const unsigned char *arg2 = reinterpret_cast<const unsigned char *>(t2);
+  const Arg *arg3 = reinterpret_cast<const Arg *>(t3);
+  Arg arg4 = cl::sycl::detail::convertDataToType<T, Arg>(t4);
+  __SYCL_PPCAT(__FUNC_PREFIX_OCL, vector_select)(n, arg1, arg2, arg3, arg4);
 }
 template <typename T>
 inline __SYCL_ALWAYS_INLINE void __invoke_vector_select(size_t n, T *t1, const bool *t2, T t3, const T *t4) __NOEXC {
-  __SYCL_EXTERN_IT5(void, __FUNC_PREFIX_OCL, vector_select, size_t, T*, const bool*, T, const T*);
-  __SYCL_PPCAT(__FUNC_PREFIX_OCL, vector_select)(n, t1, t2, t3, t4);
+  using Arg = cl::sycl::detail::ConvertToOpenCLType_t<T>;
+  __SYCL_EXTERN_IT5(void, __FUNC_PREFIX_OCL, vector_select, size_t, Arg*, const unsigned char*, Arg, const Arg*);
+  Arg *arg1 = reinterpret_cast<Arg *>(t1);
+  const unsigned char *arg2 = reinterpret_cast<const unsigned char *>(t2);
+  Arg arg3 = cl::sycl::detail::convertDataToType<T, Arg>(t3);
+  const Arg *arg4 = reinterpret_cast<const Arg *>(t4);
+  __SYCL_PPCAT(__FUNC_PREFIX_OCL, vector_select)(n, arg1, arg2, arg3, arg4);
 }
 
 #ifndef __SYCL_DEVICE_ONLY__

@@ -12,8 +12,9 @@
 #include <clcmacro.h>
 
 #define __CLC_FUNCTION __spirv_ocl_vector_neg
-#define __CLC_BUILTIN  __cn_vector_negate_f32
-
-#define __CLC_BUILTIN_INT __cn_vector_negate_s32
-#define __CLC_BUILTIN_LONG __cn_vector_negate_s64
+#define __CLC_BUILTIN __cn_vector_negate
+#define __CLC_BUILTIN_F __CLC_XCONCAT(__CLC_BUILTIN, _f32)
+#define __CLC_BUILTIN_H __CLC_XCONCAT(__CLC_BUILTIN, _f16)
+#define __CLC_BUILTIN_I __CLC_XCONCAT(__CLC_BUILTIN, _s32)
+#define __CLC_BUILTIN_L __CLC_XCONCAT(__CLC_BUILTIN, _s64)
 #include <../../include/vector_unary_builtin.inc>

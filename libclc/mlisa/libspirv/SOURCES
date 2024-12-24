@@ -13,7 +13,6 @@ workitem/get_sub_group_size.cl
 
 math/acos.cl
 math/acosh.cl
-math/add.cl
 math/asin.cl
 math/asinh.cl
 math/atan.cl
@@ -22,7 +21,6 @@ math/cbrt.cl
 math/ceil.cl
 math/cos.cl
 math/cosh.cl
-math/div.cl
 math/erf.cl
 math/exp.cl
 math/fabs.cl
@@ -34,7 +32,6 @@ math/log.cl
 math/log1p.cl
 math/log2.cl
 math/log10.cl
-math/mul.cl
 math/pow.cl
 math/round.cl
 math/rsqrt.cl
@@ -42,7 +39,6 @@ math/sign.cl
 math/sin.cl
 math/sinh.cl
 math/sqrt.cl
-math/sub.cl
 math/tan.cl
 math/tanh.cl
 math/trunc.cl

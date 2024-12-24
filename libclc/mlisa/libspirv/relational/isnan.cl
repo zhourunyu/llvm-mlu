@@ -13,4 +13,7 @@
 
 _CLC_DEF _CLC_OVERLOAD bool __spirv_IsNan(float x) { return __cn_scalar_isnan_f32(x); }
 
-_CLC_DEFINE_RELATIONAL_UNARY_VEC_ALL(schar, __spirv_IsNan, float)
+#ifdef cl_khr_fp16
+#pragma OPENCL EXTENSION cl_khr_fp16 : enable
+_CLC_DEF _CLC_OVERLOAD bool __spirv_IsNan(half x) { return __cn_scalar_isnan_f16(x); }
+#endif

@@ -12,6 +12,7 @@
 #include <clcmacro.h>
 
 #define __CLC_FUNCTION __spirv_ocl_trunc
-#define __CLC_BUILTIN  __cn_scalar_trunc_f32
-#define __CLC_BUILTIN_F  __cn_scalar_trunc_f32
+#define __CLC_BUILTIN __cn_scalar_trunc
+#define __CLC_BUILTIN_F __CLC_XCONCAT(__CLC_BUILTIN, _f32)
+#define __CLC_BUILTIN_H __CLC_XCONCAT(__CLC_BUILTIN, _f16)
 #include <math/unary_builtin.inc>

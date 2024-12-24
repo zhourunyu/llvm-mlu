@@ -9,59 +9,78 @@
 #include "utils.h"
 #include <clcmacro.h>
 
-#ifndef __CLC_BUILTIN
-#define __CLC_BUILTIN __CLC_XCONCAT(__clc_, __CLC_FUNCTION)
+#define DEFINE_TERNARY_VECTORIZED(FUNCTION, BUILTIN, ARG1_TYPE, ARG2_TYPE,     \
+                                  ARG3_TYPE)                                   \
+  _CLC_DEF _CLC_OVERLOAD void FUNCTION(size_t n, ARG1_TYPE x, ARG2_TYPE y,     \
+                                       ARG3_TYPE z) {                          \
+    BUILTIN(n, (bool *)x, y, z);                                               \
+  }                                                                            \
+
+DEFINE_TERNARY_VECTORIZED(__CLC_FUNCTION, __CLC_BUILTIN_F, unsigned char*, const float*, const float*)
+#ifdef __CLC_BUILTIN_SCALAR_F
+#ifndef __CLC_BUILTIN_SCALAR2_F
+#define __CLC_BUILTIN_SCALAR2_F(n, a, b, c) __CLC_BUILTIN_SCALAR_F(n, a, c, b)
+#endif
+DEFINE_TERNARY_VECTORIZED(__CLC_FUNCTION, __CLC_BUILTIN_SCALAR_F, unsigned char*, const float*, float)
+DEFINE_TERNARY_VECTORIZED(__CLC_FUNCTION, __CLC_BUILTIN_SCALAR2_F, unsigned char*, float, const float*)
 #endif
 
-_CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, bool *a, const float *b, const float *c) { __CLC_BUILTIN(n, a, b, c); }
-#ifdef __CLC_BUILTIN_SCALAR
-#ifndef __CLC_BUILTIN_SCALAR_L
-#define __CLC_BUILTIN_SCALAR_L(n, a, b, c) __CLC_BUILTIN_SCALAR(n, a, c, b)
+#ifdef __CLC_BUILTIN_I
+DEFINE_TERNARY_VECTORIZED(__CLC_FUNCTION, __CLC_BUILTIN_I, unsigned char*, const int*, const int*)
+#ifdef __CLC_BUILTIN_SCALAR_I
+#ifndef __CLC_BUILTIN_SCALAR2_I
+#define __CLC_BUILTIN_SCALAR2_I(n, a, b, c) __CLC_BUILTIN_SCALAR_I(n, a, c, b)
 #endif
-_CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, bool *a, const float *b, float c) { __CLC_BUILTIN_SCALAR(n, a, b, c); }
-_CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, bool *a, float b, const float *c) { __CLC_BUILTIN_SCALAR_L(n, a, b, c); }
-#endif
-
-#ifdef __CLC_BUILTIN_INT
-_CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, bool *a, const int *b, const int *c) { __CLC_BUILTIN_INT(n, a, b, c); }
-#ifdef __CLC_BUILTIN_INT_SCALAR
-#ifndef __CLC_BUILTIN_INT_SCALAR_L
-#define __CLC_BUILTIN_INT_SCALAR_L(n, a, b, c) __CLC_BUILTIN_INT_SCALAR(n, a, c, b)
-#endif
-_CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, bool *a, const int *b, int c) { __CLC_BUILTIN_INT_SCALAR(n, a, b, c); }
-_CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, bool *a, int b, const int *c) { __CLC_BUILTIN_INT_SCALAR_L(n, a, b, c); }
-#endif
-#endif
-
-#ifdef __CLC_BUILTIN_UINT
-_CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, bool *a, const unsigned int *b, const unsigned int *c) { __CLC_BUILTIN_UINT(n, a, b, c); }
-#ifdef __CLC_BUILTIN_UINT_SCALAR
-#ifndef __CLC_BUILTIN_UINT_SCALAR_L
-#define __CLC_BUILTIN_UINT_SCALAR_L(n, a, b, c) __CLC_BUILTIN_UINT_SCALAR(n, a, c, b)
-#endif
-_CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, bool *a, const unsigned int *b, unsigned int c) { __CLC_BUILTIN_UINT_SCALAR(n, a, b, c); }
-_CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, bool *a, unsigned int b, const unsigned int *c) { __CLC_BUILTIN_UINT_SCALAR_L(n, a, b, c); }
+DEFINE_TERNARY_VECTORIZED(__CLC_FUNCTION, __CLC_BUILTIN_SCALAR_I, unsigned char*, const int*, int)
+DEFINE_TERNARY_VECTORIZED(__CLC_FUNCTION, __CLC_BUILTIN_SCALAR2_I, unsigned char*, int, const int*)
 #endif
 #endif
 
-#ifdef __CLC_BUILTIN_LONG
-_CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, bool *a, const long *b, const long *c) { __CLC_BUILTIN_LONG(n, a, b, c); }
-#ifdef __CLC_BUILTIN_LONG_SCALAR
-#ifndef __CLC_BUILTIN_LONG_SCALAR_L
-#define __CLC_BUILTIN_LONG_SCALAR_L(n, a, b, c) __CLC_BUILTIN_LONG_SCALAR(n, a, c, b)
+#ifdef __CLC_BUILTIN_U
+DEFINE_TERNARY_VECTORIZED(__CLC_FUNCTION, __CLC_BUILTIN_U, unsigned char*, const unsigned int*, const unsigned int*)
+#ifdef __CLC_BUILTIN_SCALAR_U
+#ifndef __CLC_BUILTIN_SCALAR2_U
+#define __CLC_BUILTIN_SCALAR2_U(n, a, b, c) __CLC_BUILTIN_SCALAR_U(n, a, c, b)
 #endif
-_CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, bool *a, const long *b, long c) { __CLC_BUILTIN_LONG_SCALAR(n, a, b, c); }
-_CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, bool *a, long b, const long *c) { __CLC_BUILTIN_LONG_SCALAR_L(n, a, b, c); }
+DEFINE_TERNARY_VECTORIZED(__CLC_FUNCTION, __CLC_BUILTIN_SCALAR_U, unsigned char*, const unsigned int*, unsigned int)
+DEFINE_TERNARY_VECTORIZED(__CLC_FUNCTION, __CLC_BUILTIN_SCALAR2_U, unsigned char*, unsigned int, const unsigned int*)
 #endif
 #endif
 
-#ifdef __CLC_BUILTIN_ULONG
-_CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, bool *a, const unsigned long *b, const unsigned long *c) { __CLC_BUILTIN_ULONG(n, a, b, c); }
-#ifdef __CLC_BUILTIN_ULONG_SCALAR
-#ifndef __CLC_BUILTIN_ULONG_SCALAR_L
-#define __CLC_BUILTIN_ULONG_SCALAR_L(n, a, b, c) __CLC_BUILTIN_ULONG_SCALAR(n, a, c, b)
+#ifdef __CLC_BUILTIN_L
+DEFINE_TERNARY_VECTORIZED(__CLC_FUNCTION, __CLC_BUILTIN_L, unsigned char*, const long*, const long*)
+#ifdef __CLC_BUILTIN_SCALAR_L
+#ifndef __CLC_BUILTIN_SCALAR2_L
+#define __CLC_BUILTIN_SCALAR2_L(n, a, b, c) __CLC_BUILTIN_SCALAR_L(n, a, c, b)
 #endif
-_CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, bool *a, const unsigned long *b, unsigned long c) { __CLC_BUILTIN_ULONG_SCALAR(n, a, b, c); }
-_CLC_DEF _CLC_OVERLOAD void __CLC_FUNCTION(size_t n, bool *a, unsigned long b, const unsigned long *c) { __CLC_BUILTIN_ULONG_SCALAR_L(n, a, b, c); }
+DEFINE_TERNARY_VECTORIZED(__CLC_FUNCTION, __CLC_BUILTIN_SCALAR_L, unsigned char*, const long*, long)
+DEFINE_TERNARY_VECTORIZED(__CLC_FUNCTION, __CLC_BUILTIN_SCALAR2_L, unsigned char*, long, const long*)
 #endif
 #endif
+
+#ifdef __CLC_BUILTIN_UL
+DEFINE_TERNARY_VECTORIZED(__CLC_FUNCTION, __CLC_BUILTIN_UL, unsigned char*, const unsigned long*, const unsigned long*)
+#ifdef __CLC_BUILTIN_SCALAR_UL
+#ifndef __CLC_BUILTIN_SCALAR2_UL
+#define __CLC_BUILTIN_SCALAR2_UL(n, a, b, c) __CLC_BUILTIN_SCALAR_UL(n, a, c, b)
+#endif
+DEFINE_TERNARY_VECTORIZED(__CLC_FUNCTION, __CLC_BUILTIN_SCALAR_UL, unsigned char*, const unsigned long*, unsigned long)
+DEFINE_TERNARY_VECTORIZED(__CLC_FUNCTION, __CLC_BUILTIN_SCALAR2_UL, unsigned char*, unsigned long, const unsigned long*)
+#endif
+#endif
+
+#ifdef cl_khr_fp16
+#pragma OPENCL EXTENSION cl_khr_fp16 : enable
+#ifdef __CLC_BUILTIN_H
+DEFINE_TERNARY_VECTORIZED(__CLC_FUNCTION, __CLC_BUILTIN_H, unsigned char*, const half*, const half*)
+#ifdef __CLC_BUILTIN_SCALAR_H
+#ifndef __CLC_BUILTIN_SCALAR2_H
+#define __CLC_BUILTIN_SCALAR2_H(n, a, b, c) __CLC_BUILTIN_SCALAR_H(n, a, c, b)
+#endif
+DEFINE_TERNARY_VECTORIZED(__CLC_FUNCTION, __CLC_BUILTIN_SCALAR_H, unsigned char*, const half*, half)
+DEFINE_TERNARY_VECTORIZED(__CLC_FUNCTION, __CLC_BUILTIN_SCALAR2_H, unsigned char*, half, const half*)
+#endif
+#endif
+#endif
+
+#undef DEFINE_TERNARY_VECTORIZED
