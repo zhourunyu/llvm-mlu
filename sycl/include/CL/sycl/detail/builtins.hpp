@@ -407,6 +407,16 @@ inline __SYCL_ALWAYS_INLINE void __invoke_vector_select(size_t n, T *t1, const b
   const Arg *arg4 = reinterpret_cast<const Arg *>(t4);
   __SYCL_PPCAT(__FUNC_PREFIX_OCL, vector_select)(n, arg1, arg2, arg3, arg4);
 }
+template <typename T>
+inline __SYCL_ALWAYS_INLINE void __invoke_vector_select(size_t n, T *t1, const bool *t2, T t3, T t4) __NOEXC {
+  using Arg = cl::sycl::detail::ConvertToOpenCLType_t<T>;
+  __SYCL_EXTERN_IT5(void, __FUNC_PREFIX_OCL, vector_select, size_t, Arg*, const unsigned char*, Arg, Arg);
+  Arg *arg1 = reinterpret_cast<Arg *>(t1);
+  const unsigned char *arg2 = reinterpret_cast<const unsigned char *>(t2);
+  Arg arg3 = cl::sycl::detail::convertDataToType<T, Arg>(t3);
+  Arg arg4 = cl::sycl::detail::convertDataToType<T, Arg>(t4);
+  __SYCL_PPCAT(__FUNC_PREFIX_OCL, vector_select)(n, arg1, arg2, arg3, arg4);
+}
 
 #ifndef __SYCL_DEVICE_ONLY__
 } // namespace __host_std

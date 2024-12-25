@@ -1015,4 +1015,6 @@ foreach name = ["vector_select"] in {
                              ConstType<PointerType<AGenTypeMLU>>, AGenTypeMLU]>;
   def : OCLSPVBuiltin<name, [Void, Size, PointerType<AGenTypeMLU>, ConstType<PointerType<UChar>>,
                              AGenTypeMLU, ConstType<PointerType<AGenTypeMLU>>]>;
+  def : OCLSPVBuiltin<name, [Void, Size, PointerType<AGenTypeMLU>, ConstType<PointerType<UChar>>,
+                             AGenTypeMLU, AGenTypeMLU]>;
 }
