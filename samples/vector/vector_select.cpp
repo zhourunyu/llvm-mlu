@@ -104,6 +104,30 @@ void SelectOp(sycl::queue &q, const std::array<bool, n> &a, const std::array<T, 
     sycl::free(d_dev, q);
 }
 
+template <typename T, size_t n>
+void SelectOp(sycl::queue &q, const std::array<bool, n> &a, T b, T c, std::array<T, n> &d) {
+    auto a_dev = sycl::malloc_device<bool>(n, q);
+    auto d_dev = sycl::malloc_device<T>(n, q);
+    q.memcpy(a_dev, a.data(), n * sizeof(bool));
+
+    q.parallel_for<class mm>(sycl::range<3>{1, 1, N_CORES}, [=](sycl::item<3> item) {
+        auto id = item.get_id(2);
+        constexpr size_t nram_length = n / N_CORES;
+        bool *a_offset = a_dev + id * nram_length;
+        T *d_offset = d_dev + id * nram_length;
+        auto nram_buffer_a = *sycl::ext::mlu::sycl_nram_memory<bool[nram_length]>();
+        auto nram_buffer_d = *sycl::ext::mlu::sycl_nram_memory<T[nram_length]>();
+        sycl::ext::mlu::memcpy_gdram2nram(nram_buffer_a, a_offset, nram_length);
+        sycl::ext::mlu::vector_select(nram_buffer_d, nram_buffer_a, b, c, nram_length);
+        sycl::ext::mlu::memcpy_nram2gdram(d_offset, nram_buffer_d, nram_length);
+    });
+
+    q.memcpy(d.data(), d_dev, n * sizeof(T));
+    q.wait();
+    sycl::free(a_dev, q);
+    sycl::free(d_dev, q);
+}
+
 constexpr auto N = 1024;
 
 int main() {

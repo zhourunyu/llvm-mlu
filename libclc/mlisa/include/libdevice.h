@@ -358,10 +358,13 @@ void __cn_vector_ne_scalar_s64(int n, bool *z, const long *x, const long y);
 void __cn_vector_ne_scalar_u64(int n, bool *z, const unsigned long *x, const unsigned long y);
 
 void __cn_vector_and_s16(int n, short *z, const short *x, const short *y);
+void __cn_vector_and_u16(int n, unsigned short *z, const unsigned short *x, const unsigned short *y);
 void __cn_vector_and_s32(int n, int *z, const int *x, const int *y);
 void __cn_vector_and_u32(int n, unsigned int *z, const unsigned int *x, const unsigned int *y);
 void __cn_vector_and_s64(int n, long *z, const long *x, const long *y);
 void __cn_vector_and_u64(int n, unsigned long *z, const unsigned long *x, const unsigned long *y);
+void __cn_vector_and_scalar_s16(int n, short *z, const short *x, const short y);
+void __cn_vector_and_scalar_u16(int n, unsigned short *z, const unsigned short *x, const unsigned short y);
 void __cn_vector_and_scalar_s32(int n, int *z, const int *x, const int y);
 void __cn_vector_and_scalar_u32(int n, unsigned int *z, const unsigned int *x, const unsigned int y);
 void __cn_vector_and_scalar_s64(int n, long *z, const long *x, const long y);

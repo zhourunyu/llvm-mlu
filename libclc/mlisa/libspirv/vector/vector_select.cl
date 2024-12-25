@@ -39,6 +39,13 @@ _CLC_INLINE void __cn_scalar_select_vector_s32(size_t n, int *a, const unsigned 
     __cn_vector_add_scalar_s32(n, src2, src2, src1);
     __cn_vector_sub_s32(n, dst, src2, dst);
 }
+_CLC_INLINE void __cn_scalar_select_scalar_s32(size_t n, int *a, const unsigned char *b, int c, int d) {
+    int *dst = a, src1 = c, src2 = d;
+    __cn_vector_cast_u8_to_s32(n, dst, b);
+    __cn_vector_negate_s32(n, dst, dst);
+    __cn_vector_and_scalar_s32(n, dst, dst, src1 - src2);
+    __cn_vector_add_scalar_s32(n, dst, dst, src2);
+}
 
 _CLC_INLINE void __cn_vector_select_s16(size_t n, short *a, const unsigned char *b, const short *c, const short *d) {
     short *dst = a, *src1 = (short *)c, *src2 = (short *)d;
@@ -66,6 +73,13 @@ _CLC_INLINE void __cn_scalar_select_vector_s16(size_t n, short *a, const unsigne
     __cn_vector_and_s16(n, dst, dst, src2);
     __cn_vector_add_scalar_s16(n, src2, src2, src1);
     __cn_vector_sub_s16(n, dst, src2, dst);
+}
+_CLC_INLINE void __cn_scalar_select_scalar_s16(size_t n, short *a, const unsigned char *b, short c, short d) {
+    short *dst = a, src1 = c, src2 = d;
+    __cn_vector_cast_u8_to_s16(n, dst, b);
+    __cn_vector_negate_s16(n, dst, dst);
+    __cn_vector_and_scalar_s16(n, dst, dst, src1 - src2);
+    __cn_vector_add_scalar_s16(n, dst, dst, src2);
 }
 
 _CLC_INLINE void __cn_vector_select_s64(size_t n, long *a, const unsigned char *b, const long *c, const long *d) {
@@ -95,6 +109,13 @@ _CLC_INLINE void __cn_scalar_select_vector_s64(size_t n, long *a, const unsigned
     __cn_vector_add_scalar_s64(n, src2, src2, src1);
     __cn_vector_sub_s64(n, dst, src2, dst);
 }
+_CLC_INLINE void __cn_scalar_select_scalar_s64(size_t n, long *a, const unsigned char *b, long c, long d) {
+    long *dst = a, src1 = c, src2 = d;
+    __cn_vector_cast_u8_to_s64(n, dst, b);
+    __cn_vector_negate_s64(n, dst, dst);
+    __cn_vector_and_scalar_s64(n, dst, dst, src1 - src2);
+    __cn_vector_add_scalar_s64(n, dst, dst, src2);
+}
 
 #define VECTOR_SELECT_32(TYPE)                                                                                                   \
 _CLC_DEF _CLC_OVERLOAD void __spirv_ocl_vector_select(size_t n, TYPE *a, const unsigned char *b, const TYPE *c, const TYPE *d) { \
@@ -105,6 +126,9 @@ _CLC_DEF _CLC_OVERLOAD void __spirv_ocl_vector_select(size_t n, TYPE *a, const u
 }                                                                                                                                \
 _CLC_DEF _CLC_OVERLOAD void __spirv_ocl_vector_select(size_t n, TYPE *a, const unsigned char *b, TYPE c, const TYPE *d) {        \
     __cn_scalar_select_vector_s32(n, (int *)a, b, *(int *)&c, (const int *)d);                                                   \
+}                                                                                                                                \
+_CLC_DEF _CLC_OVERLOAD void __spirv_ocl_vector_select(size_t n, TYPE *a, const unsigned char *b, TYPE c, TYPE d) {               \
+    __cn_scalar_select_scalar_s32(n, (int *)a, b, *(int *)&c, *(int *)&d);                                                       \
 }
 #define VECTOR_SELECT_16(TYPE)                                                                                                   \
 _CLC_DEF _CLC_OVERLOAD void __spirv_ocl_vector_select(size_t n, TYPE *a, const unsigned char *b, const TYPE *c, const TYPE *d) { \
@@ -115,6 +139,9 @@ _CLC_DEF _CLC_OVERLOAD void __spirv_ocl_vector_select(size_t n, TYPE *a, const u
 }                                                                                                                                \
 _CLC_DEF _CLC_OVERLOAD void __spirv_ocl_vector_select(size_t n, TYPE *a, const unsigned char *b, TYPE c, const TYPE *d) {        \
     __cn_scalar_select_vector_s16(n, (short *)a, b, *(short *)&c, (const short *)d);                                             \
+}                                                                                                                                \
+_CLC_DEF _CLC_OVERLOAD void __spirv_ocl_vector_select(size_t n, TYPE *a, const unsigned char *b, TYPE c, TYPE d) {               \
+    __cn_scalar_select_scalar_s16(n, (short *)a, b, *(short *)&c, *(short *)&d);                                                 \
 }
 #define VECTOR_SELECT_64(TYPE)                                                                                                   \
 _CLC_DEF _CLC_OVERLOAD void __spirv_ocl_vector_select(size_t n, TYPE *a, const unsigned char *b, const TYPE *c, const TYPE *d) { \
@@ -125,6 +152,9 @@ _CLC_DEF _CLC_OVERLOAD void __spirv_ocl_vector_select(size_t n, TYPE *a, const u
 }                                                                                                                                \
 _CLC_DEF _CLC_OVERLOAD void __spirv_ocl_vector_select(size_t n, TYPE *a, const unsigned char *b, TYPE c, const TYPE *d) {        \
     __cn_scalar_select_vector_s64(n, (long *)a, b, *(long *)&c, (const long *)d);                                                \
+}                                                                                                                                \
+_CLC_DEF _CLC_OVERLOAD void __spirv_ocl_vector_select(size_t n, TYPE *a, const unsigned char *b, TYPE c, TYPE d) {               \
+    __cn_scalar_select_scalar_s64(n, (long *)a, b, *(long *)&c, *(long *)&d);                                                    \
 }
 
 VECTOR_SELECT_32(float)

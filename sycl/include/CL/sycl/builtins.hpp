@@ -1812,6 +1812,11 @@ detail::enable_if_t<detail::is_sgentype<T>::value, void> vector_select(T* out, c
   __sycl_std::__invoke_vector_select(n, out, in1, in2, in3);
 }
 
+template <typename T>
+detail::enable_if_t<detail::is_sgentype<T>::value, void> vector_select(T* out, const bool* in1, T in2, T in3, size_t n) __NOEXC {
+  __sycl_std::__invoke_vector_select(n, out, in1, in2, in3);
+}
+
 } // namespace mlu
 } // namespace ext
 
