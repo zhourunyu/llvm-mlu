@@ -12,15 +12,12 @@ int main() {
     std::array<float, N> a_host;
     std::array<float, 1> b_dev, b_host;
     initArray(a_host);
-    b_dev[0] = 0.0f;
-    b_host[0] = 0.0f;
 
     auto a = sycl::malloc_device<float>(N, q);
     auto b = sycl::malloc_device<float>(1, q);
     auto startTime = getTime();
 
     q.memcpy(a, a_host.data(), N * sizeof(float));
-    q.memcpy(b, b_host.data(), 1 * sizeof(float));
     q.parallel_for<class mm>(sycl::nd_range<3>({1, 1, 4}, {1, 1, 4}), [=](sycl::nd_item<3> item) {
         auto group = item.get_group();
         auto id = item.get_local_id(2);
@@ -44,6 +41,7 @@ int main() {
     auto endTime = getTime();
     std::cout << "Time: " << endTime - startTime << "us" << std::endl;
 
+    b_host[0] = 0.0f;
     for (int i = 0; i < N; i++) {
         b_host[0] += a_host[i];
     }

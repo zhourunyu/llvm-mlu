@@ -55,6 +55,7 @@ add_llvm_component_library(LLVMTransformUtils
   PredicateInfo.cpp
   PromoteMemoryToRegister.cpp
   RelLookupTableConverter.cpp
+  RemoveAttributes.cpp
   ScalarEvolutionExpander.cpp
   SCCPSolver.cpp
   StripGCRelocates.cpp

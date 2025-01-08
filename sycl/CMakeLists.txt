@@ -190,13 +190,15 @@ add_custom_target( sycl-toolchain
           file-table-tform
           llc
           llvm-ar
+          llvm-as
+          llvm-dis
           llvm-foreach
           llvm-no-spir-kernel
           llvm-spirv
           llvm-link
-		  llvm-config
-		  llvm-config
+		      llvm-config
           llvm-objcopy
+          opt
           sycl-post-link
           sycl-ls
           opencl-aot
@@ -242,12 +244,15 @@ set( SYCL_TOOLCHAIN_DEPLOY_COMPONENTS
      level-zero-headers
      llc
      llvm-ar
+     llvm-as
+     llvm-dis
      llvm-foreach
      llvm-no-spir-kernel
      llvm-spirv
-	 llvm-config
+	   llvm-config
      llvm-link
      llvm-objcopy
+     opt
      sycl-post-link
      sycl-ls
      clang-resource-headers

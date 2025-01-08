@@ -522,15 +522,12 @@ void BangToolChain::addClangTargetOptions(
     }
 
     if (LibSpirvFile.empty()) {
-      getDriver().Diag(diag::err_drv_no_sycl_libspirv)<<"libspirv-mlisa--.bc";
+      getDriver().Diag(diag::err_drv_no_sycl_libspirv) << "libspirv-mlisa--.bc";
       return;
     }
 
     CC1Args.push_back("-mlink-builtin-bitcode");
     CC1Args.push_back(DriverArgs.MakeArgString(LibSpirvFile));
-
-    CC1Args.push_back("-mlink-builtin-bitcode");
-    CC1Args.push_back("/usr/local/neuware/mlvm/libdevice/libdevice.compute_30.bc");
   }
 
 

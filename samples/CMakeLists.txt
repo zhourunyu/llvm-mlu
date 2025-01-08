@@ -6,7 +6,7 @@ project(samples)
 set(CMAKE_CXX_STANDARD 17)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 add_link_options(-fsycl -fsycl-targets=mlisa-cambricon-bang)
-add_compile_options(-fsycl -fsycl-targets=mlisa-cambricon-bang -O1)
+add_compile_options(-fsycl -fsycl-targets=mlisa-cambricon-bang -O3)
 
 include(CTest)
 enable_testing()
