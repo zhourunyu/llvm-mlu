@@ -527,9 +527,6 @@ void BangToolChain::addClangTargetOptions(
 
     CC1Args.push_back("-mlink-builtin-bitcode");
     CC1Args.push_back(DriverArgs.MakeArgString(LibSpirvFile));
-
-    CC1Args.push_back("-mlink-builtin-bitcode");
-    CC1Args.push_back("/usr/local/neuware/mlvm/libdevice/libdevice.compute_30.bc");
   }
 
 

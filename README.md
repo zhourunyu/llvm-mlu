@@ -49,8 +49,6 @@ $ sycl-ls
 
 4. 编译libclc
 ```shell
-ln -s -f /usr/local/neuware/lib/llvm-mm/bin/llvm-as build/bin/llvm-as
-ln -s -f /usr/local/neuware/lib/llvm-mm/bin/opt build/bin/opt
 bash libclc/build_mlisa.sh
 ```
 
