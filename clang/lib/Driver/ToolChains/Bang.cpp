@@ -397,8 +397,7 @@ void MLISA::Linker::ConstructJob(Compilation &C, const JobAction &JA,
   for (const auto& A : Args.getAllArgValues(options::OPT_Xbang_fatbinary))
     CmdArgs.push_back(Args.MakeArgString(A));
 
-  // TODO(zhouxiaoyong): replace cnas with cnlinker
-  const char *Exec = Args.MakeArgString(TC.GetProgramPath("cnas"));
+  const char *Exec = Args.MakeArgString(TC.GetProgramPath("cnlink"));
 
   C.addCommand(std::make_unique<Command>(JA, *this,
       ResponseFileSupport{ResponseFileSupport::RF_Full, llvm::sys::WEM_UTF8,
