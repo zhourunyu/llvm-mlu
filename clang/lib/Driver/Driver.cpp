@@ -3894,6 +3894,9 @@ class OffloadingActionBuilder final {
     /// List of CUDA architectures to use in this compilation with NVPTX targets.
     SmallVector<CudaArch, 8> GpuArchList;
 
+    /// List of BANG architectures to use in this compilation with MLISA targets.
+    SmallVector<BangArch, 4> MluArchList;
+
     /// Build the last steps for CUDA after all BC files have been linked.
     Action *finalizeNVPTXDependences(Action *Input, const llvm::Triple &TT) {
       auto *BA = C.getDriver().ConstructPhaseAction(
@@ -3943,6 +3946,9 @@ class OffloadingActionBuilder final {
       if (TC->getTriple().isNVPTX())
         for (CudaArch A : GpuArchList)
           Op(CudaArchToString(A));
+      else if (TC->getTriple().isMLISA())
+        for (BangArch A : MluArchList)
+          Op(BangArchToString(A));
       else
         Op(nullptr);
     }
@@ -4000,6 +4006,8 @@ class OffloadingActionBuilder final {
         const char *BoundArch = nullptr;
         if (TC->getTriple().isNVPTX())
           BoundArch = CudaArchToString(GpuArchList.front());
+        else if (TC->getTriple().isMLISA())
+          BoundArch = BangArchToString(MluArchList.front());
         DA.add(*DeviceCompilerInput, *TC, BoundArch, Action::OFK_SYCL);
         // Clear the input file, it is already a dependence to a host
         // action.
@@ -4478,9 +4486,7 @@ class OffloadingActionBuilder final {
           Action *FinAction =
               finalizeMLISADependences(PostLinkAction, (*TC)->getTriple());
           WrapperInputs.push_back(FinAction);
-        } 
-        
-        else {
+        } else {
           // For SPIRV-based targets - translate to SPIRV then optionally
           // compile ahead-of-time to native architecture
           constexpr char COL_CODE[] = "Code";
@@ -4585,15 +4591,16 @@ class OffloadingActionBuilder final {
     bool initializeGpuArchMap() {
       const OptTable &Opts = C.getDriver().getOpts();
       for (auto *A : Args) {
+        llvm::Triple TT;
+        if (!SYCLTripleList.empty())
+          TT = SYCLTripleList.front();
         unsigned Index;
 
-        if (A->getOption().matches(options::OPT_Xsycl_backend_EQ))
+        if (A->getOption().matches(options::OPT_Xsycl_backend_EQ)) {
+          TT = llvm::Triple(A->getValue(0));
           // Passing device args: -Xsycl-target-backend=<triple> -opt=val.
-          if (llvm::Triple(A->getValue(0)).isNVPTX())
-            Index = Args.getBaseArgs().MakeIndex(A->getValue(1));
-          else
-            continue;
-        else if (A->getOption().matches(options::OPT_Xsycl_backend))
+          Index = Args.getBaseArgs().MakeIndex(A->getValue(1));
+        } else if (A->getOption().matches(options::OPT_Xsycl_backend))
           // Passing device args: -Xsycl-target-backend -opt=val.
           Index = Args.getBaseArgs().MakeIndex(A->getValue(0));
         else
@@ -4605,13 +4612,22 @@ class OffloadingActionBuilder final {
         if (ParsedArg &&
             ParsedArg->getOption().matches(options::OPT_offload_arch_EQ)) {
           ParsedArg->claim();
-          GpuArchList.push_back(StringToCudaArch(ParsedArg->getValue(0)));
+          if (TT.isNVPTX())
+            GpuArchList.push_back(StringToCudaArch(ParsedArg->getValue(0)));
+          else if (TT.isMLISA())
+            MluArchList.push_back(StringToBangArch(ParsedArg->getValue(0)));
         }
       }
 
-      // If there are no CUDA architectures provided then default to SM_50.
-      if (GpuArchList.empty()) {
-        GpuArchList.push_back(CudaArch::SM_50);
+      for (const auto& TT: SYCLTripleList) {
+        // If there are no CUDA architectures provided then default to SM_50.
+        if (TT.isNVPTX() && GpuArchList.empty()) {
+          GpuArchList.push_back(CudaArch::SM_50);
+        }
+        // If there are no BANG architectures provided then default to MTP_372.
+        if (TT.isMLISA() && MluArchList.empty()) {
+          MluArchList.push_back(BangArch::MTP_372);
+        }
       }
 
       return false;

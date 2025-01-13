@@ -18,6 +18,7 @@
 #include "Arch/SystemZ.h"
 #include "Arch/VE.h"
 #include "Arch/X86.h"
+#include "Bang.h"
 #include "CommonArgs.h"
 #include "Hexagon.h"
 #include "InputInfo.h"
@@ -4445,49 +4446,6 @@ void Clang::ConstructJob(Compilation &C, const JobAction &JA,
   assert((IsCuda || IsHIP || (IsOpenMPDevice && Inputs.size() == 2) || IsSYCL ||
           IsHeaderModulePrecompile || Inputs.size() == 1) &&
          "Unable to handle multiple inputs.");
-
-  if (IsSYCL && JA.getType() == types::TY_PP_Asm && Triple.isMLISA()) {
-    // llvm-link --only-needed -o main.bc main.bc /usr/local/neuware/mlvm/libdevice/libdevice.compute_30.bc
-    // opt --passes=remove-attributes -remove-attrs=mustprogress -S -o main.ll main.bc
-    // cncc --target=mlisa-cambricon-bang -march=mtp_372 -S -Ox -o main.s main.ll
-    const char *LLVMLink = Args.MakeArgString(TC.GetProgramPath("llvm-link"));
-    std::string TempBCName = C.getDriver().GetTemporaryPath(
-        llvm::sys::path::stem(Output.getBaseInput()), "bc");
-    const char *TempBCFile = C.addTempFile(Args.MakeArgString(TempBCName));
-    InputInfo TempBC(&JA, TempBCFile, Output.getBaseInput());
-    ArgStringList LLVMLinkArgs{"--only-needed", "-o", TempBC.getFilename()};
-    for (const auto &II : Inputs) {
-      if (II.isFilename())
-        LLVMLinkArgs.push_back(II.getFilename());
-      else
-        II.getInputArg().renderAsInput(Args, LLVMLinkArgs);
-    }
-    std::string LibdeviceBC = "/usr/local/neuware/mlvm/libdevice/libdevice.compute_30.bc";
-    LLVMLinkArgs.push_back(Args.MakeArgString(LibdeviceBC));
-    C.addCommand(std::make_unique<Command>(
-          JA, *this, ResponseFileSupport::None(), LLVMLink, LLVMLinkArgs, Inputs, TempBC));
-
-    const char *Opt = Args.MakeArgString(TC.GetProgramPath("opt"));
-    std::string TempLLName = C.getDriver().GetTemporaryPath(
-        llvm::sys::path::stem(Output.getBaseInput()), "ll");
-    const char *TempLLFile = C.addTempFile(Args.MakeArgString(TempLLName));
-    InputInfo TempLL(&JA, TempLLFile, Output.getBaseInput());
-    ArgStringList OptArgs{"--passes=remove-attributes", "-remove-attrs=mustprogress", "-S",
-        "-o", TempLL.getFilename(), TempBC.getFilename()};
-    C.addCommand(std::make_unique<Command>(
-          JA, *this, ResponseFileSupport::None(), Opt, OptArgs, TempBC, TempLL));
-
-    const char *Cncc = Args.MakeArgString(TC.GetProgramPath("cncc"));
-    ArgStringList CnccArgs{"--target=mlisa-cambricon-bang", "-march=mtp_372", "-S"};
-    const Arg *OptLevel = Args.getLastArg(options::OPT_O_Group);
-    if (OptLevel) {
-      OptLevel->render(Args, CnccArgs);
-    }
-    CnccArgs.append({"-o", Output.getFilename(), TempLL.getFilename()});
-    C.addCommand(std::make_unique<Command>(
-          JA, *this, ResponseFileSupport::None(), Cncc, CnccArgs, TempLL, Output));
-    return;
-  }
 
   // Perform the SYCL host compilation using an external compiler if the user
   // requested.

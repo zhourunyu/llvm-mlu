@@ -70,21 +70,21 @@ public:
   void getTargetDefines(const LangOptions &Opts,
                         MacroBuilder &Builder) const override;
 
-  
-
   ArrayRef<Builtin::Info> getTargetBuiltins() const override;
 
   bool
   initFeatureMap(llvm::StringMap<bool> &Features, DiagnosticsEngine &Diags,
                  StringRef CPU,
-                 const std::vector<std::string> &FeaturesVec) const override;
+                 const std::vector<std::string> &FeaturesVec) const override {
+    Features[BangArchToString(MLU)] = true;
+    return TargetInfo::initFeatureMap(Features, Diags, CPU, FeaturesVec);
+  }
 
   // Target feature map see: llvm/lib/Target/MLISA/MLISA.td
   bool hasFeature(StringRef Feature) const override;
 
-  bool hasExtIntType() const override { return true; }
-
   ArrayRef<const char *> getGCCRegNames() const override;
+
   ArrayRef<TargetInfo::GCCRegAlias> getGCCRegAliases() const override {
     // No aliases.
     return None;
@@ -118,6 +118,12 @@ public:
 
   bool isValidCPUName(StringRef Name) const override {
     return StringToBangArch(Name) != BangArch::UNKNOWN;
+  }
+
+  void fillValidCPUList(SmallVectorImpl<StringRef> &Values) const override {
+    for (int i = static_cast<int>(BangArch::TP_210);
+         i < static_cast<int>(BangArch::LAST); ++i)
+      Values.emplace_back(BangArchToString(static_cast<BangArch>(i)));
   }
 
   bool setCPU(const std::string &Name) override {
@@ -165,6 +171,13 @@ public:
     return CCCR_Warning;
   }
 
+  void adjust(LangOptions &Opts) override {
+    TargetInfo::adjust(Opts);
+    // FIXME: Needed for compiling SYCL to MLISA.
+    TLSSupported = TLSSupported || Opts.SYCLIsDevice;
+  }
+
+  bool hasExtIntType() const override { return true; }
 };
 
 } // namespace targets

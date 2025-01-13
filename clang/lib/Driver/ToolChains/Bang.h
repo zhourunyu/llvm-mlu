@@ -16,9 +16,9 @@
 #include "clang/Driver/Tool.h"
 #include "clang/Driver/ToolChain.h"
 #include "llvm/ADT/Optional.h"
-#include "llvm/ADT/SmallSet.h"
 #include "llvm/Support/Compiler.h"
 #include "llvm/Support/VersionTuple.h"
+#include <bitset>
 #include <set>
 #include <vector>
 
@@ -30,7 +30,7 @@ class BangInstallationDetector {
 private:
   const Driver &D;
   bool IsValid = false;
-  BangVersion Version = BangVersion::UNKNOWN;
+  CnrtVersion Version = CnrtVersion::UNKNOWN;
   std::string DetectedVersion;
   bool DetectedVersionIsNotSupported = false;
   std::string InstallPath;
@@ -42,11 +42,11 @@ private:
 
   // BANG architectures for which we have raised an error in
   // CheckBangVersionSupportsArch.
-  mutable llvm::SmallSet<BangArch, 4> ArchsWithBadVersion;
+  mutable std::bitset<(int)BangArch::LAST> ArchsWithBadVersion;
 
 public:
   BangInstallationDetector(const Driver &D, const llvm::Triple &HostTriple,
-                           const llvm::opt::ArgList &Args);
+                              const llvm::opt::ArgList &Args);
 
   void AddBangIncludeArgs(const llvm::opt::ArgList &DriverArgs,
                           llvm::opt::ArgStringList &CC1Args) const;
@@ -63,7 +63,7 @@ public:
   void print(raw_ostream &OS) const;
 
   /// Get the detected Bang install's version.
-  BangVersion version() const { return Version; }
+  CnrtVersion version() const { return Version; }
   /// Get the detected Bang installation path.
   StringRef getInstallPath() const { return InstallPath; }
   /// Get the detected path to Bang's bin directory.
@@ -76,22 +76,20 @@ public:
   StringRef getLibDevicePath() const { return LibDevicePath; }
   /// Get libdevice file for given architecture
   std::string getLibDeviceFile(StringRef Mlu) const {
-    return LibDeviceMap.lookup(Mlu);
+    BangArch arch = StringToBangArch(Mlu);
+    return LibDeviceMap.lookup(BangArchToVirtualArchString(arch));
   }
   void WarnIfUnsupportedVersion();
-
-private:
-  void ParseBangVersionFile(llvm::StringRef V);
 };
 
 namespace tools {
 namespace MLISA {
 
-// Run llc, the MLISA backend
+// Run cncc, the MLISA backend compiler
 class LLVM_LIBRARY_VISIBILITY BackendCompiler : public Tool {
  public:
    BackendCompiler(const ToolChain &TC)
-       : Tool("MLISA::Backend", "llc", TC) {}
+       : Tool("MLISA::Backend", "cncc", TC) {}
 
    bool hasIntegratedCPP() const override { return false; }
 
@@ -100,9 +98,6 @@ class LLVM_LIBRARY_VISIBILITY BackendCompiler : public Tool {
                      const llvm::opt::ArgList &TCArgs,
                      const char *LinkingOutput) const override;
 };
-
-
-
 
 // Run cnas, the MLISA assembler.
 class LLVM_LIBRARY_VISIBILITY Assembler : public Tool {
@@ -118,12 +113,11 @@ class LLVM_LIBRARY_VISIBILITY Assembler : public Tool {
                      const char *LinkingOutput) const override;
 };
 
-// Runs fatbinary, which combines MLU object files ("fatbin" files) and/or MLISA
+// Runs cnlink/cncc, which combines MLU object files ("cnbin" files) and/or MLISA
 // assembly into a single output file.
 class LLVM_LIBRARY_VISIBILITY Linker : public Tool {
  public:
-   Linker(const ToolChain &TC)
-       : Tool("MLISA::Linker", "fatbinary", TC) {}
+   Linker(const ToolChain &TC) : Tool("MLISA::Linker", "cnlink", TC) {}
 
    bool hasIntegratedCPP() const override { return false; }
 

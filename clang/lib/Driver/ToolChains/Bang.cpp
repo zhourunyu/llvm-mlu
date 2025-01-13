@@ -1,9 +1,8 @@
 //===--- Bang.cpp - Bang Tool and ToolChain Implementations -----*- C++ -*-===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is distributed under the University of Illinois Open Source
-// License. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -17,6 +16,7 @@
 #include "clang/Driver/Driver.h"
 #include "clang/Driver/DriverDiagnostic.h"
 #include "clang/Driver/Options.h"
+#include "llvm/ADT/Optional.h"
 #include "llvm/Option/ArgList.h"
 #include "llvm/Support/FileSystem.h"
 #include "llvm/Support/Host.h"
@@ -33,70 +33,116 @@ using namespace clang::driver::tools;
 using namespace clang;
 using namespace llvm::opt;
 
-#if 0  // TODO(zhouxiaoyong): check the device-side library libdevice.bc
-// Parses the contents of mlvm/version.txt in an NEUWARE installation.
-// It should contain one line of the from e.g. "MLVM Version 2.4.0".
-static BangVersion ParseBangVersionFile(llvm::StringRef V) {
-  if (!V.startswith("MLVM Version ")) {
-    return BangVersion::UNKNOWN;
+namespace {
+struct CnrtVersionInfo {
+  std::string DetectedVersion;
+  CnrtVersion Version;
+};
+
+CnrtVersionInfo parseCnrtHFile(llvm::StringRef Input) {
+  // Helper lambda which skips the words if the line starts with them or returns
+  // None otherwise.
+  auto StartsWithWords =
+      [](llvm::StringRef Line,
+         const SmallVector<StringRef, 2> words) -> llvm::Optional<StringRef> {
+    for (StringRef word : words) {
+      if (!Line.consume_front(word))
+        return {};
+      Line = Line.ltrim();
+    }
+    return Line;
+  };
+
+  Input = Input.ltrim();
+  int version_major = -1, version_minor = -1, version_patch = -1;
+  while (!Input.empty()) {
+    if (auto Line =
+            StartsWithWords(Input.ltrim(), {"#define", "CNRT_MAJOR_VERSION"})) {
+      Line->consumeInteger(10, version_major);
+    } else if (auto Line = 
+            StartsWithWords(Input.ltrim(), {"#define", "CNRT_MINOR_VERSION"})) {
+      Line->consumeInteger(10, version_minor);
+    } else if (auto Line = 
+            StartsWithWords(Input.ltrim(), {"#define", "CNRT_PATCH_VERSION"})) {
+      Line->consumeInteger(10, version_patch);
+    }
+    if (version_major != -1 && version_minor != -1 && version_patch != -1) {
+      auto version = llvm::VersionTuple(version_major, version_minor, version_patch);
+      return {"cnrt.h: CNRT_VERSION=" + version.getAsString(),
+              ToCnrtVersion(version)};
+    }
+    // Find next non-empty line.
+    Input = Input.drop_front(Input.find_first_of("\n\r")).ltrim();
   }
-  V = V.substr(strlen("MLVM Version "));
-  int Major = -1, Minor = -1;
-  auto First = V.split('.');
-  auto Second = First.second.split('.');
-  if (First.first.getAsInteger(10, Major) ||
-      Second.first.getAsInteger(10, Minor)) {
-    return BangVersion::UNKNOWN;
-  }
-  if (Major == 1) {
-    return BangVersion::BANG_10;
-  }
-  if (Major == 2) {
-    return BangVersion::BANG_20;
-  }
-  return BangVersion::UNKNOWN;
+  return {"cnrt.h: CNRT_VERSION not found.", CnrtVersion::UNKNOWN};
 }
-#endif
+} // namespace
+
+void BangInstallationDetector::WarnIfUnsupportedVersion() {
+  if (DetectedVersionIsNotSupported)
+    D.Diag(diag::warn_drv_unknown_cuda_version)
+        << DetectedVersion
+        << CnrtVersionToString(CnrtVersion::LATEST_SUPPORTED);
+}
 
 BangInstallationDetector::BangInstallationDetector(
     const Driver &D, const llvm::Triple &HostTriple,
     const llvm::opt::ArgList &Args)
     : D(D) {
-  SmallVector<std::string, 4> BangPathCandidates;
+  struct Candidate {
+    std::string Path;
+    bool StrictChecking;
+
+    Candidate(std::string Path, bool StrictChecking = false)
+        : Path(Path), StrictChecking(StrictChecking) {}
+  };
+  SmallVector<Candidate, 4> Candidates;
+
+  auto &FS = D.getVFS();
 
   if (Args.hasArg(clang::driver::options::OPT_neuware_path_EQ)) {
-    BangPathCandidates.push_back(
+    Candidates.emplace_back(
         Args.getLastArgValue(clang::driver::options::OPT_neuware_path_EQ).str());
   } else {
+    // Try to find cncc binary. If the executable is located in a directory
+    // called 'bin/', its parent directory might be a good guess for a valid
+    // NEUWARE installation.
+    if (llvm::ErrorOr<std::string> cncc =
+            llvm::sys::findProgramByName("cncc")) {
+      SmallString<256> cnccAbsolutePath;
+      llvm::sys::fs::real_path(*cncc, cnccAbsolutePath);
+
+      StringRef cnccDir = llvm::sys::path::parent_path(cnccAbsolutePath);
+      if (llvm::sys::path::filename(cnccDir) == "bin")
+        Candidates.emplace_back(
+            std::string(llvm::sys::path::parent_path(cnccDir)),
+            /*StrictChecking=*/true);
+    }
+
     char* neuware_home = std::getenv("NEUWARE_HOME");
     if (neuware_home) {
-      BangPathCandidates.push_back(neuware_home);
+      Candidates.emplace_back(neuware_home);
     }
-  }
-  
-  std::string DefaultNeuwarePath = "/usr/local/neuware";
-  if (BangPathCandidates.size() == 0) {
-    BangPathCandidates.push_back(DefaultNeuwarePath);
+
+    Candidates.emplace_back(D.SysRoot + "/usr/local/neuware");
   }
 
-  for (const auto &BangPath : BangPathCandidates) {
-    if (BangPath.empty() || !D.getVFS().exists(BangPath))
+  bool NoNeuwareLib = Args.hasArg(options::OPT_noneuwarelib);
+
+  for (const auto &Candidate : Candidates) {
+    InstallPath = Candidate.Path;
+    if (InstallPath.empty() || !FS.exists(InstallPath))
       continue;
 
-    InstallPath = BangPath;
-    BinPath = BangPath + "/bin";
+    BinPath = InstallPath + "/bin";
     IncludePath = InstallPath + "/include";
     LibDevicePath = InstallPath + "/mlvm/libdevice";
 
-    auto &FS = D.getVFS();
-#if 0  // TODO(zhouxiaoyong): check the depend bin and libdevice.bc
-    if (!(FS.exists(IncludePath) && FS.exists(BinPath) &&
-          FS.exists(LibDevicePath)))
+    if (!(FS.exists(IncludePath) && FS.exists(BinPath)))
       continue;
-#else
-    if (!(FS.exists(IncludePath)))
+    bool CheckLibDevice = (!NoNeuwareLib || Candidate.StrictChecking);
+    if (CheckLibDevice && !FS.exists(LibDevicePath))
       continue;
-#endif
 
     if (HostTriple.isArch64Bit() && FS.exists(InstallPath + "/lib64"))
       LibPath = InstallPath + "/lib64";
@@ -104,45 +150,52 @@ BangInstallationDetector::BangInstallationDetector(
       LibPath = InstallPath + "/lib";
     else
       continue;
-   /*
-// TODO(zhouxiaoyong): check the device-side library libdevice.bc
-    llvm::ErrorOr<std::unique_ptr<llvm::MemoryBuffer>> VersionFile =
-        FS.getBufferForFile(InstallPath + "/mlvm/version.txt");
-    if (!VersionFile) {
-      // neuware < v1.2.5 doesn't have a version.txt
-      Version = BangVersion::BANG_10;
-    } else {
-      Version = ParseBangVersionFile((*VersionFile)->getBuffer());
+
+    CnrtVersionInfo VersionInfo = {"", CnrtVersion::UNKNOWN};
+    if (auto CnrtHFile = FS.getBufferForFile(InstallPath + "/include/cnrt.h"))
+      VersionInfo = parseCnrtHFile((*CnrtHFile)->getBuffer());
+    if (VersionInfo.Version == CnrtVersion::UNKNOWN) {
+      VersionInfo.DetectedVersion =
+          "No version found in cnrt.h.";
     }
 
+    Version = VersionInfo.Version;
+    DetectedVersion = VersionInfo.DetectedVersion;
+
     std::error_code EC;
-    for (llvm::sys::fs::directory_iterator LI(LibDevicePath, EC), LE;
-         !EC && LI != LE; LI = LI.increment(EC)) {
+    for (llvm::vfs::directory_iterator LI = FS.dir_begin(LibDevicePath, EC),
+                                       LE;
+          !EC && LI != LE; LI = LI.increment(EC)) {
       StringRef FilePath = LI->path();
       StringRef FileName = llvm::sys::path::filename(FilePath);
-      // Process all bitcode filenames that look like libdevice.compute_XX.YY.bc
+      // Process all bitcode filenames that look like
+      // libdevice.compute_XX.bc
       const StringRef LibDeviceName = "libdevice.";
       if (!(FileName.startswith(LibDeviceName) && FileName.endswith(".bc")))
         continue;
       StringRef MluArch = FileName.slice(
           LibDeviceName.size(), FileName.find('.', LibDeviceName.size()));
       LibDeviceMap[MluArch] = FilePath.str();
-      // Insert map entries for specifc devices with this compute
-      // capability. CNCC's choice of the libdevice library version is
-      // rather peculiar and depends on the BANG version.
-      if (MluArch == "MLU100") {
-        LibDeviceMap["mlu100"] = FilePath;
-      } else if (MluArch == "MLU200") {
-        LibDeviceMap["mlu200"] = FilePath;
-      } else if (MluArch == "1H8") {
-        LibDeviceMap["1H8"] = FilePath;
+      // Insert map entries for specific devices with this compute
+      // capability.
+      if (MluArch == "compute_20") {
+        LibDeviceMap["compute_20"] = std::string(FilePath);
+      } else if (MluArch == "compute_30") {
+        LibDeviceMap["compute_30"] = std::string(FilePath);
+      } else if (MluArch == "compute_50") {
+        LibDeviceMap["compute_50"] = std::string(FilePath);
+      } else if (MluArch == "compute_60") {
+        LibDeviceMap["compute_60"] = std::string(FilePath);
       }
     }
-    */
+
+    // Check that we have found at least one libdevice that we can link in if
+    // -noneuwarelib hasn't been specified.
+    if (LibDeviceMap.empty() && !NoNeuwareLib)
+      continue;
 
     IsValid = true;
     break;
-
   }
 }
 
@@ -174,45 +227,75 @@ void BangInstallationDetector::AddBangIncludeArgs(
 
 void BangInstallationDetector::CheckBangVersionSupportsArch(
     BangArch Arch) const {
-  if (Arch == BangArch::UNKNOWN || Version == BangVersion::UNKNOWN ||
-      ArchsWithBadVersion.count(Arch) > 0)
+  if (Arch == BangArch::UNKNOWN || Version == CnrtVersion::UNKNOWN ||
+      ArchsWithBadVersion[(int)Arch])
     return;
 
-  auto RequiredVersion = MinVersionForBangArch(Arch);
-  /*
-  if (Version < RequiredVersion) {
-    ArchsWithBadVersion.insert(Arch);
-    D.Diag(diag::err_drv_neuware_version_too_low)
-        << InstallPath << BangArchToString(Arch) << BangVersionToString(Version)
-        << BangVersionToString(RequiredVersion);
+  auto MinVersion = MinVersionForBangArch(Arch);
+  auto MaxVersion = MaxVersionForBangArch(Arch);
+  if (Version < MinVersion || Version > MaxVersion) {
+    ArchsWithBadVersion[(int)Arch] = true;
+    D.Diag(diag::err_drv_cuda_version_unsupported)
+        << BangArchToString(Arch) << CnrtVersionToString(MinVersion)
+        << CnrtVersionToString(MaxVersion) << InstallPath
+        << CnrtVersionToString(Version);
   }
-  */
 }
 
 void BangInstallationDetector::print(raw_ostream &OS) const {
   if (isValid())
     OS << "Found NEUWARE installation: " << InstallPath << ", version " 
-       << "\n";
-       // << BangVersionToString(Version) << "\n";
-}
-
-void BangInstallationDetector::ParseBangVersionFile(llvm::StringRef V) {
-  // TODO(libaolaing): add version checking
-}
-
-void BangInstallationDetector::WarnIfUnsupportedVersion() {
-  // TODO(libaoliang): add warning information
+       << CnrtVersionToString(Version) << "\n";
 }
 
 void MLISA::BackendCompiler::ConstructJob(Compilation &C, const JobAction &JA,
-                                    const InputInfo &Output,
-                                    const InputInfoList &Inputs,
-                                    const ArgList &Args,
-                                    const char *LinkingOutput) const {
-                                    
-  return ;
-}
+                                          const InputInfo &Output,
+                                          const InputInfoList &Inputs,
+                                          const ArgList &Args,
+                                          const char *LinkingOutput) const {
+  const auto &TC =
+      static_cast<const toolchains::BangToolChain &>(getToolChain());
+  assert(TC.getTriple().isMLISA() && "Wrong platform");
 
+  // Obtain architecture from the action.
+  std::string mlu_arch = JA.getOffloadingArch();
+
+  const char *LLVMLink = Args.MakeArgString(TC.GetProgramPath("llvm-link"));
+  std::string BCFile = C.getDriver().GetTemporaryPath(
+      llvm::sys::path::stem(Output.getBaseInput()), "bc");
+  InputInfo BC(&JA, C.addTempFile(Args.MakeArgString(BCFile)), Output.getBaseInput());
+  ArgStringList LLVMLinkArgs{"--only-needed", "-o", BC.getFilename()};
+  for (const auto &II : Inputs) {
+    if (II.isFilename())
+      LLVMLinkArgs.push_back(II.getFilename());
+    else
+      II.getInputArg().renderAsInput(Args, LLVMLinkArgs);
+  }
+  std::string LibDeviceFile = TC.BangInstallation.getLibDeviceFile(mlu_arch);
+  LLVMLinkArgs.push_back(Args.MakeArgString(LibDeviceFile));
+  C.addCommand(std::make_unique<Command>(
+        JA, *this, ResponseFileSupport::None(), LLVMLink, LLVMLinkArgs, Inputs, BC));
+
+  const char *Opt = Args.MakeArgString(TC.GetProgramPath("opt"));
+  std::string LLFile = C.getDriver().GetTemporaryPath(
+      llvm::sys::path::stem(Output.getBaseInput()), "bc");
+  InputInfo LL(&JA, C.addTempFile(Args.MakeArgString(LLFile)), Output.getBaseInput());
+  ArgStringList OptArgs{"-S", "--passes=remove-attributes", "-remove-attrs=mustprogress",
+      "-o", LL.getFilename(), BC.getFilename()};
+  C.addCommand(std::make_unique<Command>(
+        JA, *this, ResponseFileSupport::None(), Opt, OptArgs, BC, LL));
+
+  const char *Cncc = Args.MakeArgString(TC.GetProgramPath("cncc"));
+  ArgStringList CnccArgs{"-S", "--target=mlisa-cambricon-bang"};
+  CnccArgs.push_back(Args.MakeArgString("-march=" + mlu_arch));
+  const Arg *OptLevel = Args.getLastArg(options::OPT_O_Group);
+  if (OptLevel) {
+    OptLevel->render(Args, CnccArgs);
+  }
+  CnccArgs.append({"-o", Output.getFilename(), LL.getFilename()});
+  C.addCommand(std::make_unique<Command>(
+        JA, *this, ResponseFileSupport::None(), Cncc, CnccArgs, LL, Output));
+}
 
 void MLISA::Assembler::ConstructJob(Compilation &C, const JobAction &JA,
                                     const InputInfo &Output,
@@ -396,7 +479,11 @@ void MLISA::Linker::ConstructJob(Compilation &C, const JobAction &JA,
   for (const auto& A : Args.getAllArgValues(options::OPT_Xbang_fatbinary))
     CmdArgs.push_back(Args.MakeArgString(A));
 
-  const char *Exec = Args.MakeArgString(TC.GetProgramPath("cnlink"));
+  const char *Exec;
+  if (TC.BangInstallation.version() >= CnrtVersion::CNRT_610)
+    Exec = Args.MakeArgString(TC.GetProgramPath("cnlink"));
+  else
+    Exec = Args.MakeArgString(TC.GetProgramPath("cnas"));
 
   C.addCommand(std::make_unique<Command>(JA, *this,
       ResponseFileSupport{ResponseFileSupport::RF_Full, llvm::sys::WEM_UTF8,
@@ -648,8 +735,7 @@ void BangToolChain::AddBangIncludeArgs(const ArgList &DriverArgs,
   if (!DriverArgs.hasArg(options::OPT_noneuwareinc) &&
       !DriverArgs.hasArg(options::OPT_no_neuware_version_check)) {
     StringRef Arch = DriverArgs.getLastArgValue(options::OPT_march_EQ);
-    //assert(!Arch.empty() && "Must have an explicit MLU arch.");
-    if (Arch.empty()) Arch = "mtp_372";
+    assert(!Arch.empty() && "Must have an explicit MLU arch.");
     BangInstallation.CheckBangVersionSupportsArch(StringToBangArch(Arch));
   }
   BangInstallation.AddBangIncludeArgs(DriverArgs, CC1Args);
@@ -741,7 +827,11 @@ Tool *BangToolChain::buildLinker() const {
 
 Tool *BangToolChain::SelectTool(const JobAction &JA) const {
   if (OK == Action::OFK_SYCL) {
-    if (JA.getKind() == Action::LinkJobClass &&
+    if (JA.getKind() == Action::BackendJobClass &&
+        JA.getType() == types::TY_PP_Asm) {
+      // force to use backend compiler instead of clang
+      return ToolChain::getTool(Action::BackendCompileJobClass);
+    } else if (JA.getKind() == Action::LinkJobClass &&
         JA.getType() == types::TY_LLVM_BC) {
       return static_cast<tools::MLISA::SYCLLinker *>(ToolChain::SelectTool(JA))
           ->GetSYCLToolChainLinker();

@@ -36,21 +36,21 @@ const char *const MLISATargetInfo::GCCRegNames[] = {"r0"};
 MLISATargetInfo::MLISATargetInfo(const llvm::Triple &Triple,
                                 const TargetOptions &Opts,
                                 unsigned TargetPointerWidth)
-  : TargetInfo(Triple) {
+    : TargetInfo(Triple) {
   assert(TargetPointerWidth == 64 && "MLISA only supports 64-bit modes.");
 
   TLSSupported = false;
+  VLASupported = false;
   AddrSpaceMap = &MLISAAddrSpaceMap;
   UseAddrSpaceMapMangling = true;
-  HasFloat16 = true;
   HasLegalHalfType = true;
+  HasFloat16 = true;
   
   // Define available target features
   // These must be defined in sorted order!
   NoAsmVariants = true;
-  MLU = BangArch::MTP_100;
+  MLU = BangArch::TP_210;
 
-  // resetDataLayout("e-m:e-p:64:64:64-i1:8:16-i8:8:16-i32:32:32-i64:64-v16:16-v32:32-n16:32:64");
   resetDataLayout("e-p:64:64:64-i64:64-v16:16-v32:32-n16:32:64");
 
   // If possible, get a TargetInfo for our host triple, so we can match its
@@ -68,7 +68,6 @@ MLISATargetInfo::MLISATargetInfo(const llvm::Triple &Triple,
       SizeType = TargetInfo::UnsignedLong;
       PtrDiffType = TargetInfo::SignedLong;
       IntPtrType = TargetInfo::SignedLong;
-      Int64Type = TargetInfo::SignedLong;
       break;
     default:
       llvm_unreachable("TargetPointerWidth must be 64");
@@ -110,8 +109,7 @@ MLISATargetInfo::MLISATargetInfo(const llvm::Triple &Triple,
   ProcessIDType = HostTarget->getProcessIDType();
 
   UseBitFieldTypeAlignment = HostTarget->useBitFieldTypeAlignment();
-  UseZeroLengthBitfieldAlignment =
-      HostTarget->useZeroLengthBitfieldAlignment();
+  UseZeroLengthBitfieldAlignment = HostTarget->useZeroLengthBitfieldAlignment();
   UseExplicitBitFieldAlignment = HostTarget->useExplicitBitFieldAlignment();
   ZeroLengthBitfieldBoundary = HostTarget->getZeroLengthBitfieldBoundary();
 
@@ -129,10 +127,63 @@ MLISATargetInfo::MLISATargetInfo(const llvm::Triple &Triple,
   //   types than device.
   // - LongDoubleWidth, LongDoubleAlign: mlisa's long double type is the same
   //   as its double type, but that's not necessarily true on the host.
-  //   TODO: cncc should emits a error when using long long, double, and
-  //   long double on device
+  //   TODO: cncc emits a warning when using long double on device; we should
+  //   do the same.
+}
 
-  }
+ArrayRef<const char *> MLISATargetInfo::getGCCRegNames() const {
+  return llvm::makeArrayRef(GCCRegNames);
+}
+
+bool MLISATargetInfo::hasFeature(StringRef Feature) const {
+  return llvm::StringSwitch<bool>(Feature)
+  // Has Neural Memory per Core
+  .Case("nram", true)
+  // Has Weight Memory per Core
+  .Case("wram", MLU >= BangArch::TP_210)
+  // Has Shared Memory per Cluster
+  .Case("sram", MLU >= BangArch::TP_210 && MLU != BangArch::TP_220 &&
+                MLU != BangArch::TP_270 && MLU != BangArch::TP_322)
+  // Has Level-0 Cache per Core
+  .Case("l0c", MLU >= BangArch::TP_210)
+  // Has Level-1 Cache per Cluster
+  .Case("l1c", false)
+  // Has Level-2 Cache per Device
+  .Case("l2c", MLU > BangArch::MTP_372)
+  // Has Neural Function Unit per Core
+  .Case("nfu", true)
+  // Has Weight Function Unit per Core
+  .Case("wfu", MLU >= BangArch::TP_210)
+  // Has Grid Function Unit per Core
+  .Case("gfu", MLU > BangArch::MTP_270)
+  // Support Stream Vector Compute
+  .Case("svc", true)
+  // Support Tensorized Compute
+  .Case("trc", MLU >= BangArch::TP_322)
+  // Support Grid Stencil Compute
+  .Case("gsc", MLU >= BangArch::TP_322)
+  // Allow half type
+  .Case("fp16", true)
+  // Allow float type
+  .Case("fp32", MLU >= BangArch::TP_210)
+  // Allow double type
+  .Case("fp64", false)
+  // Allow bfloat16 type
+  .Case("bf16", MLU >= BangArch::TP_322)
+  // BANG v1.0 compute compatibility
+  .Case("compute_10", false)
+  // BANG v2.0 compute compatibility
+  .Case("compute_20", (MLU >= BangArch::TP_210) && (MLU <= BangArch::MTP_290))
+  // BANG v3.0 compute compatibility
+  .Case("compute_30", (MLU >= BangArch::TP_322) && (MLU <= BangArch::MTP_372))
+  // BANG v3.5 compute compatibility
+  .Case("compute_35", (MLU > BangArch::MTP_372) && (MLU <= BangArch::MTP_372))
+  .Case("tp_220", MLU == BangArch::TP_220)
+  .Case("tp_322", MLU == BangArch::TP_322)
+  .Case("mtp_220", MLU == BangArch::MTP_220)
+  .Case("mtp_372", MLU == BangArch::MTP_372)
+  .Default(false);
+}
 
 void MLISATargetInfo::getTargetDefines(const LangOptions &Opts,
                       MacroBuilder &Builder) const {
@@ -144,22 +195,9 @@ void MLISATargetInfo::getTargetDefines(const LangOptions &Opts,
   int wram_size = 0;
   int sram_size = 0;
   switch (MLU) {
-  case BangArch::UNKNOWN: {
-    assert(false && "No MLU arch when compiling BANG device code.");
-  } break;
-  case BangArch::TP_110: {
-    nram_size = 512;
-    wram_size = 512;
-    sram_size = 0;
-  } break;
-  case BangArch::TP_120: {
-    nram_size = 512;
+  case BangArch::TP_210: {
+    nram_size = 256;
     wram_size = 256;
-    sram_size = 0;
-  } break;
-  case BangArch::MTP_100: {
-    nram_size = 512;
-    wram_size = 1024;
     sram_size = 0;
   } break;
   case BangArch::TP_220: {
@@ -167,15 +205,15 @@ void MLISATargetInfo::getTargetDefines(const LangOptions &Opts,
     wram_size = 512;
     sram_size = 0;
   } break;
-  case BangArch::MTP_220: {
-    nram_size = 512;
-    wram_size = 512;
-    sram_size = 2048;
-  } break;
   case BangArch::TP_270: {
     nram_size = 512;
     wram_size = 1024;
     sram_size = 0;
+  } break;
+  case BangArch::MTP_220: {
+    nram_size = 512;
+    wram_size = 512;
+    sram_size = 2048;
   } break;
   case BangArch::MTP_270: {
     nram_size = 512;
@@ -192,31 +230,18 @@ void MLISATargetInfo::getTargetDefines(const LangOptions &Opts,
     wram_size = 1024;
     sram_size = 0;
   } break;
-  case BangArch::MTP_322: {
-    nram_size = 768;
-    wram_size = 1024;
-    sram_size = 1536;
-  } break;
   case BangArch::MTP_372: {
     nram_size = 768;
     wram_size = 1024;
     sram_size = 4096;
   } break;
-  case BangArch::MTP_392: {
+  case BangArch::MTP_592: {
     nram_size = 512;
     wram_size = 512;
     sram_size = 2048;
   } break;
-  case BangArch::TC_303: {
-    nram_size = 384;
-    wram_size = 0;
-    sram_size = 0;
-  } break;
-  case BangArch::TC_306: {
-    nram_size = 640;
-    wram_size = 0;
-    sram_size = 0;
-  } break;
+  case BangArch::LAST:
+    break;
   default:
     assert(false && "No MLU arch when compiling BANG device code.");
     break;
@@ -230,18 +255,14 @@ void MLISATargetInfo::getTargetDefines(const LangOptions &Opts,
     // Set __BANG_ARCH__ for the MLU specified.
     std::string BANGArchCode = [this] {
       switch (MLU) {
-      case BangArch::MTP_1FF:
-      case BangArch::MTP_2FF:
-      case BangArch::FUTURE:
+      case BangArch::LAST:
+        break;
+      case BangArch::UNUSED:
       case BangArch::UNKNOWN:
         assert(false && "No MLU arch when compiling BANG device code.");
         return "";
-      case BangArch::TP_110:
-        return "110";
-      case BangArch::MTP_100:
-        return "100";
-      case BangArch::TP_120:
-        return "120";
+      case BangArch::TP_210:
+        return "210";
       case BangArch::TP_220:
         return "220";
       case BangArch::MTP_220:
@@ -254,16 +275,10 @@ void MLISATargetInfo::getTargetDefines(const LangOptions &Opts,
         return "290";
       case BangArch::TP_322:
         return "322";
-      case BangArch::MTP_322:
-        return "322";
       case BangArch::MTP_372:
         return "372";
-      case BangArch::MTP_392:
-        return "392";
-      case BangArch::TC_303:
-        return "303";
-      case BangArch::TC_306:
-        return "306";
+      case BangArch::MTP_592:
+        return "592";
       }
       llvm_unreachable("unhandled BangArch");
     }();
@@ -273,77 +288,5 @@ void MLISATargetInfo::getTargetDefines(const LangOptions &Opts,
 
 ArrayRef<Builtin::Info> MLISATargetInfo::getTargetBuiltins() const {
   return llvm::makeArrayRef(BuiltinInfo, clang::MLISA::LastTSBuiltin -
-                                               Builtin::FirstTSBuiltin);
+                                             Builtin::FirstTSBuiltin);
 }
-
-bool MLISATargetInfo::initFeatureMap(llvm::StringMap<bool> &Features, DiagnosticsEngine &Diags,
-                 StringRef CPU,
-                 const std::vector<std::string> &FeaturesVec) const{
-    return TargetInfo::initFeatureMap(Features, Diags, CPU, FeaturesVec);
-  }
-
-bool MLISATargetInfo::hasFeature(StringRef Feature) const {
-    return llvm::StringSwitch<bool>(Feature)
-    // Has Neural Memory per Core
-    .Case("nram", true)
-    // Has Weight Memory per Core
-    .Case("wram", MLU >= BangArch::MTP_100)
-    // Has Shared Memory per Cluster
-    .Case("sram", MLU > BangArch::MTP_1FF && MLU != BangArch::TP_220 &&
-                  MLU != BangArch::TP_270 && MLU != BangArch::TP_322 &&
-                  MLU != BangArch::TC_303 && MLU != BangArch::TC_306)
-    // Has Level-0 Cache per Core
-    .Case("l0c", MLU > BangArch::MTP_1FF)
-    // Has Level-1 Cache per Cluster
-    .Case("l1c", false)
-    // Has Level-2 Cache per Device
-    .Case("l2c", MLU >= BangArch::MTP_392)
-    // Has Neural Function Unit per Core
-    .Case("nfu", true)
-    // Has Weight Function Unit per Core
-    .Case("wfu", MLU >= BangArch::MTP_100)
-    // Has Grid Function Unit per Core
-    .Case("gfu", MLU > BangArch::MTP_2FF)
-    // Support Stream Vector Compute
-    .Case("svc", true)
-    // Support Tensorized Compute
-    .Case("trc", MLU > BangArch::MTP_2FF)
-    // Support Grid Stencil Compute
-    .Case("gsc", MLU > BangArch::MTP_2FF)
-    // Allow half type
-    .Case("fp16", true)
-    // Allow float type
-    .Case("fp32", MLU > BangArch::MTP_1FF)
-    // Allow double type
-    .Case("fp64", false)
-    // Allow bfloat16 type
-    .Case("bf16", MLU > BangArch::MTP_2FF)
-    // Allow tfloat32 type
-    .Case("tf32", MLU == BangArch::MTP_392)
-    // BANG v1.0 compute compatibility
-    .Case("compute_10", (MLU > BangArch::UNKNOWN) && (MLU < BangArch::MTP_1FF))
-    // BANG v2.0 compute compatibility
-    .Case("compute_20", (MLU > BangArch::MTP_1FF) && (MLU < BangArch::MTP_2FF))
-    // BANG v3.0 compute compatibility
-    .Case("compute_30", (MLU > BangArch::MTP_2FF) && (MLU < BangArch::MTP_392))
-    // BANG v3.5 compute compatibility
-    .Case("compute_35", (MLU > BangArch::MTP_372) && (MLU <= BangArch::MTP_392))
-    .Case("tc_303", MLU == BangArch::TC_303)
-    .Case("tc_306", MLU == BangArch::TC_306)
-    .Case("tp_220", MLU == BangArch::TP_220)
-    .Case("tp_322", MLU == BangArch::TP_322)
-    .Case("mtp_220", MLU == BangArch::MTP_220)
-    .Case("mtp_322", MLU == BangArch::MTP_322)
-    .Case("mtp_372", MLU == BangArch::MTP_372)
-    .Case("mtp_392", MLU == BangArch::MTP_392)
-    .Default(false);
-  
-}
-
-ArrayRef<const char *> MLISATargetInfo::getGCCRegNames() const {
-  return llvm::makeArrayRef(GCCRegNames);
-}
-
-
-
-  
