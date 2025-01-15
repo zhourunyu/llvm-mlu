@@ -31,6 +31,9 @@ template <typename ElementType>
 using local_ptr = multi_ptr<ElementType, access::address_space::local_space>;
 
 template <typename ElementType>
+using nram_ptr = multi_ptr<ElementType, access::address_space::nram_space>;
+
+template <typename ElementType>
 using wram_ptr = multi_ptr<ElementType, access::address_space::wram_space>;
 
 template <typename ElementType>

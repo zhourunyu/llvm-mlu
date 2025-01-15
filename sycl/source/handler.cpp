@@ -340,7 +340,6 @@ void handler::processArg(void *Ptr, const detail::kernel_param_kind_t &Kind,
                                MNDRDesc.GlobalSize.size(), MArgs, IsESIMD);
       break;
     }
-    case access::target::wram:
     case access::target::local: {
       detail::LocalAccessorImplHost *LAcc =
           static_cast<detail::LocalAccessorImplHost *>(Ptr);
@@ -350,22 +349,58 @@ void handler::processArg(void *Ptr, const detail::kernel_param_kind_t &Kind,
       int SizeInBytes = LAcc->MElemSize;
       for (int I = 0; I < Dims; ++I)
         SizeInBytes *= Size[I];
-      
-      
-      if (AccTarget == access::target::local) {
-        int *p = new int(101);
-        MArgs.emplace_back(kernel_param_kind_t::kind_std_layout, (void*)p,
+      MArgs.emplace_back(kernel_param_kind_t::kind_std_layout, nullptr,
                          SizeInBytes, Index + IndexShift);
-      } else if (AccTarget == access::target::wram) {
-        int *p = new int(102);
-        MArgs.emplace_back(kernel_param_kind_t::kind_std_layout, (void*)p,
+      if (!IsKernelCreatedFromSource) {
+        ++IndexShift;
+        const size_t SizeAccField = Dims * sizeof(Size[0]);
+        MArgs.emplace_back(kernel_param_kind_t::kind_std_layout, &Size,
+                           SizeAccField, Index + IndexShift);
+        ++IndexShift;
+        MArgs.emplace_back(kernel_param_kind_t::kind_std_layout, &Size,
+                           SizeAccField, Index + IndexShift);
+        ++IndexShift;
+        MArgs.emplace_back(kernel_param_kind_t::kind_std_layout, &Size,
+                           SizeAccField, Index + IndexShift);
+      }
+      break;
+    }
+    case access::target::nram: {
+      detail::LocalAccessorImplHost *LAcc =
+          static_cast<detail::LocalAccessorImplHost *>(Ptr);
+
+      range<3> &Size = LAcc->MSize;
+      const int Dims = LAcc->MDims;
+      int SizeInBytes = LAcc->MElemSize;
+      for (int I = 0; I < Dims; ++I)
+        SizeInBytes *= Size[I];
+      MArgs.emplace_back(kernel_param_kind_t::kind_std_layout, nullptr,
                          SizeInBytes, Index + IndexShift);
-      } 
-      
-      
-      
-      //MArgs.emplace_back(kernel_param_kind_t::kind_std_layout, nullptr,
-      //                    SizeInBytes, Index + IndexShift);
+      if (!IsKernelCreatedFromSource) {
+        ++IndexShift;
+        const size_t SizeAccField = Dims * sizeof(Size[0]);
+        MArgs.emplace_back(kernel_param_kind_t::kind_std_layout, &Size,
+                           SizeAccField, Index + IndexShift);
+        ++IndexShift;
+        MArgs.emplace_back(kernel_param_kind_t::kind_std_layout, &Size,
+                           SizeAccField, Index + IndexShift);
+        ++IndexShift;
+        MArgs.emplace_back(kernel_param_kind_t::kind_std_layout, &Size,
+                           SizeAccField, Index + IndexShift);
+      }
+      break;
+    }
+    case access::target::wram: {
+      detail::LocalAccessorImplHost *LAcc =
+          static_cast<detail::LocalAccessorImplHost *>(Ptr);
+
+      range<3> &Size = LAcc->MSize;
+      const int Dims = LAcc->MDims;
+      int SizeInBytes = LAcc->MElemSize;
+      for (int I = 0; I < Dims; ++I)
+        SizeInBytes *= Size[I];
+      MArgs.emplace_back(kernel_param_kind_t::kind_std_layout, nullptr,
+                         SizeInBytes, Index + IndexShift);
       if (!IsKernelCreatedFromSource) {
         ++IndexShift;
         const size_t SizeAccField = Dims * sizeof(Size[0]);
@@ -466,6 +501,7 @@ void handler::extractArgsAndReqsFromLambda(
             static_cast<detail::AccessorBaseHost *>(Ptr);
         Ptr = detail::getSyclObjImpl(*AccBase).get();
       } else if (AccTarget == access::target::local ||
+                 AccTarget == access::target::nram ||
                  AccTarget == access::target::wram) {
         detail::LocalAccessorBaseHost *LocalAccBase =
             static_cast<detail::LocalAccessorBaseHost *>(Ptr);

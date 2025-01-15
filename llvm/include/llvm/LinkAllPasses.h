@@ -39,6 +39,8 @@
 #include "llvm/IR/IRPrintingPasses.h"
 #include "llvm/SYCLLowerIR/LowerESIMD.h"
 #include "llvm/SYCLLowerIR/LowerWGLocalMemory.h"
+#include "llvm/SYCLLowerIR/LowerWGNramMemory.h"
+#include "llvm/SYCLLowerIR/LowerWGWramMemory.h"
 #include "llvm/SYCLLowerIR/LowerWGScope.h"
 #include "llvm/Support/Valgrind.h"
 #include "llvm/Transforms/AggressiveInstCombine/AggressiveInstCombine.h"
@@ -209,6 +211,8 @@ namespace {
       (void)llvm::createESIMDLowerVecArgPass();
       (void)llvm::createSPIRITTAnnotationsLegacyPass();
       (void)llvm::createSYCLLowerWGLocalMemoryLegacyPass();
+      (void)llvm::createSYCLLowerWGNramMemoryLegacyPass();
+      (void)llvm::createSYCLLowerWGWramMemoryLegacyPass();
       std::string buf;
       llvm::raw_string_ostream os(buf);
       (void) llvm::createPrintModulePass(os);

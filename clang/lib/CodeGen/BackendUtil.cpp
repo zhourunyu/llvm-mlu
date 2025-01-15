@@ -42,6 +42,8 @@
 #include "llvm/Passes/PassPlugin.h"
 #include "llvm/Passes/StandardInstrumentations.h"
 #include "llvm/SYCLLowerIR/LowerWGLocalMemory.h"
+#include "llvm/SYCLLowerIR/LowerWGNramMemory.h"
+#include "llvm/SYCLLowerIR/LowerWGWramMemory.h"
 #include "llvm/Support/BuryPointer.h"
 #include "llvm/Support/CommandLine.h"
 #include "llvm/Support/MemoryBuffer.h"
@@ -1004,6 +1006,8 @@ void EmitAssemblyHelper::EmitAssembly(BackendAction Action,
     if (CodeGenOpts.DisableLLVMPasses)
       PerModulePasses.add(createAlwaysInlinerLegacyPass(false));
     PerModulePasses.add(createSYCLLowerWGLocalMemoryLegacyPass());
+    PerModulePasses.add(createSYCLLowerWGNramMemoryLegacyPass());
+    PerModulePasses.add(createSYCLLowerWGWramMemoryLegacyPass());
   }
 
   switch (Action) {

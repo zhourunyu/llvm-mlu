@@ -40,6 +40,7 @@
 #include <CL/sycl/kernel_bundle.hpp>
 #include <CL/sycl/kernel_handler.hpp>
 #include <CL/sycl/marray.hpp>
+#include <CL/sycl/mlu_memory.hpp>
 #include <CL/sycl/multi_ptr.hpp>
 #include <CL/sycl/nd_item.hpp>
 #include <CL/sycl/nd_range.hpp>

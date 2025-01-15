@@ -1912,26 +1912,11 @@ pi_result cnrt_piKernelSetArg(pi_kernel kernel, pi_uint32 arg_index,
   assert(kernel != nullptr);
   pi_result retErr = PI_SUCCESS;
   try {
-    
-    
-    int* flag = const_cast<int*>(reinterpret_cast<const int *> (arg_value));
-    if (*flag == 101) {
-      kernel->set_kernel_local_arg(arg_index, arg_size);
-    } else if (*flag == 102) {
-      kernel->set_kernel_wram_arg(arg_index, arg_size);
-    } else if(arg_value) {
-      kernel->set_kernel_arg(arg_index, arg_size, arg_value);
-    }
-    
-    /*
     if (arg_value) {
       kernel->set_kernel_arg(arg_index, arg_size, arg_value);
     } else {
       kernel->set_kernel_local_arg(arg_index, arg_size);
     }
-    */
-    
-
   } catch (pi_result err) {
     retErr = err;
   }

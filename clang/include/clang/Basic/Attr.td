@@ -1538,11 +1538,6 @@ def OpenCLLocalAddressSpace : TypeAttr {
   let Documentation = [OpenCLAddressSpaceLocalDocs];
 }
 
-def OpenCLWRAMAddressSpace : TypeAttr {
-  let Spellings = [Keyword<"__wram">, Keyword<"wram">, Clang<"opencl_wram">];
-  let Documentation = [OpenCLAddressSpaceWRAMDocs];
-}
-
 def OpenCLConstantAddressSpace : TypeAttr {
   let Spellings = [Keyword<"__constant">, Keyword<"constant">, Clang<"opencl_constant">];
   let Documentation = [OpenCLAddressSpaceConstantDocs];
@@ -1551,6 +1546,16 @@ def OpenCLConstantAddressSpace : TypeAttr {
 def OpenCLGenericAddressSpace : TypeAttr {
   let Spellings = [Keyword<"__generic">, Keyword<"generic">, Clang<"opencl_generic">];
   let Documentation = [OpenCLAddressSpaceGenericDocs];
+}
+
+def SYCLNramAddressSpace : TypeAttr {
+  let Spellings = [Keyword<"__nram">, Keyword<"nram">, Clang<"sycl_nram">];
+  let Documentation = [SYCLAddressSpaceNramDocs];
+}
+
+def SYCLWramAddressSpace : TypeAttr {
+  let Spellings = [Keyword<"__wram">, Keyword<"wram">, Clang<"sycl_wram">];
+  let Documentation = [SYCLAddressSpaceWramDocs];
 }
 
 def OpenCLNoSVM : Attr {

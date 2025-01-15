@@ -135,6 +135,28 @@ public:
                 Accessor)
       : multi_ptr(Accessor.get_pointer()) {}
 
+  // Only if Space == nram_space
+  template <int dimensions, access::mode Mode,
+            access::placeholder isPlaceholder, typename PropertyListT,
+            access::address_space _Space = Space,
+            typename = typename detail::enable_if_t<
+                _Space == Space && Space == access::address_space::nram_space>>
+  multi_ptr(accessor<ElementType, dimensions, Mode, access::target::nram,
+                     isPlaceholder, PropertyListT>
+                Accessor)
+      : multi_ptr(Accessor.get_pointer()) {}
+
+  // Only if Space == wram_space
+  template <int dimensions, access::mode Mode,
+            access::placeholder isPlaceholder, typename PropertyListT,
+            access::address_space _Space = Space,
+            typename = typename detail::enable_if_t<
+                _Space == Space && Space == access::address_space::wram_space>>
+  multi_ptr(accessor<ElementType, dimensions, Mode, access::target::wram,
+                     isPlaceholder, PropertyListT>
+                Accessor)
+      : multi_ptr(Accessor.get_pointer()) {}
+
   // Only if Space == constant_space
   template <
       int dimensions, access::mode Mode, access::placeholder isPlaceholder,
@@ -182,6 +204,32 @@ public:
           std::is_const<ET>::value && std::is_same<ET, ElementType>::value>>
   multi_ptr(accessor<typename detail::remove_const_t<ET>, dimensions, Mode,
                      access::target::local, isPlaceholder, PropertyListT>
+                Accessor)
+      : multi_ptr(Accessor.get_pointer()) {}
+
+  // Only if Space == nram_space and element type is const
+  template <
+      int dimensions, access::mode Mode, access::placeholder isPlaceholder,
+      typename PropertyListT, access::address_space _Space = Space,
+      typename ET = ElementType,
+      typename = typename detail::enable_if_t<
+          _Space == Space && Space == access::address_space::nram_space &&
+          std::is_const<ET>::value && std::is_same<ET, ElementType>::value>>
+  multi_ptr(accessor<typename detail::remove_const_t<ET>, dimensions, Mode,
+                     access::target::nram, isPlaceholder, PropertyListT>
+                Accessor)
+      : multi_ptr(Accessor.get_pointer()) {}
+
+  // Only if Space == wram_space and element type is const
+  template <
+      int dimensions, access::mode Mode, access::placeholder isPlaceholder,
+      typename PropertyListT, access::address_space _Space = Space,
+      typename ET = ElementType,
+      typename = typename detail::enable_if_t<
+          _Space == Space && Space == access::address_space::wram_space &&
+          std::is_const<ET>::value && std::is_same<ET, ElementType>::value>>
+  multi_ptr(accessor<typename detail::remove_const_t<ET>, dimensions, Mode,
+                     access::target::wram, isPlaceholder, PropertyListT>
                 Accessor)
       : multi_ptr(Accessor.get_pointer()) {}
 
@@ -398,6 +446,26 @@ public:
                 Accessor)
       : multi_ptr(Accessor.get_pointer()) {}
 
+  // Only if Space == nram_space
+  template <typename ElementType, int dimensions, access::mode Mode,
+            typename PropertyListT, access::address_space _Space = Space,
+            typename = typename detail::enable_if_t<
+                _Space == Space && Space == access::address_space::nram_space>>
+  multi_ptr(accessor<ElementType, dimensions, Mode, access::target::nram,
+                     access::placeholder::false_t, PropertyListT>
+                Accessor)
+      : multi_ptr(Accessor.get_pointer()) {}
+
+  // Only if Space == wram_space
+  template <typename ElementType, int dimensions, access::mode Mode,
+            typename PropertyListT, access::address_space _Space = Space,
+            typename = typename detail::enable_if_t<
+                _Space == Space && Space == access::address_space::wram_space>>
+  multi_ptr(accessor<ElementType, dimensions, Mode, access::target::wram,
+                     access::placeholder::false_t, PropertyListT>
+                Accessor)
+      : multi_ptr(Accessor.get_pointer()) {}
+
   // Only if Space == constant_space
   template <
       typename ElementType, int dimensions, access::mode Mode,
@@ -519,6 +587,26 @@ public:
                 Accessor)
       : multi_ptr(Accessor.get_pointer()) {}
 
+  // Only if Space == nram_space
+  template <typename ElementType, int dimensions, access::mode Mode,
+            typename PropertyListT, access::address_space _Space = Space,
+            typename = typename detail::enable_if_t<
+                _Space == Space && Space == access::address_space::nram_space>>
+  multi_ptr(accessor<ElementType, dimensions, Mode, access::target::nram,
+                     access::placeholder::false_t, PropertyListT>
+                Accessor)
+      : multi_ptr(Accessor.get_pointer()) {}
+
+  // Only if Space == wram_space
+  template <typename ElementType, int dimensions, access::mode Mode,
+            typename PropertyListT, access::address_space _Space = Space,
+            typename = typename detail::enable_if_t<
+                _Space == Space && Space == access::address_space::wram_space>>
+  multi_ptr(accessor<ElementType, dimensions, Mode, access::target::wram,
+                     access::placeholder::false_t, PropertyListT>
+                Accessor)
+      : multi_ptr(Accessor.get_pointer()) {}
+
   // Only if Space == constant_space
   template <
       typename ElementType, int dimensions, access::mode Mode,
@@ -570,6 +658,16 @@ template <int dimensions, access::mode Mode, access::placeholder isPlaceholder,
 multi_ptr(accessor<T, dimensions, Mode, access::target::local, isPlaceholder,
                    PropertyListT>)
     ->multi_ptr<T, access::address_space::local_space>;
+template <int dimensions, access::mode Mode, access::placeholder isPlaceholder,
+          typename PropertyListT, class T>
+multi_ptr(accessor<T, dimensions, Mode, access::target::nram, isPlaceholder,
+                   PropertyListT>)
+    ->multi_ptr<T, access::address_space::nram_space>;
+template <int dimensions, access::mode Mode, access::placeholder isPlaceholder,
+          typename PropertyListT, class T>
+multi_ptr(accessor<T, dimensions, Mode, access::target::wram, isPlaceholder,
+                   PropertyListT>)
+    ->multi_ptr<T, access::address_space::wram_space>;
 #endif
 
 template <typename ElementType, access::address_space Space>

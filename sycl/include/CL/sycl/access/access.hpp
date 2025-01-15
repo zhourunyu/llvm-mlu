@@ -22,7 +22,8 @@ enum class target {
   host_buffer = 2018,
   host_image = 2019,
   image_array = 2020,
-  wram = 2021
+  nram = 2021,
+  wram = 2022
 };
 
 enum class mode {
@@ -37,8 +38,7 @@ enum class mode {
 enum class fence_space {
   local_space = 0,
   global_space = 1,
-  global_and_local = 2,
-  wram_space = 3,
+  global_and_local = 2
 };
 
 enum class placeholder { false_t = 0, true_t = 1 };
@@ -50,7 +50,8 @@ enum class address_space : int {
   local_space = 3,
   global_device_space = 4,
   global_host_space = 5,
-  wram_space = 99
+  nram_space = 10,
+  wram_space = 11
 };
 
 } // namespace access
@@ -118,7 +119,8 @@ constexpr bool modeWritesNewData(access::mode m) {
 #define __OPENCL_LOCAL_AS__ __attribute__((opencl_local))
 #define __OPENCL_CONSTANT_AS__ __attribute__((opencl_constant))
 #define __OPENCL_PRIVATE_AS__ __attribute__((opencl_private))
-#define __OPENCL_WRAM_AS__ __attribute__((opencl_wram))
+#define __SYCL_NRAM_AS__ __attribute__((sycl_nram))
+#define __SYCL_WRAM_AS__ __attribute__((sycl_wram))
 #else
 #define __OPENCL_GLOBAL_AS__
 #define __OPENCL_GLOBAL_DEVICE_AS__
@@ -126,7 +128,8 @@ constexpr bool modeWritesNewData(access::mode m) {
 #define __OPENCL_LOCAL_AS__
 #define __OPENCL_CONSTANT_AS__
 #define __OPENCL_PRIVATE_AS__
-#define __OPENCL_WRAM_AS__
+#define __SYCL_NRAM_AS__
+#define __SYCL_WRAM_AS__
 #endif
 
 template <access::target accessTarget> struct TargetToAS {
@@ -149,6 +152,11 @@ template <> struct TargetToAS<access::target::local> {
 template <> struct TargetToAS<access::target::constant_buffer> {
   constexpr static access::address_space AS =
       access::address_space::constant_space;
+};
+
+template <> struct TargetToAS<access::target::nram> {
+  constexpr static access::address_space AS =
+      access::address_space::nram_space;
 };
 
 template <> struct TargetToAS<access::target::wram> {
@@ -199,10 +207,14 @@ struct DecoratedType<ElementType, access::address_space::local_space> {
 };
 
 template <typename ElementType>
-struct DecoratedType<ElementType, access::address_space::wram_space> {
-  using type = __OPENCL_WRAM_AS__ ElementType;
+struct DecoratedType<ElementType, access::address_space::nram_space> {
+  using type = __SYCL_NRAM_AS__ ElementType;
 };
 
+template <typename ElementType>
+struct DecoratedType<ElementType, access::address_space::wram_space> {
+  using type = __SYCL_WRAM_AS__ ElementType;
+};
 template <class T> struct remove_AS { typedef T type; };
 
 #ifdef __SYCL_DEVICE_ONLY__
@@ -239,7 +251,9 @@ template <class T> struct remove_AS<__OPENCL_PRIVATE_AS__ T> {
 
 template <class T> struct remove_AS<__OPENCL_LOCAL_AS__ T> { typedef T type; };
 
-//template <class T> struct remove_AS<__OPENCL_WRAM_AS__ T> { typedef T type; };
+template <class T> struct remove_AS<__SYCL_NRAM_AS__ T> { typedef T type; };
+
+template <class T> struct remove_AS<__SYCL_WRAM_AS__ T> { typedef T type; };
 
 template <class T> struct remove_AS<__OPENCL_CONSTANT_AS__ T> {
   typedef T type;
@@ -259,11 +273,13 @@ template <class T> struct deduce_AS<__OPENCL_LOCAL_AS__ T> {
   static const access::address_space value = access::address_space::local_space;
 };
 
-/*
-template <class T> struct deduce_AS<__OPENCL_WRAM_AS__ T> {
+template <class T> struct deduce_AS<__SYCL_NRAM_AS__ T> {
+  static const access::address_space value = access::address_space::nram_space;
+};
+
+template <class T> struct deduce_AS<__SYCL_WRAM_AS__ T> {
   static const access::address_space value = access::address_space::wram_space;
 };
-*/
 
 template <class T> struct deduce_AS<__OPENCL_CONSTANT_AS__ T> {
   static const access::address_space value =
@@ -277,7 +293,8 @@ template <class T> struct deduce_AS<__OPENCL_CONSTANT_AS__ T> {
 #undef __OPENCL_LOCAL_AS__
 #undef __OPENCL_CONSTANT_AS__
 #undef __OPENCL_PRIVATE_AS__
-#undef __OPENCL_WRAM_AS__
+#undef __SYCL_NRAM_AS__
+#undef __SYCL_WRAM_AS__
 } // namespace detail
 
 } // namespace sycl

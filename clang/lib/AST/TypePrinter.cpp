@@ -1687,7 +1687,8 @@ void TypePrinter::printAttributedAfter(const AttributedType *T,
   case attr::OpenCLLocalAddressSpace:
   case attr::OpenCLConstantAddressSpace:
   case attr::OpenCLGenericAddressSpace:
-  case attr::OpenCLWRAMAddressSpace:
+  case attr::SYCLNramAddressSpace:
+  case attr::SYCLWramAddressSpace:
     // FIXME: Update printAttributedBefore to print these once we generate
     // AttributedType nodes for them.
     break;
@@ -2147,8 +2148,6 @@ std::string Qualifiers::getAddrSpaceAsString(LangAS AS) {
   case LangAS::opencl_local:
   case LangAS::sycl_local:
     return "__local";
-  case LangAS::sycl_wram:
-    return "__wram";
   case LangAS::opencl_private:
   case LangAS::sycl_private:
     return "__private";
@@ -2162,6 +2161,10 @@ std::string Qualifiers::getAddrSpaceAsString(LangAS AS) {
   case LangAS::opencl_global_host:
   case LangAS::sycl_global_host:
     return "__global_host";
+  case LangAS::sycl_nram:
+    return "__nram";
+  case LangAS::sycl_wram:
+    return "__wram";
   case LangAS::cuda_device:
     return "__device__";
   case LangAS::cuda_constant:

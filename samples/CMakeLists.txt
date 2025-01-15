@@ -20,6 +20,8 @@ add_executable(hello-sycl hello-sycl.cpp)
 add_executable_and_test(usm usm.cpp)
 add_executable_and_test(workitem workitem.cpp)
 add_executable_and_test(local_mem local_mem.cpp)
+add_executable_and_test(nram nram.cpp)
+add_executable_and_test(wram wram.cpp)
 
 file(GLOB TEST_SOURCES 
   "libdevice/*.cpp"

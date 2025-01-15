@@ -4780,19 +4780,6 @@ space are allowed. Local address space variables cannot have an initializer.
   }];
 }
 
-def OpenCLAddressSpaceWRAMDocs : Documentation {
-  let Category = DocOpenCLAddressSpaces;
-  let Heading = "__wram, wram, [[clang::opencl_wram]]";
-  let Content = [{
-The wram address space specifies that an object is allocated in the local (work
-group) memory area, which is accessible to all work items in the same work
-group. The content stored in this memory region is not accessible after
-the kernel execution ends. In a kernel function scope, any variable can be in
-the local address space. In other scopes, only pointer types to the local address
-space are allowed. Local address space variables cannot have an initializer.
-  }];
-}
-
 def OpenCLAddressSpacePrivateDocs : Documentation {
   let Category = DocOpenCLAddressSpaces;
   let Heading = "__private, private, [[clang::opencl_private]]";
@@ -4815,6 +4802,32 @@ to a shared virtual memory region. See OpenCL v2.0 s6.7.2 for details.
 
 Since it is not widely used and has been removed from OpenCL 2.1, it is ignored
 by Clang.
+  }];
+}
+
+def SYCLAddressSpaceNramDocs : Documentation {
+  let Category = DocOpenCLAddressSpaces;
+  let Heading = "__nram, nram, [[clang::sycl_nram]]";
+  let Content = [{
+The nram address space specifies that an object is allocated in the private
+(work item) memory. Other work items cannot access the same memory area and its
+content is destroyed after work item execution ends. Local variables can be
+declared in the private address space. Function arguments are always in the
+private address space. Kernel function arguments of a pointer or an array type
+cannot point to the private address space.
+  }];
+}
+
+def SYCLAddressSpaceWramDocs : Documentation {
+  let Category = DocOpenCLAddressSpaces;
+  let Heading = "__wram, wram, [[clang::sycl_wram]]";
+  let Content = [{
+The wram address space specifies that an object is allocated in the private
+(work item) memory. Other work items cannot access the same memory area and its
+content is destroyed after work item execution ends. Local variables can be
+declared in the private address space. Function arguments are always in the
+private address space. Kernel function arguments of a pointer or an array type
+cannot point to the private address space.
   }];
 }
 

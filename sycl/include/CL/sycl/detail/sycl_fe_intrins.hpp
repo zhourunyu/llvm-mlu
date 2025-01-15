@@ -48,4 +48,12 @@ SYCL_EXTERNAL T __sycl_getComposite2020SpecConstantValue(
 extern "C" SYCL_EXTERNAL __attribute__((opencl_local)) std::uint8_t *
 __sycl_allocateLocalMemory(std::size_t Size, std::size_t Alignment);
 
+// Request a fixed-size allocation in nram address space at kernel scope.
+extern "C" SYCL_EXTERNAL __attribute__((sycl_nram)) std::uint8_t *
+__sycl_allocateNramMemory(std::size_t Size, std::size_t Alignment);
+
+// Request a fixed-size allocation in wram address space at kernel scope.
+extern "C" SYCL_EXTERNAL __attribute__((sycl_wram)) std::uint8_t *
+__sycl_allocateWramMemory(std::size_t Size, std::size_t Alignment);
+
 #endif

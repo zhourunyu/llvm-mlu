@@ -23,27 +23,28 @@ namespace clang {
 namespace targets {
 
 static const unsigned MLISAAddrSpaceMap[] = {
-    0, // Default
-    1, // opencl_global
-    3, // opencl_local
-    4, // opencl_constant
-    0, // opencl_private
+    0,   // Default
+    1,   // opencl_global
+    3,   // opencl_local
+    4,   // opencl_constant
+    0,   // opencl_private
     // FIXME: generic has to be added to the target
-    0, // opencl_generic
-    1, // opencl_global_device
-    1, // opencl_global_host
-    1, // bang_device
-    4, // bang_constant
-    3, // bang_shared
-    1, // sycl_global
-    1, // sycl_global_device
-    1, // sycl_global_host
-    3, // sycl_local
-    102, //sycl_wram
-    0, // sycl_private
-    0, // ptr32_sptr
-    0, // ptr32_uptr
-    0  // ptr64
+    0,   // opencl_generic
+    1,   // opencl_global_device
+    1,   // opencl_global_host
+    1,   // bang_device
+    4,   // bang_constant
+    3,   // bang_shared
+    1,   // sycl_global
+    1,   // sycl_global_device
+    1,   // sycl_global_host
+    3,   // sycl_local
+    0,   // sycl_private
+    101, // sycl_nram
+    102, // sycl_wram
+    0,   // ptr32_sptr
+    0,   // ptr32_uptr
+    0    // ptr64
 };
 
 /// The DWARF address class. Taken from
