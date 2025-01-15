@@ -35,7 +35,6 @@ math/log10.cl
 math/pow.cl
 math/round.cl
 math/rsqrt.cl
-math/sign.cl
 math/sin.cl
 math/sinh.cl
 math/sqrt.cl

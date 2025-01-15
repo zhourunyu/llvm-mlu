@@ -29,6 +29,7 @@ set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
   amdgpu/lib/SOURCES;
   clspv/lib/SOURCES;
   generic/lib/SOURCES;
+  mlisa/lib/SOURCES;
   ptx/lib/SOURCES;
   ptx-nvidiacl/lib/SOURCES;
   r600/lib/SOURCES;
@@ -212,14 +213,14 @@ add_custom_command(
 	COMMAND ${Python3_EXECUTABLE} ${spirv_script_loc} > convert-spirv.cl
 	DEPENDS ${spirv_script_loc} )
 add_custom_target( "generate_convert_spirv.cl" DEPENDS convert-spirv.cl )
-#[[
+
 add_custom_command(
 	OUTPUT convert-clc.cl
 	COMMAND ${Python3_EXECUTABLE} ${clc_script_loc} > convert-clc.cl
 	DEPENDS ${clc_script_loc} )
 add_custom_target( "generate_convert_clc.cl" DEPENDS convert-clc.cl )
-]]
-#enable_testing()
+
+enable_testing()
 
 if (LIBCLC_STANDALONE_BUILD)
   set(LIBCLC_LIBRARY_OUTPUT_INTDIR ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/lib${LLVM_LIBDIR_SUFFIX})
@@ -236,11 +237,10 @@ foreach( t ${LIBCLC_TARGETS_TO_BUILD} )
 	list( GET TRIPLE 2 OS )
 
 	set( dirs )
-    #[[
+
 	if ( NOT ${ARCH} STREQUAL spirv AND NOT ${ARCH} STREQUAL spirv64 AND NOT ${ARCH} STREQUAL clspv )
 		LIST( APPEND dirs generic )
 	endif()
-	]]
 
 	if( ${ARCH} STREQUAL r600 OR ${ARCH} STREQUAL amdgcn )
 		list( APPEND dirs amdgpu )
@@ -253,13 +253,11 @@ foreach( t ${LIBCLC_TARGETS_TO_BUILD} )
 		set( DARCH ${ARCH} )
 	endif()
 
-	#[[
 	set( lib_files )
 	libclc_configure_lib_source(lib_files
 		LIB_DIR lib
 		DIRS ${dirs} ${DARCH} ${DARCH}-${OS} ${DARCH}-${VENDOR}-${OS}
 		DEPS convert-clc.cl )
-	]]
 	set( libspirv_files )
 	libclc_configure_lib_source(libspirv_files
 		LIB_DIR libspirv
@@ -357,7 +355,7 @@ foreach( t ${LIBCLC_TARGETS_TO_BUILD} )
 			ALIASES ${${d}_aliases}
 			GENERATE_TARGET "generate_convert_spirv.cl" "generate_convert_core.cl"
 			PARENT_TARGET libspirv-builtins)
-        #[[
+
 		add_libclc_builtin_set(clc-${arch_suffix}
 			TRIPLE ${t}
 			TARGET_ENV clc
@@ -368,7 +366,6 @@ foreach( t ${LIBCLC_TARGETS_TO_BUILD} )
 			ALIASES ${${d}_aliases}
 			GENERATE_TARGET "generate_convert_clc.cl"
 			PARENT_TARGET libclc-builtins)
-		]]
 	endforeach( d )
 endforeach( t )
 
@@ -382,4 +379,4 @@ install(DIRECTORY ${LIBCLC_LIBRARY_OUTPUT_INTDIR}
 				COMPONENT clc-builtins
 				FILES_MATCHING PATTERN "clc-*")
 
-#add_subdirectory(test)
+add_subdirectory(test)

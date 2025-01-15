@@ -11,7 +11,7 @@
 #include "../../include/libdevice.h"
 #include <clcmacro.h>
 
-#define __CLC_FUNCTION __spirv_ocl_fmax_common
+#define __CLC_FUNCTION __spirv_ocl_fmax
 #define __CLC_BUILTIN __cn_scalar_max
 #define __CLC_BUILTIN_F __CLC_XCONCAT(__CLC_BUILTIN, _f32)
 #define __CLC_BUILTIN_H __CLC_XCONCAT(__CLC_BUILTIN, _f16)

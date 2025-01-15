@@ -80,6 +80,7 @@ function(add_sycl_rt_library LIB_NAME)
       ${CMAKE_THREAD_LIBS_INIT}
     PUBLIC
       $<$<BOOL:${SYCL_BUILD_PI_CUDA}>:pi_cuda>
+      $<$<BOOL:${SYCL_BUILD_PI_CNRT}>:pi_cnrt>
   )
 
   add_common_options(${LIB_NAME} ${LIB_OBJ_NAME})

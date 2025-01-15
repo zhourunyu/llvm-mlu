@@ -190,14 +190,11 @@ add_custom_target( sycl-toolchain
           file-table-tform
           llc
           llvm-ar
-          llvm-as
-          llvm-dis
           llvm-foreach
           llvm-no-spir-kernel
           llvm-spirv
           llvm-link
           llvm-objcopy
-          opt
           sycl-post-link
           sycl-ls
           opencl-aot
@@ -243,14 +240,11 @@ set( SYCL_TOOLCHAIN_DEPLOY_COMPONENTS
      level-zero-headers
      llc
      llvm-ar
-     llvm-as
-     llvm-dis
      llvm-foreach
      llvm-no-spir-kernel
      llvm-spirv
      llvm-link
      llvm-objcopy
-     opt
      sycl-post-link
      sycl-ls
      clang-resource-headers
@@ -302,8 +296,8 @@ if(SYCL_BUILD_PI_CNRT)
       "CNRT support requires adding \"libclc\" to the CMake argument \"LLVM_ENABLE_PROJECTS\"")
   endif()
 
-  add_dependencies(sycl-toolchain libspirv-builtins pi_cnrt)
-  list(APPEND SYCL_TOOLCHAIN_DEPLOY_COMPONENTS libspirv-builtins pi_cnrt)
+  add_dependencies(sycl-toolchain libspirv-builtins pi_cnrt opt)
+  list(APPEND SYCL_TOOLCHAIN_DEPLOY_COMPONENTS libspirv-builtins pi_cnrt opt)
 endif()
 
 # Use it as fake dependency in order to force another command(s) to execute.

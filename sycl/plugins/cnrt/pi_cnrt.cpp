@@ -20,22 +20,18 @@
 #include <sstream>
 #include <string>
 
-
 namespace {
 std::string getCnrtVersionString() {
   std::stringstream stream;
   int major_version;
   int minor_version;
   int patch_version;
-  cnrtRet_t result = cnrtGetLibVersion(&major_version,&minor_version,&patch_version);
-  if (result != CNRT_RET_SUCCESS) {
-    return "Unknown CNRT Version";
+  CNresult result = cnGetLibVersion(&major_version, &minor_version, &patch_version);
+  if (result != CN_SUCCESS) {
+    return "Unknown CNDrv Version";
   }
-  // const unsigned int majorVersion = major_version;
-  // const unsigned int minorVersion = minor_version;
-  // const unsigned int patchVersion = version % 100;
 
-  stream << "CNRT " << major_version << "." << minor_version << "."
+  stream << "CNDrv " << major_version << "." << minor_version << "."
          << patch_version;
   return stream.str();
 }

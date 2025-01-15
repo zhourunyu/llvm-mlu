@@ -23,7 +23,6 @@
 #include <atomic>
 #include <cassert>
 #include <cn_api.h>
-#include <cnrt.h>
 #include <cstring>
 #include <functional>
 #include <limits>
