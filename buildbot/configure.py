@@ -25,7 +25,7 @@ def do_configure(args):
     llvm_enable_projects = 'clang;' + llvm_external_projects
     libclc_targets_to_build = ''
     sycl_build_pi_cuda = 'OFF'
-    sycl_build_pi_esimd_cpu = 'ON'
+    sycl_build_pi_esimd_cpu = 'OFF'
     sycl_build_pi_rocm = 'OFF'
     sycl_build_pi_cnrt = 'OFF'
     sycl_werror = 'ON'

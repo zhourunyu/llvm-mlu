@@ -202,11 +202,8 @@ BangInstallationDetector::BangInstallationDetector(
 void BangInstallationDetector::AddBangIncludeArgs(
     const ArgList &DriverArgs, ArgStringList &CC1Args) const {
   if (!DriverArgs.hasArg(options::OPT_nobuiltininc)) {
-    // Add bang_wrappers/* to our system include path.  This lets us wrap
-    // standard library headers.
     SmallString<128> P(D.ResourceDir);
     llvm::sys::path::append(P, "include");
-    llvm::sys::path::append(P, "bang_wrappers");
     CC1Args.push_back("-internal-isystem");
     CC1Args.push_back(DriverArgs.MakeArgString(P));
   }
