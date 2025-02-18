@@ -41,6 +41,10 @@ bool RenameMlisaFunc(std::string &name) {
 
   auto suffix = name.substr(pos + len);
   auto prefix = name.substr(0, pos + len);
+  // skip manually mangled functions
+  if (prefix.substr(pos).rfind("__spirv_Atomic", 0) == 0) {
+    return false;
+  }
 
   // replace S0->S, S1->S0, S2->S1, ...
   {
@@ -50,12 +54,14 @@ bool RenameMlisaFunc(std::string &name) {
     std::smatch m;
     while (std::regex_search(start, suffix.cend(), m, re)) {
       renamed = true;
-      new_suffix.append(start, m[0].first);
-      int n = std::stoi(m[1].str());
-      if (n == 0) {
-        new_suffix.append("S");
+      new_suffix.append(start, m[0].first + 1);
+      if (new_suffix.length() > 1 && new_suffix[new_suffix.length() - 2] == 'A') {
+        new_suffix.append(m[1].str());
       } else {
-        new_suffix.append("S" + std::to_string(n - 1));
+        int n = std::stoi(m[1].str());
+        if (n > 0) {
+          new_suffix.append(std::to_string(n - 1));
+        }
       }
       start = m[0].second;
     }

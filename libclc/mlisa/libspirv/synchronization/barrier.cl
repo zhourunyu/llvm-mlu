@@ -20,9 +20,13 @@ _CLC_OVERLOAD _CLC_DEF _CLC_CONVERGENT void
 __spirv_ControlBarrier(unsigned int scope, unsigned int memory,
                        unsigned int semantics) {
   if (scope == Subgroup) {
-    // __sync();
-  } else {
     __mlvm_sync();
-    // __sync_all();
+  } else {
+    if (__mlvm_read_mlu_sreg_clusterdim()) {
+      __asm__ __volatile__("barrier.sync.local 32771, %[cnt];\n\t"
+        ::[cnt]"r"(__mlvm_read_mlu_sreg_coredim() + 1));
+    } else {
+      __mlvm_sync();
+    }
   }
 }

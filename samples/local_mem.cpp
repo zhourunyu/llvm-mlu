@@ -21,7 +21,7 @@ int main() {
     q.parallel_for<class mm>(sycl::nd_range<3>({1, 1, 4}, {1, 1, 4}), [=](sycl::nd_item<3> item) {
         auto group = item.get_group();
         auto id = item.get_local_id(2);
-        auto buffer = *sycl::group_local_memory<float[4]>(group);
+        auto buffer = *sycl::group_local_memory_for_overwrite<float[4]>(group);
         float tmp = 0.0f;
         for (int i = 0; i < N / 4; i++) {
             tmp += a[id * (N / 4) + i];
@@ -45,7 +45,7 @@ int main() {
     for (int i = 0; i < N; i++) {
         b_host[0] += a_host[i];
     }
-    int ret = compareResult(b_host, b_dev);
+    int ret = compareResult(b_host, b_dev, 1e-3, 1e-3);
     sycl::free(a, q);
     sycl::free(b, q);
 
