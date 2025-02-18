@@ -5,7 +5,7 @@
 #include <CL/sycl.hpp>
 #include <array>
 
-#define N_CORES 1
+constexpr size_t N_CORES = 16;
 
 template <typename Ta, typename Tb, size_t n>
 void UnaryOp(sycl::queue &q, const std::array<Ta, n> &a, std::array<Tb, n> &b) {

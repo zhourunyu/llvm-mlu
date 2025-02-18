@@ -9,7 +9,9 @@
 #include <spirv/spirv.h>
 
 _CLC_DEF _CLC_OVERLOAD size_t __spirv_WorkgroupSize_x() {
-  return __mlvm_read_mlu_sreg_clusterdim() * __mlvm_read_mlu_sreg_coredim();
+  // group size = 1 for BLOCK tasks
+  return __mlvm_read_mlu_sreg_clusterdim() ?
+    __mlvm_read_mlu_sreg_coredim() : 1;
 }
 
 _CLC_DEF _CLC_OVERLOAD size_t __spirv_WorkgroupSize_y() {

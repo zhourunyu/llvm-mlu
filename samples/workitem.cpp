@@ -2,7 +2,7 @@
 #include <CL/sycl.hpp>
 #include <array>
 
-constexpr auto N = 256;
+constexpr size_t N = 1024;
 
 int main() {
     sycl::gpu_selector selector;
@@ -10,39 +10,38 @@ int main() {
     std::cout << "Running on device: "<< q.get_device().get_info<sycl::info::device::name>() << std::endl;
 
     std::array<int, N> a_host, a_dev;
-    std::fill(a_host.begin(), a_host.end(), 0);
-
+    for (int i = 0; i < N; i++) {
+        a_host[i] = i;
+    }
     auto a = sycl::malloc_device<int>(N, q);
-    auto startTime = getTime();
 
-    q.memcpy(a, a_host.data(), N * sizeof(int));
-    q.parallel_for<class mm>(sycl::nd_range<3>({N / 4 / 4, 4, 4}, {1, 1, 4}), [=](sycl::nd_item<3> item) {
-        int i = item.get_global_id(2), j = item.get_global_id(1), k = item.get_global_id(0);
-        size_t dimX = item.get_global_range(2), dimY = item.get_global_range(1), dimZ = item.get_global_range(0);
-        int id = i + j * dimX + k * dimX * dimY;
-        a[id] += i + j + k;
-    });
-    q.memcpy(a_dev.data(), a, N * sizeof(float));
-    q.wait();
-    auto endTime = getTime();
-    std::cout << "Time: " << endTime - startTime << "us" << std::endl;
-
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
-            for (int k = 0; k < N / 4 / 4; k++) {
-                int id = i + j * 4 + k * 16;
-                a_host[id] += i + j + k;
-            }
+    // method 1: group size is auto determined
+    q.parallel_for<class range>(sycl::range<3>(1, 1, 32), [=](sycl::item<3> item) {
+        size_t id = item.get_id(2);
+        for (size_t i = id * N / 32; i < (id + 1) * N / 32; i++) {
+            a[i] = i;
         }
-    }
-    int ret = compareResult(a_host, a_dev);
-    
-    sycl::free(a, q);
-    if (ret) {
+    });
+    q.memcpy(a_dev.data(), a, N * sizeof(float)).wait();
+    if (compareResult(a_host, a_dev)) {
         std::cout << "Test failed for workitem!" << std::endl;
-        return ret;
+        return 1;
     }
 
+    // method 2: set group size manually
+    q.parallel_for<class nd_range>(sycl::nd_range<3>({1, 1, 16}, {1, 1, 4}), [=](sycl::nd_item<3> item) {
+        size_t id = item.get_global_id(2);
+        for (size_t i = id * N / 16; i < (id + 1) * N / 16; i++) {
+            a[i] = i;
+        }
+    });
+    q.memcpy(a_dev.data(), a, N * sizeof(float)).wait();
+    if (compareResult(a_host, a_dev)) {
+        std::cout << "Test failed for workitem!" << std::endl;
+        return 1;
+    }
+
+    sycl::free(a, q);
     std::cout << "Test passed." << std::endl;
     return 0;
 }
