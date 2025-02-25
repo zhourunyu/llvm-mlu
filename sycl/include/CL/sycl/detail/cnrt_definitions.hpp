@@ -13,12 +13,12 @@
 
 // Mem Object info: Retrieve the raw CNRT pointer from a cl_mem
 #define __SYCL_PI_CNRT_RAW_POINTER (0xFF01)
-// Context creation: Use a primary CNRT context instead of a custom one by
+// Context creation: Use a shared CNcontext instead of a custom one by
 //                   providing a property value of PI_TRUE for the following
 //                   property ID.
-#define __SYCL_PI_CONTEXT_PROPERTIES_CUDA_PRIMARY (0xFF02)
+#define __SYCL_PI_CONTEXT_PROPERTIES_CNRT_SHARED (0xFF02)
 
-// PI Command Queue using Default stream
+// PI Command Queue using Default queue
 #define __SYCL_PI_CNRT_USE_DEFAULT_STREAM (0xFF03)
-// PI Command queue will sync with default stream
+// PI Command queue will sync with default queue
 #define __SYCL_PI_CNRT_SYNC_WITH_DEFAULT (0xFF04)

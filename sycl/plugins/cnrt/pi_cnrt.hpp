@@ -18,30 +18,29 @@
 #ifndef PI_CNRT_HPP
 #define PI_CNRT_HPP
 
-#include "CL/sycl/detail/pi.hpp"
+#include "CL/sycl/detail/pi.h"
 #include <array>
 #include <atomic>
 #include <cassert>
-#include <cn_api.h>
 #include <cstring>
-#include <functional>
+#include <cn_api.h>
 #include <limits>
-#include <memory.h>
-#include <mutex>
 #include <numeric>
 #include <stdint.h>
 #include <string>
 #include <vector>
+#include <functional>
+#include <mutex>
 
 extern "C" {
 
 /// \cond IGNORE_BLOCK_IN_DOXYGEN
-pi_result cnrt_piContextRetain(pi_context);
-pi_result cnrt_piContextRelease(pi_context);
-pi_result cnrt_piDeviceRelease(pi_device);
-pi_result cnrt_piDeviceRetain(pi_device);
-pi_result cnrt_piProgramRetain(pi_program);
-pi_result cnrt_piProgramRelease(pi_program);
+pi_result cnrt_piContextRetain(pi_context );
+pi_result cnrt_piContextRelease(pi_context );
+pi_result cnrt_piDeviceRelease(pi_device );
+pi_result cnrt_piDeviceRetain(pi_device );
+pi_result cnrt_piProgramRetain(pi_program );
+pi_result cnrt_piProgramRelease(pi_program );
 pi_result cnrt_piQueueRelease(pi_queue);
 pi_result cnrt_piQueueRetain(pi_queue);
 pi_result cnrt_piMemRetain(pi_mem);
@@ -52,7 +51,7 @@ pi_result cnrt_piKernelRelease(pi_kernel);
 }
 
 /// A PI platform stores all known PI devices,
-///  in the CUDA plugin this is just a vector of
+///  in the CNRT plugin this is just a vector of
 ///  available devices since initialization is done
 ///  when devices are used.
 ///
@@ -60,10 +59,10 @@ struct _pi_platform {
   std::vector<std::unique_ptr<_pi_device>> devices_;
 };
 
-/// PI device mapping to a CUdevice.
+/// PI device mapping to a CNdev.
 /// Includes an observer pointer to the platform,
 /// and implements the reference counting semantics since
-/// CUDA objects are not refcounted.
+/// CNDrv objects are not refcounted.
 ///
 struct _pi_device {
 private:
@@ -84,35 +83,35 @@ public:
   pi_platform get_platform() const noexcept { return platform_; };
 };
 
-/// PI context mapping to a CUDA context object.
+/// PI context mapping to a CNcontext object.
 ///
-/// There is no direct mapping between a CUDA context and a PI context,
+/// There is no direct mapping between a CN context and a PI context,
 /// main differences described below:
 ///
-/// <b> CUDA context vs PI context </b>
+/// <b> CN context vs PI context </b>
 ///
-/// One of the main differences between the PI API and the CUDA driver API is
+/// One of the main differences between the PI API and the CN driver API is
 /// that the second modifies the state of the threads by assigning
-/// `CUcontext` objects to threads. `CUcontext` objects store data associated
+/// `CNcontext` objects to threads. `CNcontext` objects store data associated
 /// with a given device and control access to said device from the user side.
 /// PI API context are objects that are passed to functions, and not bound
 /// to threads.
 /// The _pi_context object doesn't implement this behavior, only holds the
-/// CUDA context data. The RAII object \ref ScopedContext implements the active
+/// CN context data. The RAII object \ref ScopedContext implements the active
 /// context behavior.
 ///
-/// <b> Primary vs User-defined context </b>
+/// <b> Shared vs User-defined context </b>
 ///
-/// CUDA has two different types of context, the Primary context,
+/// CNDrv has two different types of context, the Shared context,
 /// which is usable by all threads on a given process for a given device, and
 /// the aforementioned custom contexts.
-/// CUDA documentation, and performance analysis, indicates it is recommended
-/// to use Primary context whenever possible.
-/// Primary context is used as well by the CUDA Runtime API.
-/// For PI applications to interop with CUDA Runtime API, they have to use
-/// the primary context - and make that active in the thread.
+/// CNDrv documentation, and performance analysis, indicates it is recommended
+/// to use Shared context whenever possible.
+/// Shared context is used as well by the CNRT API.
+/// For PI applications to interop with CNRT API, they have to use
+/// the shared context - and make that active in the thread.
 /// The `_pi_context` object can be constructed with a `kind` parameter
-/// that allows to construct a Primary or `user-defined` context, so that
+/// that allows to construct a Shared or `user-defined` context, so that
 /// the PI object interface is always the same.
 ///
 ///  <b> Destructor callback </b>
@@ -123,6 +122,7 @@ public:
 ///  See proposal for details.
 ///
 struct _pi_context {
+
   struct deleter_data {
     pi_context_extended_deleter function;
     void *user_data;
@@ -132,12 +132,12 @@ struct _pi_context {
 
   using native_type = CNcontext;
 
-  enum class kind { primary, user_defined } kind_;
+  enum class kind { shared, user_defined } kind_;
   native_type cnContext_;
   _pi_device *deviceId_;
   std::atomic_uint32_t refCount_;
 
-  CNnotifier evBase_;
+  CNnotifier evBase_; // CN notifier used as base counter
 
   _pi_context(kind k, CNcontext ctxt, _pi_device *devId)
       : kind_{k}, cnContext_{ctxt}, deviceId_{devId}, refCount_{1},
@@ -164,7 +164,7 @@ struct _pi_context {
 
   native_type get() const noexcept { return cnContext_; }
 
-  bool is_primary() const noexcept { return kind_ == kind::primary; }
+  bool is_shared() const noexcept { return kind_ == kind::shared; }
 
   pi_uint32 increment_reference_count() noexcept { return ++refCount_; }
 
@@ -177,8 +177,8 @@ private:
   std::vector<deleter_data> extended_deleters_;
 };
 
-/// PI Mem mapping to CUDA memory allocations, both data and texture/surface.
-/// \brief Represents non-SVM allocations on the CUDA backend.
+/// PI Mem mapping to CNDrv memory allocations.
+/// \brief Represents non-SVM allocations on the CNRT backend.
 /// Keeps tracks of all mapped regions used for Map/Unmap calls.
 /// Only one region can be active at the same time per allocation.
 struct _pi_mem {
@@ -191,21 +191,19 @@ struct _pi_mem {
 
   /// Reference counting of the handler
   std::atomic_uint32_t refCount_;
-  enum class mem_type { buffer, surface } mem_type_;
+  enum class mem_type { buffer } mem_type_;
 
-  /// A PI Memory object represents either plain memory allocations ("Buffers"
-  /// in OpenCL) or typed allocations ("Images" in OpenCL).
-  /// In CUDA their API handlers are different. Whereas "Buffers" are allocated
-  /// as pointer-like structs, "Images" are stored in Textures or Surfaces
-  /// This union allows implementation to use either from the same handler.
+  /// A PI Memory object represents plain memory allocations ("Buffers"
+  /// in OpenCL).
   union mem_ {
+    // Handler for plain, pointer-based CNDrv allocations
     struct buffer_mem_ {
       using native_type = CNaddr;
 
       // If this allocation is a sub-buffer (i.e., a view on an existing
       // allocation), this is the pointer to the parent handler structure
       pi_mem parent_;
-      // CUDA handler for the pointer
+      // CNDrv handler for the pointer
       native_type ptr_;
 
       /// Pointer associated with this device on the host
@@ -220,7 +218,7 @@ struct _pi_mem {
       pi_map_flags mapFlags_;
 
       /** alloc_mode
-       * classic: Just a normal buffer allocated on the device via cuda malloc
+       * classic: Just a normal buffer allocated on the device via cn malloc
        * use_host_ptr: Use an address on the host for the device
        * copy_in: The data for the device comes from the host but the host
        pointer is not available later for re-use
@@ -243,7 +241,7 @@ struct _pi_mem {
 
       /// Returns a pointer to data visible on the host that contains
       /// the data on the device associated with this allocation.
-      /// The offset is used to index into the CUDA allocation.
+      /// The offset is used to index into the CNDrv allocation.
       ///
       void *map_to_ptr(size_t offset, pi_map_flags flags) noexcept {
         assert(mapPtr_ == nullptr);
@@ -313,8 +311,6 @@ struct _pi_mem {
     return (is_buffer() && (mem_.buffer_mem_.parent_ != nullptr));
   }
 
-  bool is_image() const noexcept { return mem_type_ == mem_type::surface; }
-
   pi_context get_context() const noexcept { return context_; }
 
   pi_uint32 increment_reference_count() noexcept { return ++refCount_; }
@@ -324,12 +320,12 @@ struct _pi_mem {
   pi_uint32 get_reference_count() const noexcept { return refCount_; }
 };
 
-/// PI queue mapping on to CUstream objects.
+/// PI queue mapping on to CNqueue objects.
 ///
 struct _pi_queue {
   using native_type = CNqueue;
 
-  native_type queue_;
+  native_type stream_;
   _pi_context *context_;
   _pi_device *device_;
   pi_queue_properties properties_;
@@ -338,7 +334,7 @@ struct _pi_queue {
 
   _pi_queue(CNqueue queue, _pi_context *context, _pi_device *device,
             pi_queue_properties properties)
-      : queue_{queue}, context_{context}, device_{device},
+      : stream_{queue}, context_{context}, device_{device},
         properties_{properties}, refCount_{1}, eventCount_{0} {
     cnrt_piContextRetain(context_);
     cnrt_piDeviceRetain(device_);
@@ -349,7 +345,7 @@ struct _pi_queue {
     cnrt_piDeviceRelease(device_);
   }
 
-  native_type get() const noexcept { return queue_; };
+  native_type get() const noexcept { return stream_; };
 
   _pi_context *get_context() const { return context_; };
 
@@ -364,7 +360,6 @@ struct _pi_queue {
 
 typedef void (*pfn_notify)(pi_event event, pi_int32 eventCommandStatus,
                            void *userData);
-
 /// PI Event mapping to CNnotifier
 ///
 struct _pi_event {
@@ -423,7 +418,7 @@ public:
   //
   pi_uint64 get_end_time() const;
 
-  // construct a native CUDA. This maps closely to the underlying CUDA event.
+  // construct a native CNDrv. This maps closely to the underlying CN notifier.
   static pi_event make_native(pi_command_type type, pi_queue queue) {
     return new _pi_event(type, queue->get_context(), queue);
   }
@@ -433,7 +428,8 @@ public:
   ~_pi_event();
 
 private:
-  // private constructor
+  // This constructor is private to force programmers to use the make_native /
+  // make_user static members in order to create a pi_event for CNRT.
   _pi_event(pi_command_type type, pi_context context, pi_queue queue);
 
   pi_command_type commandType_; // The type of command associated with event.
@@ -444,7 +440,7 @@ private:
                          // on through a call to wait(), which implies
                          // that it has completed.
 
-  bool isRecorded_; // Signifies wether a native CUDA event has been recorded
+  bool isRecorded_; // Signifies wether a native CN notifier has been recorded
                     // yet.
   bool isStarted_;  // Signifies wether the operation associated with the
                     // PI event has started or not
@@ -452,12 +448,12 @@ private:
 
   pi_uint32 eventId_; // Queue identifier of the event.
 
-  native_type evEnd_; // CUDA event handle. If this _pi_event represents a
+  native_type evEnd_; // CN notifier handle. If this _pi_event represents a
                       // user event, this will be nullptr.
 
-  native_type evStart_; // CUDA event handle associated with the start
+  native_type evStart_; // CN notifier handle associated with the start
 
-  native_type evQueued_; // CUDA event handle associated with the time
+  native_type evQueued_; // CN notifier handle associated with the time
                          // the command was enqueued
 
   pi_queue queue_; // pi_queue associated with the event. If this is a user
@@ -468,7 +464,7 @@ private:
                        // associated with the queue_ member.
 };
 
-/// Implementation of PI Program on CUDA Module object
+/// Implementation of PI Program on CN Module object
 ///
 struct _pi_program {
   using native_type = CNmodule;
@@ -502,20 +498,20 @@ struct _pi_program {
   pi_uint32 get_reference_count() const noexcept { return refCount_; }
 };
 
-/// Implementation of a PI Kernel for CUDA
+/// Implementation of a PI Kernel for CNRT
 ///
 /// PI Kernels are used to set kernel arguments,
 /// creating a state on the Kernel object for a given
-/// invocation. This is not the case of CUFunction objects,
+/// invocation. This is not the case of CNkernel objects,
 /// which are simply passed together with the arguments on the invocation.
-/// The PI Kernel implementation for CUDA stores the list of arguments,
+/// The PI Kernel implementation for CNRT stores the list of arguments,
 /// argument sizes and offsets to emulate the interface of PI Kernel,
 /// saving the arguments for the later dispatch.
 /// Note that in PI API, the Local memory is specified as a size per
-/// individual argument, but in CUDA only the total usage of shared
+/// individual argument, but in CNRT only the total usage of shared
 /// memory is required since it is not passed as a parameter.
 /// A compiler pass converts the PI API local memory model into the
-/// CUDA shared model. This object simply calculates the total of
+/// CNRT shared model. This object simply calculates the total of
 /// shared memory, and the initial offsets of each parameter.
 ///
 struct _pi_kernel {
@@ -532,7 +528,7 @@ struct _pi_kernel {
   /// Structure that holds the arguments to the kernel.
   /// Note earch argument size is known, since it comes
   /// from the kernel signature.
-  /// This is not something can be queried from the CUDA API
+  /// This is not something can be queried from the CNDrv API
   /// so there is a hard-coded size (\ref MAX_PARAM_BYTES)
   /// and a storage.
   ///
@@ -557,8 +553,7 @@ struct _pi_kernel {
     /// If the argument existed before, it is replaced.
     /// Otherwise, it is added.
     /// Gaps are filled with empty arguments.
-    /// Implicit offset argument is kept at the back of the indices
-    /// collection.
+    /// Implicit offset argument is kept at the back of the indices collection.
     void add_arg(size_t index, size_t size, const void *arg,
                  size_t localSize = 0) {
       if (index + 2 > indices_.size()) {
@@ -603,8 +598,7 @@ struct _pi_kernel {
   _pi_kernel(CNkernel func, CNkernel funcWithOffsetParam, const char *name,
              pi_program program, pi_context ctxt)
       : function_{func}, functionWithOffsetParam_{funcWithOffsetParam},
-        name_{name}, context_{ctxt}, program_{program}, refCount_{1},
-        kernel_params_{nullptr} {
+        name_{name}, context_{ctxt}, program_{program}, refCount_{1} {
     cnrt_piProgramRetain(program_);
     cnrt_piContextRetain(context_);
   }
@@ -613,7 +607,8 @@ struct _pi_kernel {
              pi_context ctxt)
       : _pi_kernel{func, nullptr, name, program, ctxt} {}
 
-  ~_pi_kernel() {
+  ~_pi_kernel()
+  {
     cnrt_piProgramRelease(program_);
     cnrt_piContextRelease(context_);
   }
@@ -643,7 +638,7 @@ struct _pi_kernel {
   /// Returns the number of arguments, excluding the implicit global offset.
   /// Note this only returns the current known number of arguments, not the
   /// real one required by the kernel, since this cannot be queried from
-  /// the CUDA Driver API
+  /// the CN Driver API
   pi_uint32 get_num_args() const noexcept { return args_.indices_.size() - 1; }
 
   void set_kernel_arg(int index, size_t size, const void *arg) {
@@ -667,7 +662,7 @@ struct _pi_kernel {
   void clear_local_size() { args_.clear_local_size(); }
 };
 
-/// Implementation of samplers for CUDA
+/// Implementation of samplers for CNRT
 ///
 /// Sampler property layout:
 /// | 31 30 ... 6 5 |      4 3 2      |     1      |         0        |
