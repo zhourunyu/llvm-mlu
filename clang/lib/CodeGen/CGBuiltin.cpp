@@ -13385,8 +13385,8 @@ Value *CodeGenFunction::EmitX86BuiltinExpr(unsigned BuiltinID,
         cast<llvm::FixedVectorType>(Ops[0]->getType())->getNumElements();
     unsigned ShiftVal = cast<llvm::ConstantInt>(Ops[2])->getZExtValue() & 0xff;
 
-    // Mask the shift amount to width of two vectors.
-    ShiftVal &= (2 * NumElts) - 1;
+    // Mask the shift amount to width of a vector.
+    ShiftVal &= NumElts - 1;
 
     int Indices[16];
     for (unsigned i = 0; i != NumElts; ++i)
@@ -15436,6 +15436,40 @@ Value *CodeGenFunction::EmitPPCBuiltinExpr(unsigned BuiltinID,
     Value *Call = Builder.CreateCall(F, CallOps);
     return Builder.CreateAlignedStore(Call, Ops[0], MaybeAlign(64));
   }
+
+  case PPC::BI__builtin_ppc_compare_and_swap:
+  case PPC::BI__builtin_ppc_compare_and_swaplp: {
+    Address Addr = EmitPointerWithAlignment(E->getArg(0));
+    Address OldValAddr = EmitPointerWithAlignment(E->getArg(1));
+    Value *OldVal = Builder.CreateLoad(OldValAddr);
+    QualType AtomicTy = E->getArg(0)->getType()->getPointeeType();
+    LValue LV = MakeAddrLValue(Addr, AtomicTy);
+    auto Pair = EmitAtomicCompareExchange(
+        LV, RValue::get(OldVal), RValue::get(Ops[2]), E->getExprLoc(),
+        llvm::AtomicOrdering::Monotonic, llvm::AtomicOrdering::Monotonic, true);
+    return Pair.second;
+  }
+  case PPC::BI__builtin_ppc_fetch_and_add:
+  case PPC::BI__builtin_ppc_fetch_and_addlp: {
+    return MakeBinaryAtomicValue(*this, AtomicRMWInst::Add, E,
+                                 llvm::AtomicOrdering::Monotonic);
+  }
+  case PPC::BI__builtin_ppc_fetch_and_and:
+  case PPC::BI__builtin_ppc_fetch_and_andlp: {
+    return MakeBinaryAtomicValue(*this, AtomicRMWInst::And, E,
+                                 llvm::AtomicOrdering::Monotonic);
+  }
+
+  case PPC::BI__builtin_ppc_fetch_and_or:
+  case PPC::BI__builtin_ppc_fetch_and_orlp: {
+    return MakeBinaryAtomicValue(*this, AtomicRMWInst::Or, E,
+                                 llvm::AtomicOrdering::Monotonic);
+  }
+  case PPC::BI__builtin_ppc_fetch_and_swap:
+  case PPC::BI__builtin_ppc_fetch_and_swaplp: {
+    return MakeBinaryAtomicValue(*this, AtomicRMWInst::Xchg, E,
+                                 llvm::AtomicOrdering::Monotonic);
+  }
   }
 }
 
@@ -15841,7 +15875,7 @@ Value *CodeGenFunction::EmitMLISABuiltinExpr(unsigned BuiltinID,
   llvm::AtomicOrdering AO = llvm::AtomicOrdering::SequentiallyConsistent;
   llvm::SyncScope::ID SSID;
   switch (BuiltinID) {
-  
+
   // mlisa workitem
   case MLISA::BI__mlvm_read_mlu_sreg_taskidx:
     return emitRangedBuiltin(*this, Intrinsic::mlvm_read_mlu_sreg_taskidx, 0, 65535);
@@ -15869,32 +15903,8 @@ Value *CodeGenFunction::EmitMLISABuiltinExpr(unsigned BuiltinID,
   case MLISA::BI__mlvm_sync:
     return Builder.CreateCall(CGM.getIntrinsic(Intrinsic::mlvm_sync));
 
-  /*
-
-  // amdgcn workgroup size
-  case MLISA::BI__builtin_amdgcn_workgroup_size_x:
-    return EmitAMDGPUWorkGroupSize(*this, 0);
-  case MLISA::BI__builtin_amdgcn_workgroup_size_y:
-    return EmitAMDGPUWorkGroupSize(*this, 1);
-  case MLISA::BI__builtin_amdgcn_workgroup_size_z:
-    return EmitAMDGPUWorkGroupSize(*this, 2);
-
-  // amdgcn grid size
-  case MLISA::BI__builtin_amdgcn_grid_size_x:
-    return EmitAMDGPUGridSize(*this, 0);
-  case MLISA::BI__builtin_amdgcn_grid_size_y:
-    return EmitAMDGPUGridSize(*this, 1);
-  case MLISA::BI__builtin_amdgcn_grid_size_z:
-    return EmitAMDGPUGridSize(*this, 2);
-  */
-
   case MLISA::BI__mlvm_stream_add_f32: {
     llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_add_f32);
-    // return Builder.CreateCall(F);
-
-    // Address Src0 = EmitPointerWithAlignment(E->getArg(0));
-    // Address Src1 = EmitPointerWithAlignment(E->getArg(1));
-    // Address Src2 = EmitPointerWithAlignment(E->getArg(2));
     Value *Src0x = EmitScalarExpr(E->getArg(0));
     Value *Src0 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src0x, Int8PtrTy);
     Value *Src1x = EmitScalarExpr(E->getArg(1));
@@ -15902,16 +15912,7 @@ Value *CodeGenFunction::EmitMLISABuiltinExpr(unsigned BuiltinID,
     Value *Src2x = EmitScalarExpr(E->getArg(2));
     Value *Src2 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src2x, Int8PtrTy);
     Value *Src3 = EmitScalarExpr(E->getArg(3));
-
-    // llvm::Value *Src0 = EmitScalarExpr(E->getArg(0));
-    // llvm::Value *Src1 = EmitScalarExpr(E->getArg(1));
-    // llvm::Value *Src2 = EmitScalarExpr(E->getArg(2));
-    // llvm::Value *Src3 = EmitScalarExpr(E->getArg(3));
-
-    // llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_add_f32,
-    //                                     Src0->getType());
     return Builder.CreateCall(F, {Src0, Src1, Src2, Src3});
-    // return emitRangeBuiltin(*this, Intrinsic::mlvm_stream_add_f32, 0, 1024);
   }
 
    case MLISA::BI__mlvm_stream_sub_f32: {
@@ -15946,7 +15947,7 @@ Value *CodeGenFunction::EmitMLISABuiltinExpr(unsigned BuiltinID,
     Value *Src2 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src2x, Int8PtrTy);
     Value *Src3 = EmitScalarExpr(E->getArg(3));
     return Builder.CreateCall(F, {Src0, Src1, Src2, Src3});
-  } 
+  }
   case MLISA::BI__mlvm_stream_active_recip_f32: {
     llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_active_recip_f32);
     Value *Src0x = EmitScalarExpr(E->getArg(0));
@@ -15955,7 +15956,7 @@ Value *CodeGenFunction::EmitMLISABuiltinExpr(unsigned BuiltinID,
     Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
     Value *Src2 = EmitScalarExpr(E->getArg(2));
     return Builder.CreateCall(F, {Src0, Src1, Src2});
-  } 
+  }
   case MLISA::BI__mlvm_stream_pow2_f32: {
     llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_pow2_f32);
     Value *Src0x = EmitScalarExpr(E->getArg(0));
@@ -15964,7 +15965,7 @@ Value *CodeGenFunction::EmitMLISABuiltinExpr(unsigned BuiltinID,
     Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
     Value *Src2 = EmitScalarExpr(E->getArg(2));
     return Builder.CreateCall(F, {Src0, Src1, Src2});
-  }  
+  }
   case MLISA::BI__mlvm_stream_log_f32: {
     llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_log_f32);
     Value *Src0x = EmitScalarExpr(E->getArg(0));
@@ -16018,7 +16019,7 @@ Value *CodeGenFunction::EmitMLISABuiltinExpr(unsigned BuiltinID,
     Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
     Value *Src2 = EmitScalarExpr(E->getArg(2));
     return Builder.CreateCall(F, {Src0, Src1, Src2});
-  }  
+  }
   case MLISA::BI__mlvm_stream_active_exp_f32: {
     llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_active_exp_f32);
     Value *Src0x = EmitScalarExpr(E->getArg(0));
@@ -16027,7 +16028,7 @@ Value *CodeGenFunction::EmitMLISABuiltinExpr(unsigned BuiltinID,
     Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
     Value *Src2 = EmitScalarExpr(E->getArg(2));
     return Builder.CreateCall(F, {Src0, Src1, Src2});
-  }  
+  }
   case MLISA::BI__mlvm_stream_active_exphp_f32: {
     llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_active_exphp_f32);
     Value *Src0x = EmitScalarExpr(E->getArg(0));
@@ -16036,7 +16037,7 @@ Value *CodeGenFunction::EmitMLISABuiltinExpr(unsigned BuiltinID,
     Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
     Value *Src2 = EmitScalarExpr(E->getArg(2));
     return Builder.CreateCall(F, {Src0, Src1, Src2});
-  }  
+  }
   case MLISA::BI__mlvm_stream_active_log_f32: {
     llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_active_log_f32);
     Value *Src0x = EmitScalarExpr(E->getArg(0));
@@ -16045,7 +16046,7 @@ Value *CodeGenFunction::EmitMLISABuiltinExpr(unsigned BuiltinID,
     Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
     Value *Src2 = EmitScalarExpr(E->getArg(2));
     return Builder.CreateCall(F, {Src0, Src1, Src2});
-  }   
+  }
   case MLISA::BI__mlvm_stream_active_pow2_f32: {
     llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_active_pow2_f32);
     Value *Src0x = EmitScalarExpr(E->getArg(0));
@@ -16063,7 +16064,7 @@ Value *CodeGenFunction::EmitMLISABuiltinExpr(unsigned BuiltinID,
     Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
     Value *Src2 = EmitScalarExpr(E->getArg(2));
     return Builder.CreateCall(F, {Src0, Src1, Src2});
-  }  
+  }
   case MLISA::BI__mlvm_stream_active_sigmoid_f32: {
     llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_active_sigmoid_f32);
     Value *Src0x = EmitScalarExpr(E->getArg(0));
@@ -16072,7 +16073,7 @@ Value *CodeGenFunction::EmitMLISABuiltinExpr(unsigned BuiltinID,
     Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
     Value *Src2 = EmitScalarExpr(E->getArg(2));
     return Builder.CreateCall(F, {Src0, Src1, Src2});
-  }  
+  }
   case MLISA::BI__mlvm_stream_active_sin_f32: {
     llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_active_sin_f32);
     Value *Src0x = EmitScalarExpr(E->getArg(0));
@@ -16081,7 +16082,7 @@ Value *CodeGenFunction::EmitMLISABuiltinExpr(unsigned BuiltinID,
     Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
     Value *Src2 = EmitScalarExpr(E->getArg(2));
     return Builder.CreateCall(F, {Src0, Src1, Src2});
-  } 
+  }
   case MLISA::BI__mlvm_stream_active_cos_f32: {
     llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_active_cos_f32);
     Value *Src0x = EmitScalarExpr(E->getArg(0));
@@ -16090,7 +16091,7 @@ Value *CodeGenFunction::EmitMLISABuiltinExpr(unsigned BuiltinID,
     Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
     Value *Src2 = EmitScalarExpr(E->getArg(2));
     return Builder.CreateCall(F, {Src0, Src1, Src2});
-  }   
+  }
   case MLISA::BI__mlvm_stream_active_tanh_f32: {
     llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_active_tanh_f32);
     Value *Src0x = EmitScalarExpr(E->getArg(0));
@@ -16647,14 +16648,12 @@ Value *CodeGenFunction::EmitMLISABuiltinExpr(unsigned BuiltinID,
 
   case MLISA::BI__mlvm_stream_conv_fix16_fix16_fix16: {
     llvm::Function *F = CGM.getIntrinsic(Intrinsic::mlvm_stream_conv_fix16_fix16_fix16);
-    
     Value *Src0x = EmitScalarExpr(E->getArg(0));
     Value *Src0 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src0x, Int8PtrTy);
     Value *Src1x = EmitScalarExpr(E->getArg(1));
     Value *Src1 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src1x, Int8PtrTy);
     Value *Src2x = EmitScalarExpr(E->getArg(2));
     Value *Src2 = Builder.CreatePointerBitCastOrAddrSpaceCast(Src2x, Int8PtrTy);
-
     Value *Src3 = EmitScalarExpr(E->getArg(3));
     Value *Src4 = EmitScalarExpr(E->getArg(4));
     Value *Src5 = EmitScalarExpr(E->getArg(5));
@@ -16664,9 +16663,7 @@ Value *CodeGenFunction::EmitMLISABuiltinExpr(unsigned BuiltinID,
     Value *Src9 = EmitScalarExpr(E->getArg(9));
     Value *Src10 = EmitScalarExpr(E->getArg(10));
     Value *Src11 = EmitScalarExpr(E->getArg(11));
-    
     return Builder.CreateCall(F, {Src0, Src1, Src2, Src3, Src4, Src5, Src6, Src7, Src8, Src9, Src10, Src11});
-    
   }
 
   default:

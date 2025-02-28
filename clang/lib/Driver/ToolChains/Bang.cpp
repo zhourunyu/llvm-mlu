@@ -59,10 +59,10 @@ CnrtVersionInfo parseCnrtHFile(llvm::StringRef Input) {
     if (auto Line =
             StartsWithWords(Input.ltrim(), {"#define", "CNRT_MAJOR_VERSION"})) {
       Line->consumeInteger(10, version_major);
-    } else if (auto Line = 
+    } else if (auto Line =
             StartsWithWords(Input.ltrim(), {"#define", "CNRT_MINOR_VERSION"})) {
       Line->consumeInteger(10, version_minor);
-    } else if (auto Line = 
+    } else if (auto Line =
             StartsWithWords(Input.ltrim(), {"#define", "CNRT_PATCH_VERSION"})) {
       Line->consumeInteger(10, version_patch);
     }
@@ -241,7 +241,7 @@ void BangInstallationDetector::CheckBangVersionSupportsArch(
 
 void BangInstallationDetector::print(raw_ostream &OS) const {
   if (isValid())
-    OS << "Found NEUWARE installation: " << InstallPath << ", version " 
+    OS << "Found NEUWARE installation: " << InstallPath << ", version "
        << CnrtVersionToString(Version) << "\n";
 }
 
@@ -519,7 +519,6 @@ BangToolChain::BangToolChain(const Driver &D, const llvm::Triple &Triple,
       OK(OK) {
   if (BangInstallation.isValid())
     getProgramPaths().push_back(std::string(BangInstallation.getBinPath()));
-  
 }
 
 std::string BangToolChain::getInputFilename(const InputInfo &Input) const {
@@ -627,7 +626,7 @@ void BangToolChain::addClangTargetOptions(
       options::OPT_fprofile_generate_EQ,
       options::OPT_fprofile_instr_generate,
       options::OPT_fprofile_instr_generate_EQ);
-  /* 
+  /*
   CC1Args.push_back("-mllvm");
   CC1Args.push_back("-mlisa-enable-stack-promote=false");
 
@@ -647,8 +646,7 @@ void BangToolChain::addClangTargetOptions(
 
   CC1Args.push_back("-mllvm");
   CC1Args.push_back("-mlisa-address-alignment=64");
-  */
-  /*
+
   if (DriverArgs.hasArg(options::OPT_bang_stack_on_ldram) || ProfileArg) {
     CC1Args.push_back("-bang-auto-vars-on-ldram");
     CC1Args.push_back("-mllvm");

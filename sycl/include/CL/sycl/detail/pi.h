@@ -52,6 +52,7 @@
 #include <CL/cl_ext.h>
 #include <CL/sycl/detail/cl.h>
 #include <CL/sycl/detail/export.hpp>
+
 #include <cstdint>
 
 #ifdef __cplusplus
@@ -278,11 +279,8 @@ typedef enum {
       CL_DEVICE_CROSS_DEVICE_SHARED_MEM_CAPABILITIES_INTEL,
   PI_DEVICE_INFO_USM_SYSTEM_SHARED_SUPPORT =
       CL_DEVICE_SHARED_SYSTEM_MEM_CAPABILITIES_INTEL,
-
-  //2022-06-release supply
   // Intel UUID extension.
-  PI_DEVICE_INFO_UUID = 0x106A,
-
+  PI_DEVICE_INFO_UUID = CL_DEVICE_UUID_KHR,
   // These are Intel-specific extensions.
   PI_DEVICE_INFO_PCI_ADDRESS = 0x10020,
   PI_DEVICE_INFO_GPU_EU_COUNT = 0x10021,
@@ -291,7 +289,7 @@ typedef enum {
   PI_DEVICE_INFO_GPU_SUBSLICES_PER_SLICE = 0x10024,
   PI_DEVICE_INFO_GPU_EU_COUNT_PER_SUBSLICE = 0x10025,
   PI_DEVICE_INFO_MAX_MEM_BANDWIDTH = 0x10026,
-  
+
   // 2022-06-release supply
   PI_DEVICE_INFO_IMAGE_SRGB = 0x10027,
   // Return true if sub-device should do its own program build

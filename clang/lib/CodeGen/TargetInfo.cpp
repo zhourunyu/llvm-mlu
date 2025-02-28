@@ -2610,7 +2610,7 @@ static std::string qualifyWindowsLibrary(llvm::StringRef Lib) {
   bool Quote = (Lib.find(' ') != StringRef::npos);
   std::string ArgStr = Quote ? "\"" : "";
   ArgStr += Lib;
-  if (!Lib.endswith_lower(".lib") && !Lib.endswith_lower(".a"))
+  if (!Lib.endswith_insensitive(".lib") && !Lib.endswith_insensitive(".a"))
     ArgStr += ".lib";
   ArgStr += Quote ? "\"" : "";
   return ArgStr;
@@ -11018,7 +11018,7 @@ public:
       : TargetCodeGenInfo(std::make_unique<MLISAABIInfo>(CGT, *this)) {}
 
   void setTargetAttributes(const Decl *D, llvm::GlobalValue *GV,
-                          CodeGen::CodeGenModule &M) const override; 
+                          CodeGen::CodeGenModule &M) const override;
 private:
   static void addMLVMMetadata(llvm::GlobalValue *GV, StringRef Name,
                               int Operand);

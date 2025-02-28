@@ -337,7 +337,7 @@ void Command::emitInstrumentationDataProxy() {
 /// @param IsCommand True if the dependency has a command object as the source,
 /// false otherwise
 void Command::emitEdgeEventForCommandDependence(Command *Cmd, void *ObjAddr,
-                                                const string_class &Prefix,
+                                                const std::string &Prefix,
                                                 bool IsCommand) {
 #ifdef XPTI_ENABLE_INSTRUMENTATION
   // Bail early if either the source or the target node for the given dependency
@@ -486,10 +486,14 @@ Command *Command::processDepEvent(EventImplPtr DepEvent, const DepDesc &Dep) {
   const ContextImplPtr &WorkerContext = WorkerQueue->getContextImplPtr();
 
   // 1. Async work is not supported for host device.
-  // 2. The event handle can be null in case of, for example, alloca command,
-  //    which is currently synchronous, so don't generate OpenCL event.
-  //    Though, this event isn't host one as it's context isn't host one.
-  if (DepEvent->is_host() || DepEvent->getHandleRef() == nullptr) {
+  // 2. Some types of commands do not produce PI events after they are enqueued
+  // (e.g. alloca). Note that we can't check the pi event to make that
+  // distinction since the command might still be unenqueued at this point.
+  bool PiEventExpected = !DepEvent->is_host();
+  if (auto *DepCmd = static_cast<Command *>(DepEvent->getCommand()))
+    PiEventExpected &= DepCmd->producesPiEvent();
+
+  if (!PiEventExpected) {
     // call to waitInternal() is in waitForPreparedHostEvents() as it's called
     // from enqueue process functions
     MPreparedHostDepsEvents.push_back(DepEvent);
@@ -519,6 +523,8 @@ const ContextImplPtr &Command::getWorkerContext() const {
 }
 
 const QueueImplPtr &Command::getWorkerQueue() const { return MQueue; }
+
+bool Command::producesPiEvent() const { return true; }
 
 Command *Command::addDep(DepDesc NewDep) {
   Command *ConnectionCmd = nullptr;
@@ -730,6 +736,8 @@ void AllocaCommandBase::emitInstrumentationData() {
   }
 #endif
 }
+
+bool AllocaCommandBase::producesPiEvent() const { return false; }
 
 AllocaCommand::AllocaCommand(QueueImplPtr Queue, Requirement Req,
                              bool InitFromUserData,
@@ -998,6 +1006,8 @@ void ReleaseCommand::printDot(std::ostream &Stream) const {
   }
 }
 
+bool ReleaseCommand::producesPiEvent() const { return false; }
+
 MapMemObject::MapMemObject(AllocaCommandBase *SrcAllocaCmd, Requirement Req,
                            void **DstPtr, QueueImplPtr Queue,
                            access::mode MapMode)
@@ -1206,7 +1216,7 @@ AllocaCommandBase *ExecCGCommand::getAllocaForReq(Requirement *Req) {
   throw runtime_error("Alloca for command not found", PI_INVALID_OPERATION);
 }
 
-vector_class<StreamImplPtr> ExecCGCommand::getStreams() const {
+std::vector<StreamImplPtr> ExecCGCommand::getStreams() const {
   if (MCommandGroup->getType() == CG::KERNEL)
     return ((CGExecKernel *)MCommandGroup.get())->getStreams();
   return {};
@@ -1391,6 +1401,8 @@ void EmptyCommand::printDot(std::ostream &Stream) const {
            << std::endl;
   }
 }
+
+bool EmptyCommand::producesPiEvent() const { return false; }
 
 void MemCpyCommandHost::printDot(std::ostream &Stream) const {
   Stream << "\"" << this << "\" [style=filled, fillcolor=\"#B6A2EB\", label=\"";
@@ -1658,7 +1670,7 @@ pi_result ExecCGCommand::SetKernelParamsAndLaunch(
     std::shared_ptr<device_image_impl> DeviceImageImpl, RT::PiKernel Kernel,
     NDRDescT &NDRDesc, std::vector<RT::PiEvent> &RawEvents, RT::PiEvent &Event,
     ProgramManager::KernelArgMask EliminatedArgMask) {
-  vector_class<ArgDesc> &Args = ExecKernel->MArgs;
+  std::vector<ArgDesc> &Args = ExecKernel->MArgs;
   // TODO this is not necessary as long as we can guarantee that the arguments
   // are already sorted (e. g. handle the sorting in handler if necessary due
   // to set_arg(...) usage).
@@ -1741,10 +1753,27 @@ pi_result ExecCGCommand::SetKernelParamsAndLaunch(
   const bool HasLocalSize = (NDRDesc.LocalSize[0] != 0);
 
   ReverseRangeDimensionsForKernel(NDRDesc);
+
+  size_t RequiredWGSize[3] = {0, 0, 0};
+  Plugin.call<PiApiKind::piKernelGetGroupInfo>(
+      Kernel, detail::getSyclObjImpl(MQueue->get_device())->getHandleRef(),
+      PI_KERNEL_GROUP_INFO_COMPILE_WORK_GROUP_SIZE, sizeof(RequiredWGSize),
+      RequiredWGSize, /* param_value_size_ret = */ nullptr);
+
+  const bool EnforcedLocalSize =
+      (RequiredWGSize[0] != 0 || RequiredWGSize[1] != 0 ||
+       RequiredWGSize[2] != 0);
+  size_t *LocalSize = nullptr;
+
+  if (EnforcedLocalSize && !HasLocalSize)
+    LocalSize = RequiredWGSize;
+  else if (HasLocalSize)
+    LocalSize = &NDRDesc.LocalSize[0];
+
   pi_result Error = Plugin.call_nocheck<PiApiKind::piEnqueueKernelLaunch>(
       MQueue->getHandleRef(), Kernel, NDRDesc.Dims, &NDRDesc.GlobalOffset[0],
-      &NDRDesc.GlobalSize[0], HasLocalSize ? &NDRDesc.LocalSize[0] : nullptr,
-      RawEvents.size(), RawEvents.empty() ? nullptr : &RawEvents[0], &Event);
+      &NDRDesc.GlobalSize[0], LocalSize, RawEvents.size(),
+      RawEvents.empty() ? nullptr : &RawEvents[0], &Event);
   return Error;
 }
 
@@ -2054,6 +2083,13 @@ cl_int ExecCGCommand::enqueueImp() {
 
     return CL_SUCCESS;
   }
+  case CG::CGTYPE::ADVISE_USM: {
+    CGAdviseUSM *Advise = (CGAdviseUSM *)MCommandGroup.get();
+    MemoryManager::advise_usm(Advise->getDst(), MQueue, Advise->getLength(),
+                              Advise->getAdvice(), std::move(RawEvents), Event);
+
+    return CL_SUCCESS;
+  }
   case CG::CGTYPE::CODEPLAY_INTEROP_TASK: {
     const detail::plugin &Plugin = MQueue->getPlugin();
     CGInteropTask *ExecInterop = (CGInteropTask *)MCommandGroup.get();
@@ -2167,6 +2203,10 @@ cl_int ExecCGCommand::enqueueImp() {
     throw runtime_error("CG type not implemented.", PI_INVALID_OPERATION);
   }
   return PI_INVALID_OPERATION;
+}
+
+bool ExecCGCommand::producesPiEvent() const {
+  return MCommandGroup->getType() != CG::CGTYPE::CODEPLAY_HOST_TASK;
 }
 
 } // namespace detail

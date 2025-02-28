@@ -105,12 +105,12 @@ public:
       return true;
     }
   }
-  
+
   const char *getClobbers() const override {
     // FIXME: Is this really right?
     return "";
   }
-  
+
   BuiltinVaListKind getBuiltinVaListKind() const override {
     // FIXME: implement
     return TargetInfo::CharPtrBuiltinVaList;

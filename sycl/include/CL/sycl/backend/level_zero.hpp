@@ -87,7 +87,7 @@ enum class ownership { transfer, keep };
 __SYCL_EXPORT platform make_platform(pi_native_handle NativeHandle);
 __SYCL_EXPORT device make_device(const platform &Platform,
                                  pi_native_handle NativeHandle);
-__SYCL_EXPORT context make_context(const vector_class<device> &DeviceList,
+__SYCL_EXPORT context make_context(const std::vector<device> &DeviceList,
                                    pi_native_handle NativeHandle,
                                    bool keep_ownership = false);
 __SYCL_EXPORT program make_program(const context &Context,

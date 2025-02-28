@@ -149,7 +149,7 @@ int main(int argc, char **argv) {
     for (Module::iterator i = M->begin(), e = M->end(); i != e; ++i) {
       if (i->isDeclaration())
         continue;
-      
+
       auto name = i->getName().operator std::string();
       if (RenameMlisaFunc(name)) {
         // errs() << "Renamed " << i->getName() << " to " << name << "\n";

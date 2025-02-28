@@ -1369,7 +1369,7 @@ namespace mlu {
 
 template <typename T>
 void memcpy_gdram2nram(T* dest, const T* src, size_t n) __NOEXC {
-#if defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_MLISA__)
+#if defined(__SYCL_DEVICE_ONLY__) && defined(__MLISA__)
   __mlvm_memcpy_gdram_to_nram(dest, (void*)src, n * sizeof(T));
 #else
   (void)dest;
@@ -1380,7 +1380,7 @@ void memcpy_gdram2nram(T* dest, const T* src, size_t n) __NOEXC {
 
 template <typename T>
 void memcpy_nram2gdram(T* dest, const T* src, size_t n) __NOEXC {
-#if defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_MLISA__)
+#if defined(__SYCL_DEVICE_ONLY__) && defined(__MLISA__)
   __mlvm_memcpy_nram_to_gdram(dest, (void*)src, n * sizeof(T));
 #else
   (void)dest;
@@ -1391,7 +1391,7 @@ void memcpy_nram2gdram(T* dest, const T* src, size_t n) __NOEXC {
 
 template <typename T>
 void memcpy_nram2nram(T* dest, const T* src, size_t n) __NOEXC {
-#if defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_MLISA__)
+#if defined(__SYCL_DEVICE_ONLY__) && defined(__MLISA__)
   __mlvm_memcpy_nram_to_nram(dest, (void*)src, n * sizeof(T));
 #else
   (void)dest;
@@ -1405,7 +1405,7 @@ inline constexpr bool always_false_v = false;
 
 template <typename T>
 void memset_nram(void* dest, T value, size_t n) __NOEXC {
-#if defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_MLISA__)
+#if defined(__SYCL_DEVICE_ONLY__) && defined(__MLISA__)
   if constexpr (sizeof(T) == 1) {
     __mlvm_memset_nram_s8((char *)dest, n, *(char *)&value);
   } else if constexpr (sizeof(T) == 2) {
@@ -1427,7 +1427,7 @@ void memset_nram(void* dest, T value, size_t n) __NOEXC {
 
 template <typename T>
 void memset_global(void* dest, T value, size_t n) __NOEXC {
-#if defined(__SYCL_DEVICE_ONLY__) && defined(__SYCL_MLISA__)
+#if defined(__SYCL_DEVICE_ONLY__) && defined(__MLISA__)
   if constexpr (sizeof(T) == 1) {
     __mlvm_memset_gdram_s8((char *)dest, n, *(char *)&value);
   } else if constexpr (sizeof(T) == 2) {
@@ -2086,6 +2086,8 @@ extern SYCL_EXTERNAL double atanh(double x);
 extern SYCL_EXTERNAL double frexp(double x, int *exp);
 extern SYCL_EXTERNAL double ldexp(double x, int exp);
 extern SYCL_EXTERNAL double hypot(double x, double y);
+
+extern SYCL_EXTERNAL void *memcpy(void *dest, const void *src, size_t n);
 }
 #ifdef __GLIBC__
 extern "C" {

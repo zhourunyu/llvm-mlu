@@ -2321,15 +2321,6 @@ struct is_device_copyable<std::tuple<T, Ts...>>
     : detail::bool_constant<is_device_copyable<T>::value &&
                             is_device_copyable<std::tuple<Ts...>>::value> {};
 
-// marray is device copyable if element type is device copyable and it is also
-// not trivially copyable (if the element type is trivially copyable, the marray
-// is device copyable by default).
-template <typename T, std::size_t N>
-struct is_device_copyable<
-    sycl::marray<T, N>, std::enable_if_t<is_device_copyable<T>::value &&
-                                         !std::is_trivially_copyable<T>::value>>
-    : std::true_type {};
-
 namespace detail {
 template <typename T, typename = void>
 struct IsDeprecatedDeviceCopyable : std::false_type {};
@@ -2385,19 +2376,6 @@ template <typename FuncT>
 struct CheckDeviceCopyable
     : CheckFieldsAreDeviceCopyable<FuncT, __builtin_num_fields(FuncT)>,
       CheckBasesAreDeviceCopyable<FuncT, __builtin_num_bases(FuncT)> {};
-
-// Below are two specializations for CheckDeviceCopyable when a kernel lambda
-// is wrapped after range rounding optimization.
-template <typename TransformedArgType, int Dims, typename KernelType>
-struct CheckDeviceCopyable<
-    RoundedRangeKernel<TransformedArgType, Dims, KernelType>>
-    : CheckDeviceCopyable<KernelType> {};
-
-template <typename TransformedArgType, int Dims, typename KernelType>
-struct CheckDeviceCopyable<
-    RoundedRangeKernelWithKH<TransformedArgType, Dims, KernelType>>
-    : CheckDeviceCopyable<KernelType> {};
-
 #endif // __SYCL_DEVICE_ONLY__
 } // namespace detail
 

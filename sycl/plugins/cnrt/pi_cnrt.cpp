@@ -932,6 +932,13 @@ pi_result cnrt_piDeviceGetInfo(pi_device device, pi_device_info param_name,
     bool ifp = false;
     return getInfo(param_value_size, param_value, param_value_size_ret, ifp);
   }
+
+  case PI_DEVICE_INFO_ATOMIC_64: {
+    bool atomic64 = false;
+    return getInfo(param_value_size, param_value, param_value_size_ret,
+                   atomic64);
+  }
+
   case PI_DEVICE_INFO_SUB_GROUP_SIZES_INTEL: {
     size_t sizes[1] = {1};
     return getInfoArray<size_t>(1, param_value_size, param_value,
@@ -1146,7 +1153,10 @@ pi_result cnrt_piDeviceGetInfo(pi_device device, pi_device_info param_name,
     return getInfo(param_value_size, param_value, param_value_size_ret, "");
   }
   case PI_DEVICE_INFO_EXTENSIONS: {
-    return getInfo(param_value_size, param_value, param_value_size_ret, "");
+
+    std::string SupportedExtensions = "cl_khr_fp16 ";
+    return getInfo(param_value_size, param_value, param_value_size_ret,
+                   SupportedExtensions.c_str());
   }
   case PI_DEVICE_INFO_PRINTF_BUFFER_SIZE: {
     // The minimum value for the FULL profile is 1 MB.
@@ -1236,6 +1246,10 @@ pi_result cnrt_piDeviceGetInfo(pi_device device, pi_device_info param_name,
   case PI_DEVICE_INFO_GPU_SUBSLICES_PER_SLICE:
   case PI_DEVICE_INFO_GPU_EU_COUNT_PER_SUBSLICE:
   case PI_DEVICE_INFO_MAX_MEM_BANDWIDTH:
+    // TODO: Check if Intel device UUID extension is utilized for CNDrv.
+    // For details about this extension, see
+    // sycl/doc/extensions/IntelGPU/IntelGPUDeviceInfo.md
+  case PI_DEVICE_INFO_UUID:
     return PI_INVALID_VALUE;
 
   default:
@@ -1835,13 +1849,13 @@ pi_result cnrt_piEnqueueMemBufferWrite(pi_queue command_queue, pi_mem buffer,
       retImplEv->start();
     }
 
-    retErr = 
+    retErr =
         PI_CHECK_ERROR(cnMemcpyHtoDAsync_V2(devPtr + offset, ptr, size, cnQueue));
 
     if (event) {
       retErr = retImplEv->record();
     }
-    
+
     if (blocking_write) {
       retErr = PI_CHECK_ERROR(cnQueueSync(cnQueue));
     }
@@ -1951,12 +1965,12 @@ pi_result cnrt_piKernelCreate(pi_program program, const char *kernel_name,
     CNkernel cnKernel;
     retErr = PI_CHECK_ERROR(
         cnModuleGetKernel(program->get(), kernel_name, &cnKernel));
-    
+
     std::string kernel_name_woffset = std::string(kernel_name) + "_with_offset";
     CNkernel cnFuncWithOffsetParam;
     CNresult offsetRes = cnModuleGetKernel(
         program->get(), kernel_name_woffset.c_str(), &cnFuncWithOffsetParam);
-    
+
     // If there is no kernel with global offset parameter we mark it as missing
     if (offsetRes == CN_ERROR_NOT_FOUND) {
       cnFuncWithOffsetParam = nullptr;
@@ -2165,7 +2179,7 @@ pi_result cnrt_piEnqueueKernelLaunch(
         break;
     }
     retError = PI_CHECK_ERROR(
-        cnInvokeKernel(cnKernel, taskDim[0], taskDim[1], taskDim[2], 
+        cnInvokeKernel(cnKernel, taskDim[0], taskDim[1], taskDim[2],
         kc, 0, cnQueue, argIndices.data(), nullptr));
     kernel->clear_local_size();
     if (event) {
@@ -2426,7 +2440,7 @@ pi_result cnrt_piProgramRelease(pi_program program) {
   // either way, cannot safely proceed.
   assert(program->get_reference_count() != 0 &&
          "Reference count overflow detected in cnrt_piProgramRelease.");
-  
+
   // decrement ref count. If it is 0, delete the program.
   if (program->decrement_reference_count() == 0) {
 
