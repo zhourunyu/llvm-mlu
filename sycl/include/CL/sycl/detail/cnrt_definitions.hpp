@@ -17,8 +17,10 @@
 //                   providing a property value of PI_TRUE for the following
 //                   property ID.
 #define __SYCL_PI_CONTEXT_PROPERTIES_CNRT_SHARED (0xFF02)
+// PI Context will not record events
+#define __SYCL_PI_CONTEXT_PROPERTIES_DISABLE_EVENT_RECORD (0xFF04)
 
 // PI Command Queue using Default queue
-#define __SYCL_PI_CNRT_USE_DEFAULT_STREAM (0xFF03)
+#define __SYCL_PI_CNRT_USE_DEFAULT_STREAM (0xFF10)
 // PI Command queue will sync with default queue
-#define __SYCL_PI_CNRT_SYNC_WITH_DEFAULT (0xFF04)
+#define __SYCL_PI_CNRT_SYNC_WITH_DEFAULT (0xFF20)

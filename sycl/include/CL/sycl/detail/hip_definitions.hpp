@@ -19,6 +19,6 @@
 #define __SYCL_PI_CONTEXT_PROPERTIES_HIP_PRIMARY (0xFF02)
 
 // PI Command Queue using Default stream
-#define __SYCL_PI_HIP_USE_DEFAULT_STREAM (0xFF03)
+#define __SYCL_PI_HIP_USE_DEFAULT_STREAM (0xFF10)
 // PI Command queue will sync with default stream
-#define __SYCL_PI_HIP_SYNC_WITH_DEFAULT (0xFF04)
+#define __SYCL_PI_HIP_SYNC_WITH_DEFAULT (0xFF20)

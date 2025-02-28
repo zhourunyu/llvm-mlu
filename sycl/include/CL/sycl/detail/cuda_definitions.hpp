@@ -19,6 +19,6 @@
 #define __SYCL_PI_CONTEXT_PROPERTIES_CUDA_PRIMARY (0xFF02)
 
 // PI Command Queue using Default stream
-#define __SYCL_PI_CUDA_USE_DEFAULT_STREAM (0xFF03)
+#define __SYCL_PI_CUDA_USE_DEFAULT_STREAM (0xFF10)
 // PI Command queue will sync with default stream
-#define __SYCL_PI_CUDA_SYNC_WITH_DEFAULT (0xFF04)
+#define __SYCL_PI_CUDA_SYNC_WITH_DEFAULT (0xFF20)

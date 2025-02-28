@@ -315,6 +315,8 @@ _pi_event::_pi_event(pi_command_type type, pi_context context, pi_queue queue)
       &evEnd_, profilingEnabled ? CN_NOTIFIER_DEFAULT : CN_NOTIFIER_DISABLE_TIMING_ALL));
 
   if (profilingEnabled) {
+    assert(!context->event_record_disabled() &&
+           "Profiling enabled but event recording disabled");
     PI_CHECK_ERROR(cnCreateNotifier(&evQueued_, CN_NOTIFIER_DEFAULT));
     PI_CHECK_ERROR(cnCreateNotifier(&evStart_, CN_NOTIFIER_DEFAULT));
   }
@@ -1324,7 +1326,7 @@ pi_result cnrt_piContextCreate(const pi_context_properties *properties,
   pi_result errcode_ret = PI_SUCCESS;
 
   // Parse properties.
-  bool property_cnrt_shared = false;
+  bool property_cnrt_shared = false, property_disable_event_record = false;
   while (properties && (0 != *properties)) {
     // Consume property ID.
     pi_context_properties id = *properties;
@@ -1336,6 +1338,10 @@ pi_result cnrt_piContextCreate(const pi_context_properties *properties,
     case __SYCL_PI_CONTEXT_PROPERTIES_CNRT_SHARED:
       assert(value == PI_FALSE || value == PI_TRUE);
       property_cnrt_shared = static_cast<bool>(value);
+      break;
+    case __SYCL_PI_CONTEXT_PROPERTIES_DISABLE_EVENT_RECORD:
+      assert(value == PI_FALSE || value == PI_TRUE);
+      property_disable_event_record = static_cast<bool>(value);
       break;
     default:
       // Unknown property.
@@ -1368,9 +1374,11 @@ pi_result cnrt_piContextCreate(const pi_context_properties *properties,
           _pi_context::kind::user_defined, newContext, *devices});
     }
 
-    // Use default stream to record base event counter
-    PI_CHECK_ERROR(cnCreateNotifier(&piContextPtr->evBase_, CN_NOTIFIER_DISABLE_TIMING_ALL));
-    PI_CHECK_ERROR(cnPlaceNotifier(piContextPtr->evBase_, 0));
+    if (!property_disable_event_record) {
+      // Use default stream to record base event counter
+      PI_CHECK_ERROR(cnCreateNotifier(&piContextPtr->evBase_, CN_NOTIFIER_DEFAULT));
+      PI_CHECK_ERROR(cnPlaceNotifier(piContextPtr->evBase_, 0));
+    }
 
     // For non-primary scoped contexts keep the last active on top of the stack
     // as `cnCtxCreate` replaces it implicitly otherwise.
@@ -1400,7 +1408,9 @@ pi_result cnrt_piContextRelease(pi_context ctxt) {
 
   std::unique_ptr<_pi_context> context{ctxt};
 
-  PI_CHECK_ERROR(cnDestroyNotifier(context->evBase_));
+  if (context->evBase_) {
+    PI_CHECK_ERROR(cnDestroyNotifier(context->evBase_));
+  }
 
   if (!ctxt->is_shared()) {
     CNcontext cnCtxt = ctxt->get();
@@ -1832,6 +1842,8 @@ pi_result cnrt_piEnqueueMemBufferWrite(pi_queue command_queue, pi_mem buffer,
 
   assert(buffer != nullptr);
   assert(command_queue != nullptr);
+  if (command_queue->get_context()->event_record_disabled())
+    event = nullptr;
   pi_result retErr = PI_SUCCESS;
   CNqueue cnQueue = command_queue->get();
   CNaddr devPtr = buffer->mem_.buffer_mem_.get();
@@ -1878,6 +1890,8 @@ pi_result cnrt_piEnqueueMemBufferRead(pi_queue command_queue, pi_mem buffer,
 
   assert(buffer != nullptr);
   assert(command_queue != nullptr);
+  if (command_queue->get_context()->event_record_disabled())
+    event = nullptr;
   pi_result retErr = PI_SUCCESS;
   CNqueue cnQueue = command_queue->get();
   CNaddr devPtr = buffer->mem_.buffer_mem_.get();
@@ -2054,6 +2068,8 @@ pi_result cnrt_piEnqueueKernelLaunch(
   assert(global_work_offset != nullptr);
   assert(work_dim > 0);
   assert(work_dim < 4);
+  if (command_queue->get_context()->event_record_disabled())
+    event = nullptr;
 
   // Try to use union task unless user has provided a better number
   size_t taskDim[3] = {1, 1, 1}, unionSize = 0;
@@ -2800,6 +2816,8 @@ pi_result cnrt_piEnqueueEventsWaitWithBarrier(pi_queue command_queue,
   if (!command_queue) {
     return PI_INVALID_QUEUE;
   }
+  if (command_queue->get_context()->event_record_disabled())
+    event = nullptr;
 
   try {
     ScopedContext active(command_queue->get_context());
@@ -3054,6 +3072,8 @@ pi_result cnrt_piEnqueueMemBufferReadRect(
 
   assert(buffer != nullptr);
   assert(command_queue != nullptr);
+  if (command_queue->get_context()->event_record_disabled())
+    event = nullptr;
 
   pi_result retErr = PI_SUCCESS;
   CNqueue cnQueue = command_queue->get();
@@ -3105,6 +3125,8 @@ pi_result cnrt_piEnqueueMemBufferWriteRect(
 
   assert(buffer != nullptr);
   assert(command_queue != nullptr);
+  if (command_queue->get_context()->event_record_disabled())
+    event = nullptr;
 
   pi_result retErr = PI_SUCCESS;
   CNqueue cnQueue = command_queue->get();
@@ -3155,6 +3177,8 @@ pi_result cnrt_piEnqueueMemBufferCopy(pi_queue command_queue, pi_mem src_buffer,
   if (!command_queue) {
     return PI_INVALID_QUEUE;
   }
+  if (command_queue->get_context()->event_record_disabled())
+    event = nullptr;
 
   std::unique_ptr<_pi_event> retImplEv{nullptr};
 
@@ -3204,6 +3228,8 @@ pi_result cnrt_piEnqueueMemBufferCopyRect(
   assert(src_buffer != nullptr);
   assert(dst_buffer != nullptr);
   assert(command_queue != nullptr);
+  if (command_queue->get_context()->event_record_disabled())
+    event = nullptr;
 
   pi_result retErr = PI_SUCCESS;
   CNqueue cnQueue = command_queue->get();
@@ -3246,6 +3272,8 @@ pi_result cnrt_piEnqueueMemBufferFill(pi_queue command_queue, pi_mem buffer,
                                       const pi_event *event_wait_list,
                                       pi_event *event) {
   assert(command_queue != nullptr);
+  if (command_queue->get_context()->event_record_disabled())
+    event = nullptr;
 
   auto args_are_multiples_of_pattern_size =
       (offset % pattern_size == 0) || (size % pattern_size == 0);
@@ -3369,6 +3397,8 @@ pi_result cnrt_piEnqueueMemBufferMap(pi_queue command_queue, pi_mem buffer,
   assert(command_queue != nullptr);
   assert(buffer != nullptr);
   assert(buffer->mem_type_ == _pi_mem::mem_type::buffer);
+  if (command_queue->get_context()->event_record_disabled())
+    event = nullptr;
 
   pi_result ret_err = PI_INVALID_OPERATION;
   const bool is_pinned = buffer->mem_.buffer_mem_.allocMode_ ==
@@ -3431,6 +3461,8 @@ pi_result cnrt_piEnqueueMemUnmap(pi_queue command_queue, pi_mem memobj,
   assert(memobj->mem_type_ == _pi_mem::mem_type::buffer);
   assert(memobj->mem_.buffer_mem_.get_map_ptr() != nullptr);
   assert(memobj->mem_.buffer_mem_.get_map_ptr() == mapped_ptr);
+  if (command_queue->get_context()->event_record_disabled())
+    event = nullptr;
 
   const bool is_pinned = memobj->mem_.buffer_mem_.allocMode_ ==
                          _pi_mem::mem_::buffer_mem_::alloc_mode::alloc_host_ptr;
@@ -3555,6 +3587,8 @@ pi_result cnrt_piextUSMEnqueueMemset(pi_queue queue, void *ptr, pi_int32 value,
                                      pi_event *event) {
   assert(queue != nullptr);
   assert(ptr != nullptr);
+  if (queue->get_context()->event_record_disabled())
+    event = nullptr;
   CNqueue cnQueue = queue->get();
   pi_result result = PI_SUCCESS;
   std::unique_ptr<_pi_event> event_ptr{nullptr};
@@ -3589,6 +3623,8 @@ pi_result cnrt_piextUSMEnqueueMemcpy(pi_queue queue, pi_bool blocking,
   assert(queue != nullptr);
   assert(dst_ptr != nullptr);
   assert(src_ptr != nullptr);
+  if (queue->get_context()->event_record_disabled())
+    event = nullptr;
   CNqueue cnQueue = queue->get();
   pi_result result = PI_SUCCESS;
   std::unique_ptr<_pi_event> event_ptr{nullptr};

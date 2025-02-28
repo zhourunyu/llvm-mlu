@@ -19,6 +19,10 @@ namespace cuda {
 class use_primary_context
     : public detail::DataLessProperty<detail::UsePrimaryContext> {};
 } // namespace cuda
+namespace cnrt {
+class disable_event_record
+    : public detail::DataLessProperty<detail::DisableEventRecord> {};
+} // namespace cnrt
 } // namespace context
 } // namespace property
 } // namespace sycl

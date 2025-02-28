@@ -8,6 +8,7 @@
 
 #include <CL/sycl/detail/common.hpp>
 #include <CL/sycl/detail/cuda_definitions.hpp>
+#include <CL/sycl/detail/cnrt_definitions.hpp>
 #include <CL/sycl/detail/pi.hpp>
 #include <CL/sycl/device.hpp>
 #include <CL/sycl/exception.hpp>
@@ -44,13 +45,28 @@ context_impl::context_impl(const std::vector<cl::sycl::device> Devices,
   }
 
   const auto Backend = getPlugin().getBackend();
-  if (Backend == backend::ext_oneapi_cuda || Backend == backend::ext_oneapi_cnrt) {
+  if (Backend == backend::ext_oneapi_cuda) {
     const bool UseCUDAPrimaryContext =
         MPropList.has_property<property::context::cuda::use_primary_context>();
     const pi_context_properties Props[] = {
         static_cast<pi_context_properties>(
             __SYCL_PI_CONTEXT_PROPERTIES_CUDA_PRIMARY),
         static_cast<pi_context_properties>(UseCUDAPrimaryContext), 0};
+
+    getPlugin().call<PiApiKind::piContextCreate>(
+        Props, DeviceIds.size(), DeviceIds.data(), nullptr, nullptr, &MContext);
+  } else if (Backend == backend::ext_oneapi_cnrt) {
+    const bool UseCUDAPrimaryContext =
+        MPropList.has_property<property::context::cuda::use_primary_context>();
+    const bool DisableEventRecord =
+        MPropList.has_property<property::context::cnrt::disable_event_record>();
+    const pi_context_properties Props[] = {
+        static_cast<pi_context_properties>(
+            __SYCL_PI_CONTEXT_PROPERTIES_CUDA_PRIMARY),
+        static_cast<pi_context_properties>(UseCUDAPrimaryContext),
+        static_cast<pi_context_properties>(
+            __SYCL_PI_CONTEXT_PROPERTIES_DISABLE_EVENT_RECORD),
+        static_cast<pi_context_properties>(DisableEventRecord), 0};
 
     getPlugin().call<PiApiKind::piContextCreate>(
         Props, DeviceIds.size(), DeviceIds.data(), nullptr, nullptr, &MContext);

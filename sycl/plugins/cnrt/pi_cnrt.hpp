@@ -166,6 +166,8 @@ struct _pi_context {
 
   bool is_shared() const noexcept { return kind_ == kind::shared; }
 
+  bool event_record_disabled() const noexcept { return evBase_ == nullptr; }
+
   pi_uint32 increment_reference_count() noexcept { return ++refCount_; }
 
   pi_uint32 decrement_reference_count() noexcept { return --refCount_; }
