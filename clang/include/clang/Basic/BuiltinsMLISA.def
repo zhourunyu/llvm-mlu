@@ -1713,6 +1713,9 @@ BUILTIN(__mlvm_stream_reduce_sum_f32, "vf*f*i", "")
 
 BUILTIN(__mlvm_stream_relu_f16, "vh*h*i", "")
 BUILTIN(__mlvm_stream_relu_f32, "vf*f*i", "")
+BUILTIN(__mlvm_stream_relu_s8, "vc*c*i", "")
+BUILTIN(__mlvm_stream_relu_s16, "vs*s*i", "")
+BUILTIN(__mlvm_stream_relu_s32, "vi*i*i", "")
 BUILTIN(__mlvm_stream_relun_f16, "vh*h*ih", "")
 BUILTIN(__mlvm_stream_relun_f32, "vf*f*if", "")
 

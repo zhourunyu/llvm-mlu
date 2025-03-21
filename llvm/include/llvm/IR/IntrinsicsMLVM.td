@@ -5061,6 +5061,21 @@ def int_mlvm_write_mlu_grid_sreg_blockidz : MLUWriteGridSRegIntrinsic_i32<"block
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
               []>;
 
+  def int_mlvm_stream_relu_s8 :
+    GCCBuiltin<"__mlvm_stream_relu_s8">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_relu_s16 :
+    GCCBuiltin<"__mlvm_stream_relu_s16">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
+              []>;
+
+  def int_mlvm_stream_relu_s32 :
+    GCCBuiltin<"__mlvm_stream_relu_s32">,
+    Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty],
+              []>;
+
   def int_mlvm_stream_relun_f16 :
     GCCBuiltin<"__mlvm_stream_relun_f16">,
     Intrinsic<[], [llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty, llvm_half_ty],
